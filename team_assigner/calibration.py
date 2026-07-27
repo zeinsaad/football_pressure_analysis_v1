@@ -16,6 +16,8 @@ from .config import TeamAssignerConfig
 from .embedder import SiglipEmbedder
 
 
+# Collect player torso embeddings from different frames across the match.
+# These samples are used to learn the two team kit clusters with KMeans.
 def sample_calibration_features(
     embedder: SiglipEmbedder, tracking_cache: dict, locked_class_by_id: dict,
     video_path: str, config: TeamAssignerConfig,
@@ -55,6 +57,7 @@ def sample_calibration_features(
     print(f"\nCollected {len(calibration_features)} SigLIP calibration embeddings "
           f"across the full match (frames 0-{frame_idx - 1}).")
 
+    # Limit the number of samples while keeping a random distribution over the match.
     if len(calibration_features) > config.max_calibration_samples:
         rng = np.random.default_rng(42)
         keep_idx = rng.choice(len(calibration_features), size=config.max_calibration_samples, replace=False)
@@ -67,6 +70,8 @@ def sample_calibration_features(
     return calibration_features, calibration_meta
 
 
+# Normalize embeddings and fit a two-cluster KMeans model to separate the
+# two team kits. The silhouette score is used to evaluate cluster quality.
 def fit_kmeans(calibration_features: np.ndarray) -> tuple[StandardScaler, KMeans, np.ndarray]:
     """Returns (scaler, kmeans, cluster_labels). Prints a silhouette-score
     sanity check — >0.5 well separated, 0.2-0.5 weak, <0.2 not meaningfully

@@ -16,6 +16,8 @@ import numpy as np
 from .config import TeamAssignerConfig
 
 
+# Convert a pixel coordinate from the camera view into real pitch coordinates
+# using the homography transformation.
 def project_to_pitch(point_px: tuple[float, float], H: np.ndarray, px_per_meter: int) -> tuple[float, float]:
     pt = cv2.perspectiveTransform(
         np.array([[[point_px[0], point_px[1]]]], dtype=np.float32), H
@@ -23,11 +25,16 @@ def project_to_pitch(point_px: tuple[float, float], H: np.ndarray, px_per_meter:
     return float(pt[0] / px_per_meter), float(pt[1] / px_per_meter)
 
 
+# Get the player's ground contact point from the bounding box.
+# The bottom-center point is used because it represents the player's location
+# on the pitch better than the box center.
 def bbox_foot_point(bbox: list[float]) -> tuple[float, float]:
     x1, y1, x2, y2 = bbox
     return ((x1 + x2) / 2, y2)
 
 
+# Retrieve the homography matrix for a specific frame.
+# Supports both frame-indexed lists and dictionaries.
 def get_homography_at(homography_cache, frame_idx: int):
     """Homography cache may be a list indexed by frame or a dict keyed by frame_idx."""
     if isinstance(homography_cache, dict):
@@ -37,6 +44,9 @@ def get_homography_at(homography_cache, frame_idx: int):
     return None
 
 
+# Collect sampled pitch-space positions for a specific tracked player.
+# Positions are obtained by projecting bounding box foot points through the
+# frame-specific homography.
 def get_track_positions(
     track_id: int, tracking_cache: dict, homography_cache, px_per_meter: int, sample_stride: int = 10,
 ) -> list[tuple[float, float]]:
@@ -55,6 +65,8 @@ def get_track_positions(
     return positions
 
 
+# Assign goalkeeper identities to teams by comparing their pitch-space location
+# with the average pitch position of each team's players.
 def assign_goalkeepers(
     tracking_cache: dict, locked_class_by_id: dict, locked_team_by_id: dict,
     homography_cache, config: TeamAssignerConfig,
@@ -63,12 +75,14 @@ def assign_goalkeepers(
     goalkeeper_ids = {tid for tid, cls in locked_class_by_id.items() if cls == "goalkeeper"}
     print(f"Goalkeeper tracks to assign: {sorted(goalkeeper_ids)}")
 
+    # Gather pitch positions of players belonging to each team.
     team_positions = {0: [], 1: []}
     for tid, team in locked_team_by_id.items():
         team_positions[team].extend(
             get_track_positions(tid, tracking_cache, homography_cache, config.px_per_meter, config.gk_position_sample_stride)
         )
 
+    # Calculate each team's average pitch location.
     team_centroids = {
         team: np.mean(positions, axis=0) if positions else None
         for team, positions in team_positions.items()
@@ -82,13 +96,17 @@ def assign_goalkeepers(
         if not gk_positions:
             print(f"  id={gk_id}: no valid pitch positions found -- skipping")
             continue
+
+        # Compute the goalkeeper's average pitch position.
         gk_centroid = np.mean(gk_positions, axis=0)
 
+        # Compare goalkeeper position to both team centroids.
         dist0 = np.linalg.norm(gk_centroid - team_centroids[0]) if team_centroids[0] is not None else np.inf
         dist1 = np.linalg.norm(gk_centroid - team_centroids[1]) if team_centroids[1] is not None else np.inf
 
         assigned_team = 0 if dist0 < dist1 else 1
         goalkeeper_team_assignment[gk_id] = assigned_team
+
         print(f"  id={gk_id} | pitch pos: ({gk_centroid[0]:.1f}, {gk_centroid[1]:.1f})m "
               f"| dist_to_team0={dist0:.1f}m dist_to_team1={dist1:.1f}m -> team {assigned_team}")
 

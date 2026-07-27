@@ -1,22 +1,4 @@
-"""
-DetectionPipeline: loads the two YOLO models and produces per-frame
-detections (ball + goalkeeper + player + referee), with the ball sourced
-exclusively from the dedicated ball model.
 
-Usage (single frame, e.g. from inside a larger pipeline / main loop):
-
-    from detector import DetectionPipeline, DetectionConfig
-
-    pipeline = DetectionPipeline(DetectionConfig())
-    pipeline.load_models()
-
-    dets = pipeline.detect_frame(frame)   # list[dict] for this one frame
-
-Usage (full video -> cache, load-or-build):
-
-    from detector import get_or_build_cache
-    detection_cache = get_or_build_cache(pipeline, cfg.video_path, cfg.output_cache_path)
-"""
 
 from __future__ import annotations
 
@@ -32,16 +14,12 @@ from .cache_io import save_cache, print_summary
 
 
 class DetectionPipeline:
-    """Two independent YOLO models, fused into one per-frame detection list."""
 
     def __init__(self, config: DetectionConfig):
         self.config = config
         self.multi_model: YOLO | None = None
         self.ball_model: YOLO | None = None
 
-    # ------------------------------------------------------------------ #
-    #  Setup                                                              #
-    # ------------------------------------------------------------------ #
 
     def check_paths(self) -> None:
         """Print OK/MISSING for every configured path. Does not raise."""
@@ -84,7 +62,7 @@ class DetectionPipeline:
 
         # --- multiclass model: goalkeeper / player / referee only ---
         multi_res = self.multi_model.predict(
-            frame, conf=cfg.conf_thresh_multi, device=cfg.device, verbose=False
+            frame, conf=cfg.conf_thresh_multi, device=cfg.device,imgsz=cfg.Image_Size, verbose=False
         )[0]
 
         multi_dets = []
@@ -103,7 +81,7 @@ class DetectionPipeline:
 
         # --- ball-only model: sole source of ball detections ---
         ball_res = self.ball_model.predict(
-            frame, conf=cfg.conf_thresh_ball, device=cfg.device, verbose=False
+            frame, conf=cfg.conf_thresh_ball, device=cfg.device,imgsz=cfg.Image_Size, verbose=False
         )[0]
 
         ball_model_dets = [

@@ -22,6 +22,6 @@ class RenderConfig:
     tracking_cache_path: str = TRACKING_CACHE_PATH   # only used if pipeline.run() is called standalone
     output_video_path: str = OUTPUT_VIDEO_PATH
 
-    show_frame_number: bool = False
+    show_frame_number: bool = True
     log_every_n_frames: int = 200
     fourcc: str = "mp4v"

@@ -1,8 +1,8 @@
 """
-Tracklet construction: group raw per-frame tracker output into tracklets,
-then deliberately split at every same-class contact (bbox overlap) so no
-identity is ever trusted to survive an occlusion just because the raw
-tracker ID didn't change.
+Builds tracklets from the raw BoT-SORT output. Raw tracks are first grouped into
+continuous tracklets, then split whenever same-class players overlap to isolate
+ambiguous contact periods. Finally, appearance, motion, and position features
+are computed for each tracklet to support the later global linking stage.
 """
 
 from __future__ import annotations
@@ -14,6 +14,8 @@ import numpy as np
 from .geometry import iou, bbox_center
 
 
+# Build a tracklet from a sequence of consecutive tracking observations,
+# organizing the per-frame data and assigning the majority class label.
 def make_tracklet(entries: list[tuple]) -> dict:
     """entries: list of (frame_idx, bbox, conf, cls, embedding), sorted by frame_idx."""
     frames = [e[0] for e in entries]
@@ -30,10 +32,10 @@ def make_tracklet(entries: list[tuple]) -> dict:
     }
 
 
+# Group raw tracker output into continuous tracklets by raw track ID.
+# A new tracklet is started whenever there is a gap in the tracked frames.
 def build_initial_tracklets(raw_tracks_by_frame: dict) -> list[dict]:
-    """Groups raw per-frame tracker output by raw_track_id. A raw ID's lifespan
-    is already 'one continuous stretch with no ambiguity according to the
-    tracker' — exactly what a tracklet should be before contact-based splitting."""
+    """Groups raw per-frame tracker output by raw_track_id."""
     raw_entries_by_id = defaultdict(list)
     for frame_idx, dets in raw_tracks_by_frame.items():
         for d in dets:
@@ -57,19 +59,10 @@ def build_initial_tracklets(raw_tracks_by_frame: dict) -> list[dict]:
     return tracklets
 
 
+# Detect same-class contact events between tracklets and determine where each
+# tracklet should be split to isolate ambiguous overlap periods.
 def find_contact_split_points(tracklets: list[dict], iou_thresh: float, merge_gap: int = 1) -> dict:
-    """Returns {tracklet_index: set of cut-boundary frames}. A cut boundary at
-    frame f means 'end a chunk after frame f' — so the tracklet is split right
-    before and right after each contact event, isolating the ambiguous contact
-    frames into their own short segment instead of leaving them attached to a
-    clean pre/post segment.
-
-    Contact frames are grouped into contiguous runs (allowing gaps of up to
-    merge_gap frames to still count as one run) before computing boundaries —
-    otherwise an extended contact would get a cut point at EVERY overlapping
-    frame, shredding the tracklet into single-frame fragments that then get
-    dropped entirely by min_tracklet_len, silently deleting real player data.
-    """
+    """Returns {tracklet_index: set of cut-boundary frames}."""
     overlap_frames_by_pair = defaultdict(set)
     frame_to_tracklets = defaultdict(list)
     for idx, tl in enumerate(tracklets):
@@ -105,6 +98,7 @@ def find_contact_split_points(tracklets: list[dict], iou_thresh: float, merge_ga
     return split_points
 
 
+# Create a new tracklet containing only the specified frames from an existing one.
 def slice_tracklet(tl: dict, frames: list[int]) -> dict:
     return {
         "frames": frames,
@@ -116,6 +110,8 @@ def slice_tracklet(tl: dict, frames: list[int]) -> dict:
     }
 
 
+# Split tracklets at the computed cut points, producing shorter tracklets that
+# separate ambiguous contact periods from clean tracking segments.
 def apply_splits(tracklets: list[dict], split_points: dict) -> list[dict]:
     new_tracklets = []
     for idx, tl in enumerate(tracklets):
@@ -137,6 +133,8 @@ def apply_splits(tracklets: list[dict], split_points: dict) -> list[dict]:
     return new_tracklets
 
 
+# Estimate a tracklet's average velocity by fitting a straight line to the
+# sequence of bounding-box center positions over time.
 def fit_velocity(frames: list[int], bbox_by_frame: dict) -> np.ndarray | None:
     if len(frames) < 2:
         return None
@@ -148,6 +146,9 @@ def fit_velocity(frames: list[int], bbox_by_frame: dict) -> np.ndarray | None:
     return np.array([vx, vy])
 
 
+# Compute appearance, motion, and position features for a tracklet.
+# These features are later used to decide whether two tracklets belong to
+# the same player during global linking.
 def compute_tracklet_features(tl: dict, window: int) -> None:
     """Mutates tl in place, adding head/tail embedding + velocity + position."""
     frames = tl["frames"]

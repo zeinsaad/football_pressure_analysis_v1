@@ -1,18 +1,9 @@
-"""
-Pitch keypoint definitions in real-world meters, and the mapping from
-segmentation-model line-pair classes / pose-model keypoint indices to those
-real-world points.
-
-Keypoints are built via build_pitch_keypoints(pitch_length, pitch_width)
-rather than hardcoded module constants, so HomographyConfig's pitch_length/
-pitch_width are always the single source of truth.
-"""
-
 from __future__ import annotations
 
 
 def build_pitch_keypoints(pitch_length: float, pitch_width: float) -> dict[str, tuple[float, float]]:
     return {
+        "top_left_corner":               (0.0, 0.0),
         "top_right_corner":              (pitch_length, 0.0),
         "halfway_top":                   (pitch_length / 2, 0.0),
         "halfway_bottom":                (pitch_length / 2, pitch_width),
@@ -78,3 +69,9 @@ def build_pose_keypoints(pitch_keypoints_real: dict[str, tuple[float, float]]) -
         30: pitch_keypoints_real["circle_left"],
         31: pitch_keypoints_real["circle_right"],
     }
+
+
+# Reliable subset used to build the anchor that resolves left/right line-pairing
+# ambiguity -- right-side box/penalty-spot/circle points (17,20,21,30,31) were
+# empirically less trustworthy than these.
+TRUSTED_ANCHOR_POSE_INDICES = {9, 12, 13, 14, 15, 16}

@@ -15,6 +15,9 @@ from .config import TeamAssignerConfig
 from .embedder import SiglipEmbedder
 
 
+# Classify player appearances using the trained KMeans kit clusters.
+# Stores every prediction as a vote for each track without immediately
+# forcing a final team assignment.
 def classify_all_tracks(
     embedder: SiglipEmbedder, scaler, kmeans, tracking_cache: dict,
     locked_class_by_id: dict, video_path: str, config: TeamAssignerConfig,
@@ -35,9 +38,12 @@ def classify_all_tracks(
             for t in data["tracks"]:
                 if t["track_id"] not in player_ids:
                     continue
+
+                # Extract jersey appearance features and predict the team cluster.
                 feat = embedder.extract(frame, t["bbox"])
                 if feat is None:
                     continue
+
                 scaled_feat = scaler.transform(feat.reshape(1, -1))
                 team = int(kmeans.predict(scaled_feat)[0])
                 raw_team_votes[t["track_id"]][team] += 1
@@ -51,6 +57,8 @@ def classify_all_tracks(
     return dict(raw_team_votes)
 
 
+# Assign one final team label to each player track using majority voting
+# over all collected frame-level predictions.
 def lock_teams(raw_team_votes: dict, config: TeamAssignerConfig) -> dict:
     """Returns locked_team_by_id: {track_id: 0 or 1}. Prints a weak-majority
     flag for tracks below config.weak_majority_threshold."""
@@ -64,7 +72,7 @@ def lock_teams(raw_team_votes: dict, config: TeamAssignerConfig) -> dict:
         total = sum(votes.values())
         majority_frac = votes[locked_team_by_id[tid]] / total
         flag = "  <-- weak majority, check this track" if majority_frac < config.weak_majority_threshold else ""
-        print(f"  id={tid:2d} | team={locked_team_by_id[tid]} | votes={dict(votes)} "
+        print(f"  id={tid: 2d} | team={locked_team_by_id[tid]} | votes={dict(votes)} "
               f"| majority={majority_frac:.2f}{flag}")
 
     team0_count = sum(1 for t in locked_team_by_id.values() if t == 0)

@@ -1,14 +1,22 @@
 """
 Root pipeline entry point. Wires together, in order:
 
-    detector -> homography -> tracker -> team_assigner -> render
+    detector -> homography -> tracker -> team_assigner -> ball_tracker
+             -> carrier assignment -> frame_table -> passes -> render
 
 Every stage uses a load-or-build cache pattern: if that stage's output
-already exists on disk (per paths.py), it's loaded instead of recomputed.
-Set force_rebuild=True on any get_or_build_cache() call below to force
-that one stage to recompute.
+already exists on disk, it's loaded instead of recomputed. Flip the
+matching force-rebuild flag to force just that one stage to recompute.
+File paths live in paths.py. Force-rebuild flags and tunable constants
+(PX_PER_METER, FPS, etc.) live in each stage's own config.py -- paths.py
+holds paths only.
 
-Fill in every path in paths.py before running this.
+frame_table and passes are pure post-processing over already-computed
+caches (no video/model access), same category as ball_tracker and
+ball_carrier -- so they slot in right after carrier assignment, before
+render. render doesn't depend on either, so ordering relative to render
+doesn't matter functionally; they're placed before it here so the full
+stats stack finishes before the (slower) render pass starts.
 """
 
 import paths
@@ -18,12 +26,24 @@ from detector import get_or_build_cache as get_or_build_detection_cache
 
 from homography import HomographyConfig, HomographyEngine
 from homography import get_or_build_cache as get_or_build_homography_cache
+from homography import FORCE_REBUILD_HOMOGRAPHY
 
 from tracker import TrackingConfig, TrackingPipeline
 from tracker import get_or_build_cache as get_or_build_tracking_cache
 
 from team_assigner import TeamAssignerConfig, TeamAssignerPipeline
 from team_assigner import get_or_build_cache as get_or_build_team_cache
+
+from ball_tracker import BallTrackerConfig, CarrierConfig
+from ball_tracker import get_or_build_ball_tracked_cache, get_or_build_ball_carrier_cache
+from ball_tracker import FORCE_REBUILD_BALL_TRACKER, FORCE_REBUILD_CARRIER, PX_PER_METER
+
+from matchframe import FrameTableConfig, FrameTablePipeline
+from matchframe import get_or_build_frame_tables, FORCE_REBUILD_FRAME_TABLE
+
+from passes import PassConfig, PassesPipeline
+from passes import get_or_build_pass_events, FORCE_REBUILD_PASSES
+from passes import team_pass_stats, top_passers
 
 from render import RenderConfig, RenderPipeline
 
@@ -34,14 +54,18 @@ def main():
     det_pipeline = DetectionPipeline(det_cfg)
     det_pipeline.check_paths()
     detection_cache = get_or_build_detection_cache(
-        det_pipeline, det_cfg.video_path, det_cfg.output_cache_path
+        det_pipeline, det_cfg.video_path, det_cfg.output_cache_path,
     )
 
     # ---- 2. homography ----
+    # get_or_build_cache loads the seg/pose models and auto-calibrates
+    # orientation itself the first time it actually needs to build.
     hom_cfg = HomographyConfig()
     hom_engine = HomographyEngine(hom_cfg)
+    hom_engine.check_paths()
     homography_cache = get_or_build_homography_cache(
-        hom_engine, hom_cfg.video_path, hom_cfg.output_cache_path, ema_alpha=hom_cfg.ema_alpha
+        hom_engine, hom_cfg.video_path, hom_cfg.output_cache_path,
+        ema_alpha=hom_cfg.ema_alpha, force_rebuild=FORCE_REBUILD_HOMOGRAPHY,
     )
 
     # ---- 3. tracking ----
@@ -54,6 +78,7 @@ def main():
     )
     tracking_cache = tracking_result["tracking_cache"]
     locked_class_by_id = tracking_result["locked_class_by_id"]
+    total_frames = len(tracking_cache)
 
     # ---- 4. team assignment ----
     team_cfg = TeamAssignerConfig()
@@ -66,13 +91,77 @@ def main():
     )
     team_by_id = team_result["team_by_id"]
 
-    # ---- 5. render ----
+    # ---- 5. ball tracking (Kalman + RTS smoother) ----
+    ball_cfg = BallTrackerConfig()
+    ball_tracked_cache = get_or_build_ball_tracked_cache(
+        detection_cache=detection_cache, tracking_cache=tracking_cache,
+        locked_class_by_id=locked_class_by_id, homography_cache=homography_cache,
+        cfg=ball_cfg, cache_path=paths.BALL_TRACKED_CACHE_PATH,
+        force_rebuild=FORCE_REBUILD_BALL_TRACKER,
+    )
+
+    # ---- 6. ball-carrier assignment ----
+    carrier_cfg = CarrierConfig()
+    ball_carrier_cache = get_or_build_ball_carrier_cache(
+        ball_tracked_cache=ball_tracked_cache, tracking_cache=tracking_cache,
+        locked_class_by_id=locked_class_by_id, homography_cache=homography_cache,
+        cfg=carrier_cfg, cache_path=paths.BALL_CARRIER_CACHE_PATH,
+        force_rebuild=FORCE_REBUILD_CARRIER, px_per_meter=PX_PER_METER,
+    )
+
+    # ---- 7. frame table (stats join layer) ----
+    # Joins every cache above into player_frame_table / ball_frame_table --
+    # the only two tables everything past this point reads from.
+    frame_table_cfg = FrameTableConfig()
+    frame_table_pipeline = FrameTablePipeline(frame_table_cfg)
+    player_frame_table, ball_frame_table = get_or_build_frame_tables(
+        frame_table_pipeline,
+        player_cache_path=paths.PLAYER_FRAME_TABLE_CACHE_PATH,
+        ball_cache_path=paths.BALL_FRAME_TABLE_CACHE_PATH,
+        tracking_cache=tracking_cache, locked_class_by_id=locked_class_by_id,
+        team_by_id=team_by_id, homography_cache=homography_cache,
+        ball_carrier_cache=ball_carrier_cache, ball_tracked_cache=ball_tracked_cache,
+        total_frames=total_frames,
+        pitch_length=hom_cfg.pitch_length, pitch_width=hom_cfg.pitch_width,
+        px_per_meter=PX_PER_METER,
+        possession_gap_limit=carrier_cfg.no_candidate_grace_frames,
+        force_rebuild=FORCE_REBUILD_FRAME_TABLE,
+    )
+
+    # ---- 8. pass stats ----
+    # max_gap_frames is always taken from carrier_cfg here, never hardcoded
+    # in PassConfig -- keeps segment-bridging in sync with the carrier
+    # assigner's own grace period, same reasoning as possession_gap_limit
+    # above.
+    pass_cfg = PassConfig(
+        max_gap_frames=carrier_cfg.no_candidate_grace_frames,
+        fps=ball_cfg.fps,
+    )
+    passes_pipeline = PassesPipeline(pass_cfg)
+    pass_events = get_or_build_pass_events(
+        passes_pipeline,
+        cache_path=paths.PASS_EVENTS_CACHE_PATH,
+        player_frame_table=player_frame_table, ball_frame_table=ball_frame_table,
+        pitch_length=hom_cfg.pitch_length, pitch_width=hom_cfg.pitch_width,
+        force_rebuild=FORCE_REBUILD_PASSES,
+    )
+
+    scored_passes = pass_events[~pass_events["is_turnover"]]
+    n_turnovers = int(pass_events["is_turnover"].sum())
+    print(
+        f"\nPass events: {len(scored_passes)} scored "
+        f"({n_turnovers} filtered as turnovers, not fake failed passes)"
+    )
+    print(team_pass_stats(scored_passes).to_string(index=False))
+
+    # ---- 9. render ----
     render_cfg = RenderConfig()
     render_pipeline = RenderPipeline(render_cfg)
     output_path = render_pipeline.render(
         tracking_cache=tracking_cache,
         locked_class_by_id=locked_class_by_id,
         team_by_id=team_by_id,
+        ball_carrier_cache=ball_carrier_cache,
     )
 
     print(f"\nPipeline complete. Annotated video: {output_path}")
@@ -83,6 +172,11 @@ def main():
         "tracking_cache": tracking_cache,
         "locked_class_by_id": locked_class_by_id,
         "team_result": team_result,
+        "ball_tracked_cache": ball_tracked_cache,
+        "ball_carrier_cache": ball_carrier_cache,
+        "player_frame_table": player_frame_table,
+        "ball_frame_table": ball_frame_table,
+        "pass_events": pass_events,
         "output_video_path": output_path,
     }
 

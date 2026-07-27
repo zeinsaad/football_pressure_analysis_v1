@@ -14,6 +14,9 @@ import numpy as np
 from scipy.optimize import linear_sum_assignment
 
 
+# Compute the compatibility score between two tracklets.
+# Combines appearance similarity from ReID embeddings with a motion penalty
+# based on the predicted position and the actual start position of the next tracklet.
 def link_score(ti: dict, tj: dict, motion_weight: float, motion_norm_px: float, max_gap: int) -> float | None:
     gap = tj["frames"][0] - ti["frames"][-1]
     if gap <= 0 or gap > max_gap:
@@ -34,6 +37,9 @@ def link_score(ti: dict, tj: dict, motion_weight: float, motion_norm_px: float, 
     return appearance_sim - motion_weight * motion_penalty
 
 
+# Link fragmented tracklets into complete identities using global Hungarian
+# matching independently for each object class.
+# Each valid link connects two tracklets that likely belong to the same player.
 def link_tracklets_globally(
     tracklets: list[dict], max_gap: int, min_link_score: float,
     motion_weight: float, motion_norm_px: float, debug: bool = False,
@@ -73,16 +79,21 @@ def link_tracklets_globally(
     return links
 
 
+# Disjoint Set Union structure used to merge linked tracklets into the same
+# final identity group.
 class UnionFind:
+    # Initialize each tracklet as its own independent identity group.
     def __init__(self, n: int):
         self.parent = list(range(n))
 
+    # Find the representative identity of a tracklet group with path compression.
     def find(self, x: int) -> int:
         while self.parent[x] != x:
             self.parent[x] = self.parent[self.parent[x]]
             x = self.parent[x]
         return x
 
+    # Merge two identity groups when two tracklets are linked as the same person.
     def union(self, x: int, y: int) -> None:
         rx, ry = self.find(x), self.find(y)
         if rx != ry:

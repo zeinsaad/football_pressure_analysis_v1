@@ -2,16 +2,7 @@
 TeamAssignerPipeline: orchestrates SigLIP calibration, classification,
 majority-vote locking, and pitch-space goalkeeper assignment.
 
-Usage:
 
-    from team_assigner import TeamAssignerConfig, TeamAssignerPipeline, get_or_build_cache
-
-    pipeline = TeamAssignerPipeline(TeamAssignerConfig())
-    team_cache = get_or_build_cache(
-        pipeline, cfg.video_path, cfg.output_cache_path,
-        tracking_cache=tracking_cache, locked_class_by_id=locked_class_by_id,
-        homography_cache=homography_cache,
-    )
 """
 
 from __future__ import annotations

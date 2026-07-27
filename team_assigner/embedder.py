@@ -17,12 +17,19 @@ from transformers import SiglipVisionModel, SiglipImageProcessor
 from .config import TeamAssignerConfig
 
 
+# Wrapper around the SigLIP vision model used to extract appearance embeddings
+# from player torso crops for team classification.
 class SiglipEmbedder:
+    # Load the SigLIP image processor and vision model using the configured
+    # model name and computation device.
     def __init__(self, config: TeamAssignerConfig):
         self.config = config
         self.processor = SiglipImageProcessor.from_pretrained(config.siglip_model_name)
         self.model = SiglipVisionModel.from_pretrained(config.siglip_model_name).to(config.device).eval()
 
+
+    # Extract the torso region from a player bounding box.
+    # Removes head, legs, arms, and background areas to focus on jersey features.
     def get_torso_crop(self, frame: np.ndarray, bbox: list[float]) -> np.ndarray | None:
         """Returns None if the resulting crop is empty or the bbox is too small."""
         cfg = self.config
@@ -47,6 +54,9 @@ class SiglipEmbedder:
 
         return frame[y1c:y2c, x1c:x2c]
 
+
+    # Extract a normalized SigLIP embedding from a player's torso crop.
+    # The embedding represents jersey appearance and is used for team assignment.
     @torch.no_grad()
     def extract(self, frame_bgr: np.ndarray, bbox: list[float]) -> np.ndarray | None:
         torso = self.get_torso_crop(frame_bgr, bbox)
@@ -60,5 +70,6 @@ class SiglipEmbedder:
         outputs = self.model(**inputs)
         emb = outputs.pooler_output.squeeze(0).cpu().numpy()
 
+        # Normalize embedding so similarity comparisons are not affected by magnitude.
         norm = np.linalg.norm(emb)
         return emb / norm if norm > 0 else emb

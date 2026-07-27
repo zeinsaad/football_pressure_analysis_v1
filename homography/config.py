@@ -1,42 +1,59 @@
-"""
-Homography configuration. Paths come from the project-root paths.py — fill
-them in there, not here. Only thresholds/runtime knobs live in this file.
-"""
-
 from dataclasses import dataclass
 
-try:
-    from paths import SEG_MODEL_PATH, POSE_MODEL_PATH, VIDEO_PATH, HOMOGRAPHY_CACHE_PATH
-except ImportError:
-    print("⚠️ Could not import path constants from paths.py — using empty defaults. "
-          "Fill in SEG_MODEL_PATH / POSE_MODEL_PATH / VIDEO_PATH / HOMOGRAPHY_CACHE_PATH "
-          "in the project-root paths.py.")
-    SEG_MODEL_PATH = ""
-    POSE_MODEL_PATH = ""
-    VIDEO_PATH = ""
-    HOMOGRAPHY_CACHE_PATH = ""
+import paths
+
+# Controls whether cached homography data should be rebuilt from scratch.
+# These are not file paths, so they stay in this config instead of paths.py.
+FORCE_REBUILD_HOMOGRAPHY = False
+
+# Forces rebuilding pitch correspondences when the extraction logic changes.
+# Rebuilding correspondences also requires rebuilding the homography.
+FORCE_REBUILD_CORRESPONDENCES = False
+
+if FORCE_REBUILD_CORRESPONDENCES:
+    FORCE_REBUILD_HOMOGRAPHY = True
 
 
 @dataclass
 class HomographyConfig:
-    # ---- model paths (sourced from paths.py) ----
-    seg_model_path: str = SEG_MODEL_PATH
-    pose_model_path: str = POSE_MODEL_PATH
+    # File locations for models, input video, and homography cache.
+    seg_model_path: str = paths.SEG_MODEL_PATH
+    pose_model_path: str = paths.POSE_MODEL_PATH
+    video_path: str = paths.VIDEO_PATH
+    output_cache_path: str = paths.HOMOGRAPHY_CACHE_PATH
 
-    # ---- video / cache paths (sourced from paths.py) ----
-    video_path: str = VIDEO_PATH
-    output_cache_path: str = HOMOGRAPHY_CACHE_PATH
-
-    # ---- model thresholds ----
+    # Confidence thresholds for segmentation and pose detection models.
     conf_thresh_seg: float = 0.25
     conf_thresh_pose: float = 0.20
+
+    # Input resolution used when running the detection models.
     img_size: int = 960
 
-    # ---- pitch geometry ----
+    # Pitch coordinate settings used for pixel-to-meter conversion.
     px_per_meter: int = 10
-    ransac_thresh: float = 25.0
     pitch_length: float = 105.0
     pitch_width: float = 68.0
 
-    # ---- temporal smoothing ----
-    ema_alpha: float = 0.3   # EMA smoothing factor across frames when building the cache
+    # RANSAC settings for rejecting incorrect pitch landmark matches.
+    ransac_thresh: float = 25.0
+
+    # EMA smoothing settings to reduce frame-to-frame homography jitter.
+    ema_alpha: float = 0.3
+    min_inliers_full_confidence: int = 15
+    min_alpha: float = 0.05
+    max_alpha: float = 0.9
+
+    # Detect sudden homography jumps and apply stronger smoothing.
+    jump_px_threshold: float = 25.0
+    jump_confidence_threshold: float = 0.5
+    jump_alpha: float = 0.8
+
+    # Minimum number and quality of pitch anchor points required to accept
+    # a homography estimation.
+    min_anchor_points: int = 4
+    min_anchor_inlier_ratio: float = 0.7
+
+    # Parameters for automatically finding the correct pitch orientation.
+    calib_sample_stride: int = 50
+    calib_max_samples: int = 60
+    calib_min_votes: int = 5

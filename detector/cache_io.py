@@ -1,7 +1,9 @@
 """
-Detection cache I/O: save, load, load-or-build, and summary stats.
-"""
+Handles detection cache management by saving, loading, and rebuilding model outputs.
+Provides summary statistics to verify detection quality 
+and avoid repeating expensive inference on the same video.
 
+"""
 from __future__ import annotations
 
 import os
@@ -24,13 +26,7 @@ def load_cache(path: str) -> dict:
 
 
 def get_or_build_cache(pipeline, video_path: str, cache_path: str, force_rebuild: bool = False) -> dict:
-    """
-    Load detection_cache from cache_path if it already exists, otherwise run
-    the pipeline over video_path and save the result.
 
-    Set force_rebuild=True to ignore an existing cache and recompute
-    (e.g. after retraining a model).
-    """
     if os.path.exists(cache_path) and not force_rebuild:
         print(f"✅ Detection cache found at '{cache_path}' — loading.")
         cache = load_cache(cache_path)
@@ -50,9 +46,11 @@ def print_summary(detection_cache: dict) -> None:
         print("Empty cache.")
         return
 
+# Counts the number of frames where the ball detector successfully found a ball.
     ball_present_frames = sum(
         1 for dets in detection_cache.values() if any(d["class"] == "ball" for d in dets)
     )
+# Counts the number of frames where a ball was detected but marked as low confidence.
     ball_low_conf_frames = sum(
         1 for dets in detection_cache.values()
         if any(d["class"] == "ball" and d.get("low_confidence") for d in dets)

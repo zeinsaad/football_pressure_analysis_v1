@@ -1,9 +1,9 @@
 """
-Raw tracking pass: single causal pass over the video using BoT-SORT (with
-the fine-tuned OSNet ReID backbone). No online ID correction — just record
-BoT-SORT's own raw track ID, bbox, and embedding per frame. Everything
-downstream (tracklets, contact splitting, global linking) operates on this
-raw output.
+Runs the initial tracking stage using BoT-SORT and the fine-tuned OSNet ReID
+model. This stage performs a single forward pass over the video and records the
+raw tracking results (track ID, bounding box, confidence, class, and embedding)
+for each frame. No identity correction or track linking is performed here;
+those steps are handled later in the pipeline.
 """
 
 from __future__ import annotations
@@ -17,6 +17,8 @@ from boxmot import BoTSORT
 from .config import TrackingConfig
 
 
+# Create and configure the BoT-SORT tracker using the parameters defined in
+# TrackingConfig, then initialize it on the selected CPU or GPU device.
 def build_tracker(config: TrackingConfig) -> BoTSORT:
     device_str = "cpu" if config.device == "cpu" else str(config.device)
     tracker = BoTSORT(
@@ -37,6 +39,9 @@ def build_tracker(config: TrackingConfig) -> BoTSORT:
     return tracker
 
 
+# Process every video frame with BoT-SORT and store the raw tracking output.
+# For each tracked object, record its raw track ID, bounding box, confidence,
+# detected class, and appearance embedding for use in later processing stages.
 def run_raw_tracking(tracker: BoTSORT, detection_cache: dict, video_path: str, config: TrackingConfig) -> dict:
     """Returns raw_tracks_by_frame: {frame_idx: [{"raw_track_id", "bbox", "conf", "class", "embedding"}]}"""
     raw_tracks_by_frame: dict[int, list[dict]] = {}
@@ -64,6 +69,7 @@ def run_raw_tracking(tracker: BoTSORT, detection_cache: dict, video_path: str, c
 
         tracked = tracker.update(dets_array, frame)
 
+        # Store normalized appearance embeddings for the currently active tracks.
         embedding_lookup = {}
         for strack in tracker.active_tracks:
             if strack.curr_feat is not None:
@@ -75,7 +81,7 @@ def run_raw_tracking(tracker: BoTSORT, detection_cache: dict, video_path: str, c
         for x1, y1, x2, y2, raw_tid, conf, cls_id, det_ind in tracked:
             raw_tid = int(raw_tid)
             bbox = [float(x1), float(y1), float(x2), float(y2)]
-            cls = person_dets[int(det_ind)]["class"]   # raw per-frame class, not boxmot's smoothed label
+            cls = person_dets[int(det_ind)]["class"]   # Raw detection class for this frame.
             embedding = embedding_lookup.get(raw_tid)
             frame_entries.append({
                 "raw_track_id": raw_tid, "bbox": bbox, "conf": float(conf),

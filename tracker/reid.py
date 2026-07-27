@@ -13,6 +13,8 @@ import torchreid
 import torchvision.transforms as T
 
 
+# Load the fine-tuned OSNet ReID model, remove the classification layer,
+# and prepare it to generate feature embeddings for person matching.
 def load_osnet(weights_path: str, device: str):
     """Load the fine-tuned OSNet backbone with its classifier head stripped
     (Identity), ready to produce 512-dim embeddings."""
@@ -27,6 +29,8 @@ def load_osnet(weights_path: str, device: str):
     return model
 
 
+# Build the preprocessing pipeline required by OSNet before extracting
+# appearance embeddings from person image crops.
 def build_osnet_transform() -> T.Compose:
     return T.Compose([
         T.Resize((256, 128)),

@@ -30,11 +30,12 @@ class DetectionConfig:
     output_cache_path: str = DETECTION_CACHE_PATH
 
     # ---- class mapping for the multiclass model ----
-    # ball is intentionally included here for validation purposes only —
-    # the pipeline never uses multi-model "ball" detections (see pipeline.py).
+
     multi_class_names: dict = field(default_factory=lambda: {
         0: "ball", 1: "goalkeeper", 2: "player", 3: "referee",
     })
+
+    Image_Size: int = 1280  
 
     # ---- confidence thresholds ----
     conf_thresh_multi: float = 0.25
@@ -42,11 +43,9 @@ class DetectionConfig:
     ball_low_conf_flag: float = 0.15   # below this, ball det is flagged low_confidence (not dropped)
 
     # ---- NMS / suppression thresholds ----
-    cross_class_iou_thresh: float = 0.5   # gk/referee suppresses overlapping player box
-    same_class_nms_iou: float = 0.5
+    cross_class_iou_thresh: float = 0.5   # Removes overlapping detections of different classes that represent the same person, keeping the more specific class.
+    same_class_nms_iou: float = 0.5 #Removes duplicate detections of the same class.
 
     # ---- runtime ----
-    # auto-detects: CUDA index 0 if a GPU is available (Kaggle/Colab), else CPU
-    # (your local machine has no GPU, so this will correctly resolve to "cpu")
     device: int | str = field(default_factory=lambda: 0 if torch.cuda.is_available() else "cpu")
     log_every_n_frames: int = 100
