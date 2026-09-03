@@ -27,9 +27,17 @@ def get_or_build_cache(
     force_rebuild: bool = False,
 ) -> dict:
     """
-    Load {"team_by_id":, "raw_team_votes":, "goalkeeper_team_assignment":,
+    Load {"team_by_id":, "track_team_segments":, "switch_suspects":,
+    "weak_windows":, "raw_team_votes":, "goalkeeper_team_assignment":,
     "team_centroids":} from cache_path if it already exists, otherwise run
     the full team-assignment pipeline and save it.
+
+    "team_by_id" is a flat, lossy single-label-per-track fallback -- for
+    any track_id in "switch_suspects" it is NOT frame-accurate. Anything
+    downstream that needs per-frame correctness (frame_table, render,
+    passes) should use "track_team_segments" via
+    team_assigner.classification.team_for_track_at_frame instead of
+    trusting "team_by_id" alone.
     """
     if os.path.exists(cache_path) and not force_rebuild:
         print(f"✅ Team assignment cache found at '{cache_path}' — loading.")

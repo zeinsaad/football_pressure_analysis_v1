@@ -17,6 +17,18 @@ ball_carrier -- so they slot in right after carrier assignment, before
 render. render doesn't depend on either, so ordering relative to render
 doesn't matter functionally; they're placed before it here so the full
 stats stack finishes before the (slower) render pass starts.
+
+Team resolution: team_assigner's output includes team_by_id (a flat,
+lossy fallback -- one label per track, wrong for roughly half the frames
+of any track flagged in team_result["switch_suspects"]), track_team_segments
+(the real per-window history), and team_colors (the auto-detected real
+average kit color per cluster, extracted from calibration torso-crop
+pixels -- self-corrects across reruns even if KMeans' cluster label 0/1
+assignment flips, unlike a hardcoded color-per-label mapping). Both
+frame_table and render need track_team_segments threaded through, not just
+team_by_id, or they silently fall back to the wrong team for any
+switch_suspect track; render also needs team_colors so it never has to
+guess which numeric label is which real team.
 """
 
 import paths
@@ -90,6 +102,14 @@ def main():
         homography_cache=homography_cache,
     )
     team_by_id = team_result["team_by_id"]
+    # Segment-aware team history -- the real per-frame source of truth.
+    # team_by_id alone is wrong for roughly half the frames of any track in
+    # team_result["switch_suspects"]; everything below that needs a team
+    # label per frame (frame_table, render) must use this, not team_by_id.
+    track_team_segments = team_result["track_team_segments"]
+    # Auto-detected real average kit color per cluster label -- self-
+    # corrects across reruns even if KMeans' 0/1 label assignment flips.
+    team_colors = team_result["team_colors"]
 
     # ---- 5. ball tracking (Kalman + RTS smoother) ----
     ball_cfg = BallTrackerConfig()
@@ -112,6 +132,9 @@ def main():
     # ---- 7. frame table (stats join layer) ----
     # Joins every cache above into player_frame_table / ball_frame_table --
     # the only two tables everything past this point reads from.
+    # track_team_segments is required here (not just team_by_id) so every
+    # row's team is resolved per-frame -- see frame_table.py's
+    # team_for_track_at_frame.
     frame_table_cfg = FrameTableConfig()
     frame_table_pipeline = FrameTablePipeline(frame_table_cfg)
     player_frame_table, ball_frame_table = get_or_build_frame_tables(
@@ -119,7 +142,8 @@ def main():
         player_cache_path=paths.PLAYER_FRAME_TABLE_CACHE_PATH,
         ball_cache_path=paths.BALL_FRAME_TABLE_CACHE_PATH,
         tracking_cache=tracking_cache, locked_class_by_id=locked_class_by_id,
-        team_by_id=team_by_id, homography_cache=homography_cache,
+        team_by_id=team_by_id, track_team_segments=track_team_segments,
+        homography_cache=homography_cache,
         ball_carrier_cache=ball_carrier_cache, ball_tracked_cache=ball_tracked_cache,
         total_frames=total_frames,
         pitch_length=hom_cfg.pitch_length, pitch_width=hom_cfg.pitch_width,
@@ -155,12 +179,18 @@ def main():
     print(team_pass_stats(scored_passes).to_string(index=False))
 
     # ---- 9. render ----
+    # track_team_segments passed so render resolves team per-frame, same
+    # as frame_table does. team_colors passed so the video always uses
+    # each team's real detected kit color instead of a hardcoded guess.
     render_cfg = RenderConfig()
     render_pipeline = RenderPipeline(render_cfg)
     output_path = render_pipeline.render(
         tracking_cache=tracking_cache,
         locked_class_by_id=locked_class_by_id,
         team_by_id=team_by_id,
+        track_team_segments=track_team_segments,
+        #team_colors=team_colors,
+        team_colors={0: (179, 0, 0), 1: (110, 238, 255)},
         ball_carrier_cache=ball_carrier_cache,
     )
 

@@ -19,10 +19,26 @@ layout broke down exactly where it mattered: dense duels):
   4. The ball-carrier highlight is a tight pulsing ring sized to the
      carrier's own marker, not a big halo — reads as "possession" without
      washing out the pitch around it.
+  5. Referee markers now show their track ID ("REF12"), not just "REF" --
+     added after a real misclassified/mis-tracked referee (a genuine
+     player, wrongly locked as referee for part of its life) went
+     unnoticed for a long time specifically because the id wasn't visible
+     anywhere in the normal rendered output, only discoverable via ad hoc
+     debug tooling. Having the id on screen by default makes this class of
+     bug spottable just by watching the video.
 
 No possession/ball-carrier logic here — that's computed elsewhere
 (ball_tracker.carrier); this file only draws whatever carrier_track_id
 it's handed.
+
+Team colors: TEAM_COLORS below is a fallback default only. annotate_frame
+now accepts an optional team_colors dict override -- pass
+team_assigner's auto-detected team_result["team_colors"] (real average kit
+color per cluster, extracted from calibration torso-crop pixels) so
+render never has to guess or hardcode which numeric cluster label (0/1)
+maps to which real-world team. Falls back to TEAM_COLORS below only if no
+override is provided (e.g. an older team assignment cache with no
+team_colors key).
 """
 
 from __future__ import annotations
@@ -37,14 +53,14 @@ import numpy as np
 # ---------------------------------------------------------------------- #
 
 TEAM_COLORS = {
-    0: (255, 90, 30),       # BGR — team 0, vivid blue
-    1: (40, 40, 255),       # BGR — team 1, vivid red
+    0: (255, 90, 30),       # BGR — fallback default, team 0, vivid blue
+    1: (40, 40, 255),       # BGR — fallback default, team 1, vivid red
 }
 GOALKEEPER_COLOR = (0, 165, 255)    # orange — fallback ONLY for a GK with no team assigned yet
 REFEREE_COLOR = (0, 255, 255)       # pure yellow — distinct enough from CARRIER_COLOR's gold
                                      # (0, 215, 255) to tell apart at a glance, and backed by the
-                                     # "REF" text label below so shape+color+text all disambiguate it
-                                     # from the carrier arrow, which has no text at all
+                                     # "REF{id}" text label below so shape+color+text all disambiguate
+                                     # it from the carrier arrow, which has no text at all
 UNASSIGNED_COLOR = (180, 180, 180)  # gray fallback if a track has no team yet
 
 BALL_COLOR = (0, 220, 255)
@@ -202,16 +218,26 @@ def draw_goalkeeper_marker(
         _draw_text_with_outline(frame, label, (cx, cy), font_scale=0.26)
 
 
-def draw_referee_marker(frame: np.ndarray, bbox: list[float], color: tuple[int, int, int]) -> None:
-    """Small solid yellow square with a "REF" label inside it -- shape
-    (square, unused elsewhere: ellipse=player, diamond=goalkeeper),
+def draw_referee_marker(frame: np.ndarray, bbox: list[float], color: tuple[int, int, int], track_id: int) -> None:
+    """Small solid yellow square with a "REF{track_id}" label inside it --
+    shape (square, unused elsewhere: ellipse=player, diamond=goalkeeper),
     color (yellow), and text all disambiguate it from the ball-carrier
     arrow, which is a similar gold but has no text and a different shape.
+
+    The track id is included (not just "REF") so a referee track can be
+    identified and cross-checked on sight -- e.g. spotting a track whose
+    box is clearly a player but is drawn as a referee marker, the exact
+    class of bug that previously went unnoticed until found via separate
+    debug tooling. Square is a bit larger than a bare "REF" needed, and the
+    id font is smaller, purely to fit the longer "REF{id}" text -- same
+    width-driven sizing tradeoff as draw_goalkeeper_marker's "GK{id}"
+    label vs a bare number.
+
     Referees are never part of the crowd-density count, so this stays
     full-size always -- there's rarely more than one on screen near any
     given duel."""
     cx, cy = bbox_foot_point(bbox)
-    r = COMPACT_MARKER_RADIUS + 3
+    r = COMPACT_MARKER_RADIUS + 6
     pts = np.array([
         [cx - r, cy - r], [cx + r, cy - r], [cx + r, cy + r], [cx - r, cy + r],
     ], np.int32)
@@ -219,7 +245,7 @@ def draw_referee_marker(frame: np.ndarray, bbox: list[float], color: tuple[int, 
     cv2.polylines(frame, [pts], True, MARKER_OUTLINE_COLOR, 1, cv2.LINE_AA)
     # dark text, no outline pass -- see _draw_text_plain's docstring for why
     # _draw_text_with_outline was rendering this as a solid blob
-    _draw_text_plain(frame, "REF", (cx, cy), font_scale=0.24, color=(20, 20, 20))
+    _draw_text_plain(frame, f"REF{track_id}", (cx, cy), font_scale=0.22, color=(20, 20, 20))
 
 
 def draw_dashed_circle(
@@ -293,7 +319,7 @@ def draw_carrier_indicator(
 #  Frame-level orchestration                                              #
 # ---------------------------------------------------------------------- #
 
-def get_track_color(track_id: int, role: str, team_by_id: dict) -> tuple[int, int, int]:
+def get_track_color(track_id: int, role: str, team_by_id: dict, team_colors: dict) -> tuple[int, int, int]:
     if role == "referee":
         return REFEREE_COLOR
     # goalkeeper is marked by shape (diamond, see draw_goalkeeper_marker), not
@@ -302,7 +328,7 @@ def get_track_color(track_id: int, role: str, team_by_id: dict) -> tuple[int, in
     # before team assignment has run.
     team = team_by_id.get(track_id)
     if team is not None:
-        return TEAM_COLORS.get(team, UNASSIGNED_COLOR)
+        return team_colors.get(team, UNASSIGNED_COLOR)
     if role == "goalkeeper":
         return GOALKEEPER_COLOR
     return UNASSIGNED_COLOR
@@ -314,6 +340,7 @@ def annotate_frame(
     ball_det: dict | None,
     locked_class_by_id: dict,
     team_by_id: dict,
+    team_colors: dict | None = None,
     show_frame_number: int | None = None,
     carrier_track_id: int | None = None,
     frame_idx: int | None = None,
@@ -326,6 +353,14 @@ def annotate_frame(
     with their number inside it; a player in a duel/scramble (>= 3 other
     players within CROWD_RADIUS_PX) automatically drops to a small color
     dot so a crowded scene reads as "a cluster", not overlapping labels.
+    Referees always show their track id ("REF{id}") regardless of crowd
+    density -- see draw_referee_marker.
+
+    team_colors: optional override, {0: (b,g,r), 1: (b,g,r)}. Pass
+    team_assigner's auto-detected team_result["team_colors"] here so
+    colors always match each team's real kit, regardless of which numeric
+    cluster label KMeans happened to assign this run. Falls back to the
+    module-level TEAM_COLORS default if not provided.
 
     carrier_track_id: track_id of the current ball carrier (from
     ball_tracker.carrier's ball_carrier_cache), or None. Gets a thin
@@ -336,6 +371,8 @@ def annotate_frame(
 
     Returns frame for convenient chaining.
     """
+    team_colors = team_colors if team_colors is not None else TEAM_COLORS
+
     # tag each track with its resolved role once, up front -- used both for
     # drawing and for the crowd-density count
     for t in tracks:
@@ -344,10 +381,10 @@ def annotate_frame(
     for t in tracks:
         tid = t["track_id"]
         role = t["_role"]
-        color = get_track_color(tid, role, team_by_id)
+        color = get_track_color(tid, role, team_by_id, team_colors)
 
         if role == "referee":
-            draw_referee_marker(frame, t["bbox"], color)
+            draw_referee_marker(frame, t["bbox"], color, tid)
             continue
 
         compact = _local_crowd_count(t, tracks, CROWD_RADIUS_PX) >= CROWD_MIN_NEARBY

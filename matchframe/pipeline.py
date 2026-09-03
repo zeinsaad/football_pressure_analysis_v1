@@ -24,6 +24,17 @@ mandatory step (not optional) in build_player_frame_table so garbage frames
 can't silently corrupt anything downstream that aggregates over pitch
 coordinates. This is a symptom-level guard, not a fix for the underlying
 homography bug.
+
+Team resolution: team_by_id (from team_assignment.pkl) is a flat, lossy
+fallback for any track flagged in switch_suspects -- it collapses a
+track's whole lifespan to one team, picked by total-vote count across
+windows. For a track that genuinely changes team label mid-match (a
+cross-team ID switch the tracking pipeline's own veto didn't catch), that
+flat value is WRONG for roughly half the track's frames. Both
+build_player_frame_table and build_ball_frame_table now resolve team via
+track_team_segments (the team_assigner's per-window history) per row,
+falling back to team_by_id only for a track with no segment history at
+all. See team_for_track_at_frame below.
 """
 
 from pathlib import Path
@@ -32,10 +43,32 @@ import cv2
 import numpy as np
 import pandas as pd
 
+from matchframe.config import FrameTableConfig
+
 
 def bbox_foot_point(bbox):
     x1, y1, x2, y2 = bbox
     return ((x1 + x2) / 2.0, y2)
+
+
+def team_for_track_at_frame(track_team_segments, team_by_id, tid, frame_idx):
+    """Segment-aware team lookup. track_team_segments[tid] is a sorted list
+    of (window_start_frame, team) -- the team in effect at frame_idx is
+    whichever window's start is the latest one <= frame_idx. Falls back to
+    the flat team_by_id only for a track with no segment history at all
+    (shouldn't happen for anything the team_assigner actually classified;
+    could happen for a track that predates that pipeline stage, or one
+    filtered out as a ghost before segments were built)."""
+    segments = track_team_segments.get(tid)
+    if not segments:
+        return team_by_id.get(tid)
+    team = segments[0][1]
+    for window_start, team_here in segments:
+        if window_start <= frame_idx:
+            team = team_here
+        else:
+            break
+    return team
 
 
 def flag_valid_pitch_coords(df, pitch_length, pitch_width, margin_m=5.0, verbose=True):
@@ -73,15 +106,17 @@ class FrameTablePipeline:
     # ---- player table ----
 
     def build_player_frame_table(
-        self, tracking_cache, locked_class_by_id, team_by_id, homography_cache,
-        ball_carrier_cache, total_frames, pitch_length, pitch_width, px_per_meter,
+        self, tracking_cache, locked_class_by_id, team_by_id, track_team_segments,
+        homography_cache, ball_carrier_cache, total_frames, pitch_length, pitch_width, px_per_meter,
     ):
         """Long format: one row per (frame_idx, track_id). pitch_x/pitch_y
         are NaN wherever that frame's homography is missing (e.g. before
         orientation calibration locks in) or implausible (degenerate H) --
         left as NaN rather than dropped, so frame counts stay comparable
         across columns and every stat module decides for itself how to
-        handle missing pitch data."""
+        handle missing pitch data. team is resolved per-row via
+        track_team_segments, not a flat per-track value -- see
+        team_for_track_at_frame."""
         rows = []
         for f in range(total_frames):
             frame_tracks = tracking_cache.get(f, {}).get("tracks", [])
@@ -103,7 +138,7 @@ class FrameTablePipeline:
                 rows.append((
                     f, tid,
                     locked_class_by_id.get(tid, t["class"]),
-                    team_by_id.get(tid),
+                    team_for_track_at_frame(track_team_segments, team_by_id, tid, f),
                     float(fx), float(fy),
                     float(px), float(py),
                     tid == carrier_id,
@@ -120,12 +155,14 @@ class FrameTablePipeline:
     # ---- ball table ----
 
     def build_ball_frame_table(self, ball_tracked_cache, ball_carrier_cache, team_by_id,
-                                total_frames, possession_gap_limit):
+                                track_team_segments, total_frames, possession_gap_limit):
         """One row per frame_idx. possession_team forward-fills carrier_team
         through gaps (ball lost, carrier not re-confirmed yet), bounded by
         possession_gap_limit -- the same short gaps the carrier assigner
         itself considers "still held" (no_candidate_grace_frames),
-        reverting to null beyond that, same as carrier_track_id does."""
+        reverting to null beyond that, same as carrier_track_id does.
+        carrier_team is resolved per-row via track_team_segments, not a
+        flat per-track value -- see team_for_track_at_frame."""
         rows = []
         for f in range(total_frames):
             ball = ball_tracked_cache.get(f, {})
@@ -139,7 +176,8 @@ class FrameTablePipeline:
                 xy_pitch[0] if xy_pitch else np.nan, xy_pitch[1] if xy_pitch else np.nan,
                 ball.get("source"), ball.get("conf"),
                 carrier_id,
-                team_by_id.get(carrier_id) if carrier_id is not None else None,
+                team_for_track_at_frame(track_team_segments, team_by_id, carrier_id, f)
+                if carrier_id is not None else None,
             ))
 
         df = pd.DataFrame(rows, columns=[
@@ -206,16 +244,16 @@ class FrameTablePipeline:
 
     # ---- orchestration ----
 
-    def build(self, tracking_cache, locked_class_by_id, team_by_id, homography_cache,
-              ball_carrier_cache, ball_tracked_cache, total_frames,
+    def build(self, tracking_cache, locked_class_by_id, team_by_id, track_team_segments,
+              homography_cache, ball_carrier_cache, ball_tracked_cache, total_frames,
               pitch_length, pitch_width, px_per_meter, possession_gap_limit):
         player_df = self.build_player_frame_table(
-            tracking_cache, locked_class_by_id, team_by_id, homography_cache,
-            ball_carrier_cache, total_frames, pitch_length, pitch_width, px_per_meter,
+            tracking_cache, locked_class_by_id, team_by_id, track_team_segments,
+            homography_cache, ball_carrier_cache, total_frames, pitch_length, pitch_width, px_per_meter,
         )
         ball_df = self.build_ball_frame_table(
-            ball_tracked_cache, ball_carrier_cache, team_by_id, total_frames,
-            possession_gap_limit=possession_gap_limit,
+            ball_tracked_cache, ball_carrier_cache, team_by_id, track_team_segments,
+            total_frames, possession_gap_limit=possession_gap_limit,
         )
         direction_map = self.infer_attack_direction_from_gk(
             player_df, pitch_length, half_boundary_frame=self.cfg.half_boundary_frame,
@@ -228,7 +266,7 @@ class FrameTablePipeline:
 
 def get_or_build_frame_tables(
     pipeline: FrameTablePipeline, player_cache_path, ball_cache_path,
-    tracking_cache, locked_class_by_id, team_by_id, homography_cache,
+    tracking_cache, locked_class_by_id, team_by_id, track_team_segments, homography_cache,
     ball_carrier_cache, ball_tracked_cache, total_frames,
     pitch_length, pitch_width, px_per_meter, possession_gap_limit,
     force_rebuild=False,
@@ -247,7 +285,8 @@ def get_or_build_frame_tables(
 
     player_df, ball_df, _ = pipeline.build(
         tracking_cache=tracking_cache, locked_class_by_id=locked_class_by_id,
-        team_by_id=team_by_id, homography_cache=homography_cache,
+        team_by_id=team_by_id, track_team_segments=track_team_segments,
+        homography_cache=homography_cache,
         ball_carrier_cache=ball_carrier_cache, ball_tracked_cache=ball_tracked_cache,
         total_frames=total_frames, pitch_length=pitch_length, pitch_width=pitch_width,
         px_per_meter=px_per_meter, possession_gap_limit=possession_gap_limit,

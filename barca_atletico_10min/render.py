@@ -22,12 +22,18 @@ import pickle
 import cv2
 
 # ---- paths: edit these ----
-CACHE_PATH = "barca_atletico_tracking_cache_final (2).pkl"
-VIDEO_PATH = "barca_atletico_10min.mkv"
+CACHE_PATH = "barca_atletico_tracking_cache_full_first_half_v2.pkl"
+VIDEO_PATH = "barca_atletico_46m53s.mkv"
 OUTPUT_PATH = "annotated_local.mp4"
 
 SHOW_FRAME_NUMBER = True
 SHOW_BALL = True
+
+# ---- frame range: set START_FRAME/END_FRAME to render a clip instead of the
+# whole video. END_FRAME=None means "go to the end". Both default to the full
+# video, so leaving these alone changes nothing.
+START_FRAME = 0
+END_FRAME = 10000      # e.g. 3000 to render only the first 3000 frames
 
 
 def id_to_color(track_id):
@@ -77,14 +83,27 @@ def main():
     total_frames = int(cap.get(cv2.CAP_PROP_FRAME_COUNT))
     print(f"Video: {frame_w}x{frame_h} @ {fps:.2f}fps, {total_frames} frames")
 
+    # Clamp the requested range to what the video actually has.
+    end_frame = total_frames if END_FRAME is None else min(END_FRAME, total_frames)
+    start_frame = max(0, min(START_FRAME, end_frame))
+    n_frames_to_render = end_frame - start_frame
+    print(f"Rendering frames {start_frame} -> {end_frame} ({n_frames_to_render} frames)")
+
+    if start_frame > 0:
+        cap.set(cv2.CAP_PROP_POS_FRAMES, start_frame)
+        # Note: CAP_PROP_POS_FRAMES seeking is exact on most mp4/H.264 sources but
+        # can land a few frames off on some mkv/VFR containers -- if you need
+        # frame-exact alignment for a specific diagnostic, trust the printed f_idx
+        # values rather than assuming the seek landed exactly on START_FRAME.
+
     fourcc = cv2.VideoWriter_fourcc(*"mp4v")
     writer = cv2.VideoWriter(OUTPUT_PATH, fourcc, fps, (frame_w, frame_h))
     if not writer.isOpened():
         raise RuntimeError(f"Could not open VideoWriter for: {OUTPUT_PATH}")
 
-    progress_every = max(50, total_frames // 30)
-    f_idx = 0
-    while True:
+    progress_every = max(50, n_frames_to_render // 30) if n_frames_to_render > 0 else 50
+    f_idx = start_frame
+    while f_idx < end_frame:
         ret, frame = cap.read()
         if not ret:
             break
@@ -116,13 +135,13 @@ def main():
 
         writer.write(frame)
 
-        if f_idx % progress_every == 0:
-            print(f"  frame {f_idx}/{total_frames}")
+        if (f_idx - start_frame) % progress_every == 0:
+            print(f"  frame {f_idx}/{end_frame}")
         f_idx += 1
 
     cap.release()
     writer.release()
-    print(f"\nDone. Wrote {f_idx} frames to {OUTPUT_PATH}")
+    print(f"\nDone. Wrote {f_idx - start_frame} frames ({start_frame}->{f_idx}) to {OUTPUT_PATH}")
 
 
 if __name__ == "__main__":

@@ -36,7 +36,7 @@ class BallKalmanTracker:
 
         # Constant velocity motion model:
         # next_position = current_position + velocity
-        # velocity stays approximately constant.
+        # This model predicts where the ball should appear in the next frame.
         self.F = np.array([
             [1, 0, 1, 0],
             [0, 1, 0, 1],
@@ -46,8 +46,8 @@ class BallKalmanTracker:
 
 
         # Measurement model:
-        # The detector only observes the ball position (x,y),
-        # not its velocity.
+        # The detector only observes the ball position (x,y),not its velocity.
+        # The measurement matrix extracts the position components from the state vector during the Kalman update.
         self.H = np.array([
             [1, 0, 0, 0],
             [0, 1, 0, 0],

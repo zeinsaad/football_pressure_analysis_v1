@@ -6,6 +6,12 @@ average pitch-space position of each team's players (via homography), then
 assign the goalkeeper to whichever team centroid is closer. Uses pitch
 coordinates, not raw pixel distance — pixel-space distance is distorted by
 camera perspective.
+
+Team centroids are built using team_for_track_at_frame per SAMPLED
+POSITION, not one flat team label per track -- so a switch_suspect track's
+positions are correctly split between the two teams' centroids instead of
+all being attributed to whichever team happened to win that track's
+now-defunct whole-track vote.
 """
 
 from __future__ import annotations
@@ -14,6 +20,7 @@ import cv2
 import numpy as np
 
 from .config import TeamAssignerConfig
+from .classification import team_for_track_at_frame
 
 
 # Convert a pixel coordinate from the camera view into real pitch coordinates
@@ -44,13 +51,15 @@ def get_homography_at(homography_cache, frame_idx: int):
     return None
 
 
-# Collect sampled pitch-space positions for a specific tracked player.
-# Positions are obtained by projecting bounding box foot points through the
-# frame-specific homography.
-def get_track_positions(
+# Collect sampled pitch-space positions for a specific tracked player, WITH
+# the frame_idx each position came from -- needed so callers can resolve
+# which team was actually in effect at each sampled frame (see
+# team_for_track_at_frame), instead of assuming one team for the whole
+# track.
+def get_track_positions_with_frame(
     track_id: int, tracking_cache: dict, homography_cache, px_per_meter: int, sample_stride: int = 10,
-) -> list[tuple[float, float]]:
-    """Pitch-space positions for a track, sampled every sample_stride frames it appears in."""
+) -> list[tuple[int, tuple[float, float]]]:
+    """Returns [(frame_idx, (pitch_x, pitch_y)), ...]."""
     positions = []
     for frame_idx, data in tracking_cache.items():
         if frame_idx % sample_stride != 0:
@@ -60,27 +69,46 @@ def get_track_positions(
                 H = get_homography_at(homography_cache, frame_idx)
                 if H is not None:
                     pos = project_to_pitch(bbox_foot_point(t["bbox"]), H, px_per_meter)
-                    positions.append(pos)
+                    positions.append((frame_idx, pos))
                 break
     return positions
+
+
+def get_track_positions(
+    track_id: int, tracking_cache: dict, homography_cache, px_per_meter: int, sample_stride: int = 10,
+) -> list[tuple[float, float]]:
+    """Backward-compatible wrapper -- positions only, no frame index."""
+    return [pos for _, pos in get_track_positions_with_frame(
+        track_id, tracking_cache, homography_cache, px_per_meter, sample_stride
+    )]
 
 
 # Assign goalkeeper identities to teams by comparing their pitch-space location
 # with the average pitch position of each team's players.
 def assign_goalkeepers(
-    tracking_cache: dict, locked_class_by_id: dict, locked_team_by_id: dict,
+    tracking_cache: dict, locked_class_by_id: dict, track_team_segments: dict,
     homography_cache, config: TeamAssignerConfig,
 ) -> tuple[dict, dict]:
-    """Returns (goalkeeper_team_assignment, team_centroids)."""
+    """Returns (goalkeeper_team_assignment, team_centroids).
+
+    Takes track_team_segments (not locked_team_by_id) so EVERY classified
+    player track -- including switch_suspects -- contributes its positions
+    to the correct team centroid, attributing each sampled position to
+    whichever team was actually in effect at that frame.
+    """
     goalkeeper_ids = {tid for tid, cls in locked_class_by_id.items() if cls == "goalkeeper"}
     print(f"Goalkeeper tracks to assign: {sorted(goalkeeper_ids)}")
 
-    # Gather pitch positions of players belonging to each team.
+    # Gather pitch positions of players belonging to each team, resolved
+    # per-frame via track_team_segments -- not one flat label per track.
     team_positions = {0: [], 1: []}
-    for tid, team in locked_team_by_id.items():
-        team_positions[team].extend(
-            get_track_positions(tid, tracking_cache, homography_cache, config.px_per_meter, config.gk_position_sample_stride)
-        )
+    for tid in track_team_segments:
+        for frame_idx, pos in get_track_positions_with_frame(
+            tid, tracking_cache, homography_cache, config.px_per_meter, config.gk_position_sample_stride
+        ):
+            team = team_for_track_at_frame(track_team_segments, tid, frame_idx)
+            if team is not None:
+                team_positions[team].append(pos)
 
     # Calculate each team's average pitch location.
     team_centroids = {
@@ -92,7 +120,9 @@ def assign_goalkeepers(
 
     goalkeeper_team_assignment = {}
     for gk_id in goalkeeper_ids:
-        gk_positions = get_track_positions(gk_id, tracking_cache, homography_cache, config.px_per_meter, config.gk_position_sample_stride)
+        gk_positions = get_track_positions(
+            gk_id, tracking_cache, homography_cache, config.px_per_meter, config.gk_position_sample_stride
+        )
         if not gk_positions:
             print(f"  id={gk_id}: no valid pitch positions found -- skipping")
             continue

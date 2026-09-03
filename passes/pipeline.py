@@ -14,6 +14,17 @@ completed = same-team receiver. failed = opponent-team receiver (a genuine
 interception -- ball control transferred continuously, just to the wrong
 team).
 
+Team resolution: each possession segment's team is resolved from its own
+start_frame against player_frame_table's frame-accurate team column (via
+merge_asof), NOT a single flattened value per track_id. A track's team can
+change mid-match (switch_suspects, from track_team_segments upstream in
+frame_table.py) -- a segment must reflect whichever team was in effect
+when that segment actually happened, not whatever team the track had on
+its first-ever appearance in the table. This mirrors the same
+frame-accurate resolution frame_table.py already applies via
+team_for_track_at_frame; this module resolves it per-segment instead of
+per-row since a possession segment is a single team-attributable unit.
+
 Known open limitation: still can't perfectly tell a short misplaced pass
 from a tackle dispossession that happens to look continuous (no ball-out,
 no long lost-tracking gap). Defender-proximity or ball-velocity-direction
@@ -24,27 +35,31 @@ from pathlib import Path
 
 import pandas as pd
 
+from .config import PassConfig
+
 
 class PassesPipeline:
     """Detects pass events from player_frame_table / ball_frame_table.
     Config-driven, no video or model access -- pure post-processing, same
     category as ball_tracker / ball_carrier / frame_table."""
 
-    def __init__(self, cfg: "PassConfig"):
+    def __init__(self, cfg: PassConfig):
         self.cfg = cfg
 
     def build_possession_segments(self, ball_frame_table, player_frame_table):
         """One row per possession segment: [track_id, team, start_frame,
         end_frame, n_frames]. Bridges same-player gaps <= cfg.max_gap_frames
         (mirrors the carrier assigner's own grace period) and drops
-        segments shorter than cfg.min_segment_frames as tracking noise."""
+        segments shorter than cfg.min_segment_frames as tracking noise.
+
+        team is resolved per-segment from start_frame against
+        player_frame_table's frame-accurate team column -- NOT a single
+        flattened value per track_id (the old team_by_track approach:
+        player_frame_table[["track_id","team"]].dropna().drop_duplicates
+        ("track_id") -- collapsed every track to whatever team it had on
+        its FIRST appearance in the table, which silently mislabels every
+        segment after a switch_suspect track's mid-match team flip)."""
         cfg = self.cfg
-        team_by_track = (
-            player_frame_table[["track_id", "team"]]
-            .dropna()
-            .drop_duplicates("track_id")
-            .set_index("track_id")["team"]
-        )
 
         carrier = ball_frame_table[["frame_idx", "carrier_track_id"]].sort_values("frame_idx")
 
@@ -54,9 +69,7 @@ class PassesPipeline:
         def flush(end_frame):
             if cur_id is None:
                 return
-            n_frames = end_frame - seg_start + 1
-            if n_frames >= cfg.min_segment_frames:
-                segments.append((cur_id, team_by_track.get(cur_id), seg_start, end_frame, n_frames))
+            segments.append((cur_id, seg_start, end_frame))
 
         for f, tid in zip(carrier["frame_idx"], carrier["carrier_track_id"]):
             tid = None if pd.isna(tid) else int(tid)
@@ -76,9 +89,35 @@ class PassesPipeline:
 
         flush(last_seen_frame)
 
-        seg_df = pd.DataFrame(segments, columns=["track_id", "team", "start_frame", "end_frame", "n_frames"])
+        seg_df = pd.DataFrame(segments, columns=["track_id", "start_frame", "end_frame"])
+        seg_df["n_frames"] = seg_df["end_frame"] - seg_df["start_frame"] + 1
+        seg_df = seg_df[seg_df["n_frames"] >= cfg.min_segment_frames].reset_index(drop=True)
+
+        # --- frame-accurate team resolution ---
+        # nearest known team AT OR BEFORE each segment's start_frame, per track_id,
+        # read directly off the already-correct player_frame_table.
+        #
+        # merge_asof requires the "on" column sorted GLOBALLY (not just within
+        # each "by" group) on both sides -- sorting by ["track_id", "start_frame"]
+        # groups by track first, so start_frame isn't globally increasing and
+        # merge_asof rejects it ("left keys must be sorted"). Sort by the "on"
+        # column alone on both sides instead.
+        team_lookup = (
+            player_frame_table[["track_id", "frame_idx", "team"]]
+            .dropna(subset=["team"])
+            .sort_values("frame_idx")
+        )
+        seg_df = seg_df.sort_values("start_frame").reset_index(drop=True)
+        seg_df = pd.merge_asof(
+            seg_df,
+            team_lookup.rename(columns={"frame_idx": "start_frame"}),
+            on="start_frame",
+            by="track_id",
+            direction="backward",
+        )
         seg_df["team"] = seg_df["team"].astype("Int64")
-        return seg_df
+
+        return seg_df[["track_id", "team", "start_frame", "end_frame", "n_frames"]]
 
     def classify_transitions(self, seg_df, ball_frame_table, pitch_length, pitch_width):
         """One row per segment-to-segment transition, scored either as a
