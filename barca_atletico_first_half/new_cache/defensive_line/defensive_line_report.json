@@ -1,0 +1,249 @@
+{
+ "ATM": {
+  "scope": "pressing frames only (no attacking, no passive defending, no set pieces, no counter-press)",
+  "back_line": [
+   "ATM 15 Lenglet",
+   "ATM 2 Gimenez",
+   "ATM 14 Llorente",
+   "ATM 21 Javi Galan"
+  ],
+  "while_pressing": {
+   "presses": 117,
+   "minutes": 2.2,
+   "last_defender_median_m": 28.4,
+   "iqr_m": [
+    18.5,
+    38.7
+   ],
+   "back_line_mean_median_m": 31.1,
+   "by_press_zone_median_m": {
+    "high": 46.8,
+    "low": 16.5,
+    "mid": 31.4
+   },
+   "by_situation_median_m": {
+    "on_defenders": 30.4,
+    "on_forwards": 26.7,
+    "on_goal_kick": 40.4,
+    "on_goalkeeper": 39.5,
+    "on_midfielders": 25.4
+   },
+   "flatness_m": 2.2,
+   "width_m": 33.6,
+   "gk_to_line_m": 15.0,
+   "line_to_midfield_m": 11.5
+  },
+  "events_during_presses": {
+   "with_ball": {
+    "drop": 1
+   }
+  },
+  "defenders": [
+   {
+    "defender": "ATM 15 Lenglet",
+    "frames": 3288,
+    "mean_depth_m": 30.1,
+    "mean_width_pos_m": 29.96,
+    "vs_line_m": 0.52,
+    "last_man_share": 0.38
+   },
+   {
+    "defender": "ATM 2 Gimenez",
+    "frames": 3297,
+    "mean_depth_m": 31.34,
+    "mean_width_pos_m": 38.53,
+    "vs_line_m": 1.34,
+    "last_man_share": 0.25
+   },
+   {
+    "defender": "ATM 14 Llorente",
+    "frames": 3283,
+    "mean_depth_m": 31.63,
+    "mean_width_pos_m": 50.66,
+    "vs_line_m": 1.46,
+    "last_man_share": 0.21
+   },
+   {
+    "defender": "ATM 21 Javi Galan",
+    "frames": 3295,
+    "mean_depth_m": 32.66,
+    "mean_width_pos_m": 17.5,
+    "vs_line_m": 2.01,
+    "last_man_share": 0.17
+   }
+  ],
+  "clips": [
+   {
+    "team_name": "ATM",
+    "kind": "highest_line",
+    "start": 25851,
+    "end": 25851,
+    "note": "while pressing: last defender 59.5 m from goal",
+    "time": "17:14.0",
+    "clip": "C:\\Users\\user\\Desktop\\Football_cv_project\\football-pipeline (1)\\project\\barca_atletico_first_half\\new_cache\\defensive_line\\clips\\ATM_highest_line_25851.mp4"
+   },
+   {
+    "team_name": "ATM",
+    "kind": "deepest_line",
+    "start": 10012,
+    "end": 10012,
+    "note": "while pressing: last defender 2.4 m from goal",
+    "time": "06:40.5",
+    "clip": "C:\\Users\\user\\Desktop\\Football_cv_project\\football-pipeline (1)\\project\\barca_atletico_first_half\\new_cache\\defensive_line\\clips\\ATM_deepest_line_10012.mp4"
+   },
+   {
+    "team_name": "ATM",
+    "kind": "typical_high_press",
+    "start": 57928,
+    "end": 57928,
+    "note": "line 46.9 m (team median when pressing high)",
+    "time": "38:37.1",
+    "clip": "C:\\Users\\user\\Desktop\\Football_cv_project\\football-pipeline (1)\\project\\barca_atletico_first_half\\new_cache\\defensive_line\\clips\\ATM_typical_high_press_57928.mp4"
+   },
+   {
+    "team_name": "ATM",
+    "kind": "biggest_drop",
+    "start": 13542,
+    "end": 13592,
+    "note": "16.0 -> 7.6 m in 2 s (with ball)",
+    "time": "09:01.7",
+    "clip": "C:\\Users\\user\\Desktop\\Football_cv_project\\football-pipeline (1)\\project\\barca_atletico_first_half\\new_cache\\defensive_line\\clips\\ATM_biggest_drop_13542.mp4"
+   }
+  ],
+  "animations": [
+   "C:\\Users\\user\\Desktop\\Football_cv_project\\football-pipeline (1)\\project\\barca_atletico_first_half\\new_cache\\defensive_line\\animations\\ATM_highest_line_25851.gif",
+   "C:\\Users\\user\\Desktop\\Football_cv_project\\football-pipeline (1)\\project\\barca_atletico_first_half\\new_cache\\defensive_line\\animations\\ATM_deepest_line_10012.gif",
+   "C:\\Users\\user\\Desktop\\Football_cv_project\\football-pipeline (1)\\project\\barca_atletico_first_half\\new_cache\\defensive_line\\animations\\ATM_typical_high_press_57928.gif",
+   "C:\\Users\\user\\Desktop\\Football_cv_project\\football-pipeline (1)\\project\\barca_atletico_first_half\\new_cache\\defensive_line\\animations\\ATM_biggest_drop_13542.gif"
+  ]
+ },
+ "BAR": {
+  "scope": "pressing frames only (no attacking, no passive defending, no set pieces, no counter-press)",
+  "back_line": [
+   "BAR 5 Inigo",
+   "BAR 2 Cubarsi",
+   "BAR 3 Balde",
+   "BAR 23 Kounde"
+  ],
+  "while_pressing": {
+   "presses": 98,
+   "minutes": 2.04,
+   "last_defender_median_m": 46.5,
+   "iqr_m": [
+    40.1,
+    51.5
+   ],
+   "back_line_mean_median_m": 49.1,
+   "by_press_zone_median_m": {
+    "high": 52.1,
+    "low": 23.3,
+    "mid": 42.3
+   },
+   "by_situation_median_m": {
+    "on_defenders": 43.7,
+    "on_forwards": 45.7,
+    "on_goal_kick": 50.2,
+    "on_goalkeeper": 51.6,
+    "on_midfielders": 46.4
+   },
+   "flatness_m": 3.0,
+   "width_m": 30.9,
+   "gk_to_line_m": 21.3,
+   "line_to_midfield_m": 15.2
+  },
+  "events_during_presses": {
+   "with_ball": {
+    "drop": 1,
+    "step_up": 1
+   }
+  },
+  "defenders": [
+   {
+    "defender": "BAR 5 Inigo",
+    "frames": 3044,
+    "mean_depth_m": 47.51,
+    "mean_width_pos_m": 29.42,
+    "vs_line_m": 0.2,
+    "last_man_share": 0.45
+   },
+   {
+    "defender": "BAR 2 Cubarsi",
+    "frames": 3018,
+    "mean_depth_m": 47.08,
+    "mean_width_pos_m": 40.42,
+    "vs_line_m": 0.34,
+    "last_man_share": 0.4
+   },
+   {
+    "defender": "BAR 3 Balde",
+    "frames": 2888,
+    "mean_depth_m": 51.99,
+    "mean_width_pos_m": 21.2,
+    "vs_line_m": 3.3,
+    "last_man_share": 0.1
+   },
+   {
+    "defender": "BAR 23 Kounde",
+    "frames": 2845,
+    "mean_depth_m": 52.83,
+    "mean_width_pos_m": 50.54,
+    "vs_line_m": 5.08,
+    "last_man_share": 0.05
+   }
+  ],
+  "clips": [
+   {
+    "team_name": "BAR",
+    "kind": "highest_line",
+    "start": 13807,
+    "end": 13807,
+    "note": "while pressing: last defender 75.9 m from goal",
+    "time": "09:12.3",
+    "clip": "C:\\Users\\user\\Desktop\\Football_cv_project\\football-pipeline (1)\\project\\barca_atletico_first_half\\new_cache\\defensive_line\\clips\\BAR_highest_line_13807.mp4"
+   },
+   {
+    "team_name": "BAR",
+    "kind": "deepest_line",
+    "start": 67507,
+    "end": 67507,
+    "note": "while pressing: last defender 13.8 m from goal",
+    "time": "45:00.3",
+    "clip": "C:\\Users\\user\\Desktop\\Football_cv_project\\football-pipeline (1)\\project\\barca_atletico_first_half\\new_cache\\defensive_line\\clips\\BAR_deepest_line_67507.mp4"
+   },
+   {
+    "team_name": "BAR",
+    "kind": "typical_high_press",
+    "start": 63085,
+    "end": 63085,
+    "note": "line 52.1 m (team median when pressing high)",
+    "time": "42:03.4",
+    "clip": "C:\\Users\\user\\Desktop\\Football_cv_project\\football-pipeline (1)\\project\\barca_atletico_first_half\\new_cache\\defensive_line\\clips\\BAR_typical_high_press_63085.mp4"
+   },
+   {
+    "team_name": "BAR",
+    "kind": "biggest_drop",
+    "start": 24870,
+    "end": 24920,
+    "note": "49.4 -> 39.8 m in 2 s (with ball)",
+    "time": "16:34.8",
+    "clip": "C:\\Users\\user\\Desktop\\Football_cv_project\\football-pipeline (1)\\project\\barca_atletico_first_half\\new_cache\\defensive_line\\clips\\BAR_biggest_drop_24870.mp4"
+   },
+   {
+    "team_name": "BAR",
+    "kind": "biggest_step_up",
+    "start": 11057,
+    "end": 11107,
+    "note": "20.6 -> 34.3 m in 2 s (with ball)",
+    "time": "07:22.3",
+    "clip": "C:\\Users\\user\\Desktop\\Football_cv_project\\football-pipeline (1)\\project\\barca_atletico_first_half\\new_cache\\defensive_line\\clips\\BAR_biggest_step_up_11057.mp4"
+   }
+  ],
+  "animations": [
+   "C:\\Users\\user\\Desktop\\Football_cv_project\\football-pipeline (1)\\project\\barca_atletico_first_half\\new_cache\\defensive_line\\animations\\BAR_highest_line_13807.gif",
+   "C:\\Users\\user\\Desktop\\Football_cv_project\\football-pipeline (1)\\project\\barca_atletico_first_half\\new_cache\\defensive_line\\animations\\BAR_deepest_line_67507.gif",
+   "C:\\Users\\user\\Desktop\\Football_cv_project\\football-pipeline (1)\\project\\barca_atletico_first_half\\new_cache\\defensive_line\\animations\\BAR_typical_high_press_63085.gif",
+   "C:\\Users\\user\\Desktop\\Football_cv_project\\football-pipeline (1)\\project\\barca_atletico_first_half\\new_cache\\defensive_line\\animations\\BAR_biggest_drop_24870.gif",
+   "C:\\Users\\user\\Desktop\\Football_cv_project\\football-pipeline (1)\\project\\barca_atletico_first_half\\new_cache\\defensive_line\\animations\\BAR_biggest_step_up_11057.gif"
+  ]
+ }
+}

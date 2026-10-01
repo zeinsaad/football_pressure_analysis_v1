@@ -39,3 +39,12 @@ BALL_FRAME_TABLE_CACHE_PATH = "barca_atletico_first_half/cache/ball_frame_table.
 
 # ---- passes (stats event module) ----
 PASS_EVENTS_CACHE_PATH = "barca_atletico_first_half/cache/pass_events.parquet"
+
+
+UI_EXPORT_PATH = "barca_atletico_first_half/cache/pressure_analysis_export.json"
+
+LLM_EXPORT_PATH = "barca_atletico_first_half/cache/pressure_analysis_llm_export.json"
+
+LLM_EXPORT_DEFAULT_PATH = "barca_atletico_first_half/cache/pressure_analysis_llm_default.json"
+
+LLM_REPORT_PATH = "barca_atletico_first_half/cache/barca_atletico_pressing_report.md"

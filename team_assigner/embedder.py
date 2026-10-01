@@ -20,16 +20,11 @@ from .config import TeamAssignerConfig
 # Wrapper around the SigLIP vision model used to extract appearance embeddings
 # from player torso crops for team classification.
 class SiglipEmbedder:
-    # Load the SigLIP image processor and vision model using the configured
-    # model name and computation device.
     def __init__(self, config: TeamAssignerConfig):
         self.config = config
         self.processor = SiglipImageProcessor.from_pretrained(config.siglip_model_name)
         self.model = SiglipVisionModel.from_pretrained(config.siglip_model_name).to(config.device).eval()
 
-
-    # Extract the torso region from a player bounding box.
-    # Removes head, legs, arms, and background areas to focus on jersey features.
     def get_torso_crop(self, frame: np.ndarray, bbox: list[float]) -> np.ndarray | None:
         """Returns None if the resulting crop is empty or the bbox is too small."""
         cfg = self.config
@@ -37,6 +32,7 @@ class SiglipEmbedder:
         h_img, w_img = frame.shape[:2]
 
         box_w, box_h = (x2 - x1), (y2 - y1)
+        # Reject boxes with non-positive size or too small to give a reliable jersey sample.
         if box_w <= 0 or box_h <= 0 or (box_w * box_h) < cfg.min_bbox_area:
             return None
 
@@ -46,19 +42,21 @@ class SiglipEmbedder:
         right = x2 - cfg.torso_side_margin * box_w
 
         x1c, y1c, x2c, y2c = int(round(left)), int(round(top)), int(round(right)), int(round(bottom))
+        # Clamp to frame bounds in case the crop extends slightly past the frame edge.
         x1c, y1c = max(0, x1c), max(0, y1c)
         x2c, y2c = min(w_img, x2c), min(h_img, y2c)
 
+        # After clamping, the region can still collapse to zero/negative size
+        # (e.g. a bbox right at the frame edge) -- reject that too.
         if x2c <= x1c or y2c <= y1c:
             return None
 
         return frame[y1c:y2c, x1c:x2c]
 
-
-    # Extract a normalized SigLIP embedding from a player's torso crop.
-    # The embedding represents jersey appearance and is used for team assignment.
     @torch.no_grad()
     def extract(self, frame_bgr: np.ndarray, bbox: list[float]) -> np.ndarray | None:
+        """Extract a normalized SigLIP embedding from a player's torso crop,
+        used for team assignment."""
         torso = self.get_torso_crop(frame_bgr, bbox)
         if torso is None or torso.size == 0:
             return None
@@ -70,6 +68,7 @@ class SiglipEmbedder:
         outputs = self.model(**inputs)
         emb = outputs.pooler_output.squeeze(0).cpu().numpy()
 
-        # Normalize embedding so similarity comparisons are not affected by magnitude.
+        # Normalize so similarity comparisons depend on direction (jersey color/pattern),
+        # not magnitude (which can vary with unrelated factors like lighting/contrast).
         norm = np.linalg.norm(emb)
         return emb / norm if norm > 0 else emb

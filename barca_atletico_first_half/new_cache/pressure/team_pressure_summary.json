@@ -1,0 +1,69 @@
+{
+ "params": {
+  "CACHE_DIR": "C:\\Users\\user\\Desktop\\Football_cv_project\\football-pipeline (1)\\project\\barca_atletico_first_half\\new_cache",
+  "PLAYER_TABLE": "C:\\Users\\user\\Desktop\\Football_cv_project\\football-pipeline (1)\\project\\barca_atletico_first_half\\new_cache\\player_frame_table_named.parquet",
+  "BALL_TABLE": "C:\\Users\\user\\Desktop\\Football_cv_project\\football-pipeline (1)\\project\\barca_atletico_first_half\\new_cache\\ball_frame_table_named.parquet",
+  "META_PATH": "C:\\Users\\user\\Desktop\\Football_cv_project\\football-pipeline (1)\\project\\barca_atletico_first_half\\new_cache\\match_meta_named.json",
+  "OUT_DIR": "C:\\Users\\user\\Desktop\\Football_cv_project\\football-pipeline (1)\\project\\barca_atletico_first_half\\new_cache\\pressure",
+  "PRESSURE_DIST_M": 5.0,
+  "CLOSING_SPEED_THRESH_MPS": 2.5,
+  "TIGHT_MARK_DIST_M": 1.5,
+  "STEP_OUT_MARGIN_M": 4.0,
+  "LINE_HEIGHT_DEFENDERS_N": 3,
+  "MIN_SUSTAINED_PRESSURE_FRAMES": 8,
+  "BRIDGE_GAP_FRAMES": 3,
+  "PRESSERS_ROLES": [
+   "player"
+  ],
+  "COUNTER_PRESS_WINDOW_S": 5.0,
+  "OUTCOME_WINDOW_S": 2.0,
+  "PROGRESS_THRESH_M": 3.0,
+  "BYPASS_MARGIN_M": 2.0,
+  "BOX_DEPTH_M": 16.5,
+  "BOX_HALF_WIDTH_M": 20.16,
+  "REVIEW_SAMPLE_N": 80,
+  "FPS": 25,
+  "L": 105.0,
+  "W": 68.0,
+  "N_FRAMES": 70327,
+  "OUTCOME_WIN": 50
+ },
+ "team_line": {
+  "0": 27.382925248311835,
+  "1": 45.49660852392008
+ },
+ "teams": {
+  "ATM": {
+   "player_pressures": 314,
+   "press_sequences": 226,
+   "sequences_per_opp_possession_min": 10.64,
+   "sequence_regain_rate": 0.19,
+   "player_press_regain_rate": 0.21,
+   "mean_pressers_per_sequence": 1.32,
+   "median_press_height_x_att": 41.6,
+   "zone_share": {
+    "middle_third": 0.529,
+    "own_third": 0.347,
+    "attacking_third": 0.124
+   },
+   "counter_press_share": 0.385,
+   "forced_back_passes": 60
+  },
+  "BAR": {
+   "player_pressures": 269,
+   "press_sequences": 181,
+   "sequences_per_opp_possession_min": 12.11,
+   "sequence_regain_rate": 0.265,
+   "player_press_regain_rate": 0.242,
+   "mean_pressers_per_sequence": 1.4,
+   "median_press_height_x_att": 70.8,
+   "zone_share": {
+    "attacking_third": 0.517,
+    "middle_third": 0.428,
+    "own_third": 0.056
+   },
+   "counter_press_share": 0.439,
+   "forced_back_passes": 50
+  }
+ }
+}

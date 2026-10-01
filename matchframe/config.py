@@ -16,4 +16,8 @@ class FrameTableConfig:
     half_boundary_frame: Optional[int] = None
 
 
+# Default used by get_or_build_frame_tables() whenever the caller doesn't
+# pass force_rebuild explicitly. FIX: this used to be defined here but never
+# read anywhere in pipeline.py, so flipping it had zero effect unless a
+# caller separately remembered to pass force_rebuild=True by hand.
 FORCE_REBUILD_FRAME_TABLE = True

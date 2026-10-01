@@ -1,22 +1,8 @@
 """
 Classify every player detection per frame against the fitted KMeans model,
 then lock team assignment via WINDOWED voting -- not one whole-track
-majority vote.
-
-Why windowed, not whole-track: a same-team ID switch is invisible to team
-assignment by definition (both segments vote for the same team) -- only a
-CROSS-team switch corrupts a team label, and the tracking pipeline's own
-team veto already guards against most of those upstream. Voting in windows
-along each track's own timeline (instead of once over the whole track)
-means a track that DOES flip mid-way is detected (switch_suspects) and each
-segment gets the correct team, instead of one team silently winning a
-global vote and mislabeling roughly half the track.
-
-raw_team_votes / per_frame_team are kept non-destructive (same pattern as
-tracker's class locking): per_frame_team is the raw noisy per-frame
-predictions, track_team_segments is the final per-window decision, and
-locked_team_by_id is kept for backward compatibility -- populated only for
-tracks that never flip.
+majority vote, so a mid-track cross-team switch gets caught and each
+segment gets the correct team instead of one label winning globally.
 """
 
 from __future__ import annotations
@@ -29,9 +15,6 @@ from .config import TeamAssignerConfig
 from .embedder import SiglipEmbedder
 
 
-# Classify player appearances using the trained KMeans kit clusters.
-# Stores every prediction as a vote for each track without immediately
-# forcing a final team assignment.
 def classify_all_tracks(
     embedder: SiglipEmbedder, scaler, kmeans, tracking_cache: dict,
     locked_class_by_id: dict, video_path: str, config: TeamAssignerConfig,
@@ -61,11 +44,11 @@ def classify_all_tracks(
                 if t["track_id"] not in player_ids:
                     continue
 
-                # Extract jersey appearance features and predict the team cluster.
                 feat = embedder.extract(frame, t["bbox"])
                 if feat is None:
                     continue
 
+                # Scale + predict with the models fit during calibration.
                 scaled_feat = scaler.transform(feat.reshape(1, -1))
                 team = int(kmeans.predict(scaled_feat)[0])
                 raw_team_votes[t["track_id"]][team] += 1
@@ -87,24 +70,15 @@ def lock_teams_windowed(per_frame_team: dict, raw_team_votes: dict, config: Team
 
     Returns a dict with:
       "track_team_segments": {track_id: [(window_start_frame, team), ...]}
-          -- the real per-window history, sorted by window_start_frame.
-          This is the source of truth every downstream consumer that
-          needs frame-level correctness should use (see
-          team_for_track_at_frame below), NOT locked_team_by_id or
-          team_by_id.
+          -- source of truth for frame-level lookups (see
+          team_for_track_at_frame below), not locked_team_by_id.
       "locked_team_by_id": {track_id: team}
-          -- backward-compatible single value, populated ONLY for tracks
-          whose windows never disagree.
+          -- backward-compatible single value, only for tracks whose
+          windows never disagree.
       "switch_suspects": [track_id, ...]
-          -- tracks with a team flip across windows. Worth cross-checking
-          against the tracking pipeline's own switch-detection tools --
-          agreement is strong confirmation; a track flagged only here is
-          a cross-team switch that upstream veto missed.
+          -- tracks with a team flip across windows.
       "weak_windows": [(track_id, window_start_frame, team, majority_frac), ...]
-          -- individual windows below config.weak_majority_threshold,
-          which are noisier (not necessarily switches) and worth treating
-          with more skepticism than a window backed by a full window's
-          worth of confident votes.
+          -- windows below config.weak_majority_threshold, worth extra scrutiny.
     """
     window = config.team_vote_window_frames
 
@@ -146,6 +120,7 @@ def lock_teams_windowed(per_frame_team: dict, raw_team_votes: dict, config: Team
     print(f"{len(switch_suspects)} tracks: need per-segment team lookup via "
           f"team_for_track_at_frame(track_team_segments, tid, frame_idx) -- see track_team_segments.")
 
+    # Recompute per-window vote fractions to find low-confidence windows.
     weak_windows = []
     for tid, segments in track_team_segments.items():
         votes = votes_by_id[tid]
@@ -175,15 +150,13 @@ def lock_teams_windowed(per_frame_team: dict, raw_team_votes: dict, config: Team
 
 
 def team_for_track_at_frame(track_team_segments: dict, tid, frame_idx: int, default=None):
-    """Segment-aware team lookup -- the team in effect for a track at a
-    specific frame, using the windowed segments. This is what goalkeeper
-    centroid assignment and any downstream consumer (frame_table, render,
-    passes) should use instead of a single static label, so a mid-track
-    flip is handled correctly wherever team membership actually matters.
+    """Segment-aware team lookup for a track at a specific frame -- use this
+    instead of a single static label wherever team membership matters
+    (goalkeeper assignment, frame_table, render, passes), so a mid-track
+    flip is handled correctly.
 
-    Falls back to `default` for a track with no segment history at all
-    (shouldn't normally happen for anything actually classified -- could
-    happen for a track filtered out as a ghost before segments were built).
+    Falls back to `default` if the track has no segment history (shouldn't
+    happen for anything actually classified).
     """
     segments = track_team_segments.get(tid)
     if not segments:

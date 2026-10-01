@@ -1,0 +1,424 @@
+{
+ "fps": 25,
+ "pitch_length": 105.0,
+ "pitch_width": 68.0,
+ "n_frames": 70327,
+ "team_names": {
+  "0": "ATM",
+  "1": "BAR"
+ },
+ "attack_dir": {
+  "0": -1,
+  "1": 1
+ },
+ "goalkeeper_mean_x": {
+  "0": 100.08,
+  "1": 11.29
+ },
+ "people": {
+  "1": {
+   "name": "Pena",
+   "number": 13,
+   "team_name": "BAR",
+   "team": 1,
+   "role": "goalkeeper",
+   "visible_s": 636.0
+  },
+  "2": {
+   "name": "Oblak",
+   "number": 13,
+   "team_name": "ATM",
+   "team": 0,
+   "role": "goalkeeper",
+   "visible_s": 1487.0
+  },
+  "3": {
+   "name": "Referee",
+   "number": null,
+   "team_name": null,
+   "team": null,
+   "role": "referee",
+   "visible_s": 2363.0
+  },
+  "4": {
+   "name": "Assistant referee y0",
+   "number": null,
+   "team_name": null,
+   "team": null,
+   "role": "referee",
+   "visible_s": 2033.4
+  },
+  "5": {
+   "name": "Assistant referee y68",
+   "number": null,
+   "team_name": null,
+   "team": null,
+   "role": "referee",
+   "visible_s": 1884.7
+  },
+  "207": {
+   "name": "Griezmann",
+   "number": 7,
+   "team_name": "ATM",
+   "team": 0,
+   "role": "player",
+   "visible_s": 2321.7
+  },
+  "116": {
+   "name": "Fermin",
+   "number": 16,
+   "team_name": "BAR",
+   "team": 1,
+   "role": "player",
+   "visible_s": 2328.9
+  },
+  "219": {
+   "name": "Alvarez",
+   "number": 19,
+   "team_name": "ATM",
+   "team": 0,
+   "role": "player",
+   "visible_s": 2365.1
+  },
+  "109": {
+   "name": "Lewandowski",
+   "number": 9,
+   "team_name": "BAR",
+   "team": 1,
+   "role": "player",
+   "visible_s": 2324.6
+  },
+  "106": {
+   "name": "Gavi",
+   "number": 6,
+   "team_name": "BAR",
+   "team": 1,
+   "role": "player",
+   "visible_s": 2295.0
+  },
+  "105": {
+   "name": "Inigo",
+   "number": 5,
+   "team_name": "BAR",
+   "team": 1,
+   "role": "player",
+   "visible_s": 2322.8
+  },
+  "108": {
+   "name": "Pedri",
+   "number": 8,
+   "team_name": "BAR",
+   "team": 1,
+   "role": "player",
+   "visible_s": 2314.4
+  },
+  "102": {
+   "name": "Cubarsi",
+   "number": 2,
+   "team_name": "BAR",
+   "team": 1,
+   "role": "player",
+   "visible_s": 2311.6
+  },
+  "103": {
+   "name": "Balde",
+   "number": 3,
+   "team_name": "BAR",
+   "team": 1,
+   "role": "player",
+   "visible_s": 2288.4
+  },
+  "117": {
+   "name": "Casado",
+   "number": 17,
+   "team_name": "BAR",
+   "team": 1,
+   "role": "player",
+   "visible_s": 2295.8
+  },
+  "214": {
+   "name": "Llorente",
+   "number": 14,
+   "team_name": "ATM",
+   "team": 0,
+   "role": "player",
+   "visible_s": 2276.4
+  },
+  "205": {
+   "name": "De Paul",
+   "number": 5,
+   "team_name": "ATM",
+   "team": 0,
+   "role": "player",
+   "visible_s": 2292.3
+  },
+  "111": {
+   "name": "Raphinha",
+   "number": 11,
+   "team_name": "BAR",
+   "team": 1,
+   "role": "player",
+   "visible_s": 2317.6
+  },
+  "215": {
+   "name": "Lenglet",
+   "number": 15,
+   "team_name": "ATM",
+   "team": 0,
+   "role": "player",
+   "visible_s": 2336.4
+  },
+  "204": {
+   "name": "Gallagher",
+   "number": 4,
+   "team_name": "ATM",
+   "team": 0,
+   "role": "player",
+   "visible_s": 2317.6
+  },
+  "208": {
+   "name": "Barrios",
+   "number": 8,
+   "team_name": "ATM",
+   "team": 0,
+   "role": "player",
+   "visible_s": 2265.3
+  },
+  "221": {
+   "name": "Javi Galan",
+   "number": 21,
+   "team_name": "ATM",
+   "team": 0,
+   "role": "player",
+   "visible_s": 2371.2
+  },
+  "123": {
+   "name": "Kounde",
+   "number": 23,
+   "team_name": "BAR",
+   "team": 1,
+   "role": "player",
+   "visible_s": 2257.4
+  },
+  "222": {
+   "name": "Simeone",
+   "number": 22,
+   "team_name": "ATM",
+   "team": 0,
+   "role": "player",
+   "visible_s": 2268.7
+  },
+  "202": {
+   "name": "Gimenez",
+   "number": 2,
+   "team_name": "ATM",
+   "team": 0,
+   "role": "player",
+   "visible_s": 2316.5
+  }
+ },
+ "stoppages": [
+  {
+   "start_frame": 1882,
+   "end_frame": 2141,
+   "n_frames": 260
+  },
+  {
+   "start_frame": 10035,
+   "end_frame": 10560,
+   "n_frames": 526
+  },
+  {
+   "start_frame": 10709,
+   "end_frame": 11025,
+   "n_frames": 317
+  },
+  {
+   "start_frame": 17496,
+   "end_frame": 17813,
+   "n_frames": 318
+  },
+  {
+   "start_frame": 18456,
+   "end_frame": 18776,
+   "n_frames": 321
+  },
+  {
+   "start_frame": 21848,
+   "end_frame": 22212,
+   "n_frames": 365
+  },
+  {
+   "start_frame": 24116,
+   "end_frame": 24572,
+   "n_frames": 457
+  },
+  {
+   "start_frame": 25933,
+   "end_frame": 26253,
+   "n_frames": 321
+  },
+  {
+   "start_frame": 26307,
+   "end_frame": 26980,
+   "n_frames": 674
+  },
+  {
+   "start_frame": 27001,
+   "end_frame": 27470,
+   "n_frames": 470
+  },
+  {
+   "start_frame": 29991,
+   "end_frame": 30524,
+   "n_frames": 534
+  },
+  {
+   "start_frame": 30535,
+   "end_frame": 31469,
+   "n_frames": 935
+  },
+  {
+   "start_frame": 33509,
+   "end_frame": 34092,
+   "n_frames": 584
+  },
+  {
+   "start_frame": 36654,
+   "end_frame": 37057,
+   "n_frames": 404
+  },
+  {
+   "start_frame": 38858,
+   "end_frame": 39670,
+   "n_frames": 813
+  },
+  {
+   "start_frame": 45045,
+   "end_frame": 45415,
+   "n_frames": 371
+  },
+  {
+   "start_frame": 46418,
+   "end_frame": 46947,
+   "n_frames": 530
+  },
+  {
+   "start_frame": 54258,
+   "end_frame": 54622,
+   "n_frames": 365
+  },
+  {
+   "start_frame": 57123,
+   "end_frame": 57386,
+   "n_frames": 264
+  },
+  {
+   "start_frame": 60462,
+   "end_frame": 60848,
+   "n_frames": 387
+  },
+  {
+   "start_frame": 63434,
+   "end_frame": 63728,
+   "n_frames": 295
+  },
+  {
+   "start_frame": 64685,
+   "end_frame": 65050,
+   "n_frames": 366
+  },
+  {
+   "start_frame": 68866,
+   "end_frame": 69294,
+   "n_frames": 429
+  },
+  {
+   "start_frame": 69654,
+   "end_frame": 69965,
+   "n_frames": 312
+  },
+  {
+   "start_frame": 70044,
+   "end_frame": 70326,
+   "n_frames": 283
+  }
+ ],
+ "params": {
+  "smooth_window": 11,
+  "smooth_poly": 2,
+  "max_segment_gap_frames": 1,
+  "out_of_pitch_margin_m": 5.0,
+  "max_plausible_speed_mps": 10.5,
+  "stoppage_gap_sec": 10.0
+ },
+ "columns": {
+  "player": [
+   "frame_idx",
+   "track_id",
+   "role",
+   "team",
+   "team_name",
+   "name",
+   "number",
+   "x1",
+   "y1",
+   "x2",
+   "y2",
+   "conf",
+   "source",
+   "assign_score",
+   "foot_px_x",
+   "foot_px_y",
+   "pitch_x_raw",
+   "pitch_y_raw",
+   "n_duplicate_boxes",
+   "pitch_valid",
+   "t_sec",
+   "pitch_x",
+   "pitch_y",
+   "vx",
+   "vy",
+   "ax",
+   "ay",
+   "segment_id",
+   "speed_mps",
+   "accel_mps2",
+   "speed_implausible",
+   "attack_dir",
+   "x_att",
+   "dist_from_own_goal",
+   "third",
+   "carrier_track_id",
+   "possession_team",
+   "is_stoppage",
+   "is_carrier",
+   "in_possession",
+   "dist_to_ball_m"
+  ],
+  "ball": [
+   "frame_idx",
+   "t_sec",
+   "ball_px_x",
+   "ball_px_y",
+   "ball_pitch_x",
+   "ball_pitch_y",
+   "ball_source",
+   "ball_conf",
+   "ball_speed_mps",
+   "ball_speed_implausible",
+   "carrier_track_id",
+   "carrier_method",
+   "carrier_team_name",
+   "possession_team_name",
+   "carrier_team",
+   "possession_team",
+   "carrier_name",
+   "is_stoppage",
+   "n_people_visible",
+   "n_visible_team0",
+   "n_visible_team1",
+   "homography_valid"
+  ]
+ }
+}

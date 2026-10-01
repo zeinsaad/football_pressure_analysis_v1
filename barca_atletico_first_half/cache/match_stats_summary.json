@@ -1,0 +1,33 @@
+{
+  "match": "Barca vs Atletico - first half",
+  "team_names": {
+    "0": "Barca",
+    "1": "Atletico"
+  },
+  "defensive_line_depth_m": {
+    "0": 45.1,
+    "1": 27.7
+  },
+  "ppda": {
+    "0": 2.43,
+    "1": 6.32
+  },
+  "pressure_events": {
+    "0": 105,
+    "1": 144
+  },
+  "pressing_intensity_pct_of_out_of_possession_time": {
+    "0": 23.5,
+    "1": 18.3
+  },
+  "coordinated_press_share_pct": {
+    "0": 40.0,
+    "1": 33.3
+  },
+  "pressure_to_regain_rate_pct": {
+    "0": 40.0,
+    "1": 25.7
+  },
+  "stoppages": 26,
+  "total_dead_time_sec": 450.7
+}

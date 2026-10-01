@@ -29,3 +29,6 @@ runs/
 # IDE
 .vscode/
 .idea/
+barca_atletico_first_half/new_cache/player_frame_table_named.parquet
+
+.env

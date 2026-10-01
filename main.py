@@ -152,31 +152,7 @@ def main():
         force_rebuild=FORCE_REBUILD_FRAME_TABLE,
     )
 
-    # ---- 8. pass stats ----
-    # max_gap_frames is always taken from carrier_cfg here, never hardcoded
-    # in PassConfig -- keeps segment-bridging in sync with the carrier
-    # assigner's own grace period, same reasoning as possession_gap_limit
-    # above.
-    pass_cfg = PassConfig(
-        max_gap_frames=carrier_cfg.no_candidate_grace_frames,
-        fps=ball_cfg.fps,
-    )
-    passes_pipeline = PassesPipeline(pass_cfg)
-    pass_events = get_or_build_pass_events(
-        passes_pipeline,
-        cache_path=paths.PASS_EVENTS_CACHE_PATH,
-        player_frame_table=player_frame_table, ball_frame_table=ball_frame_table,
-        pitch_length=hom_cfg.pitch_length, pitch_width=hom_cfg.pitch_width,
-        force_rebuild=FORCE_REBUILD_PASSES,
-    )
 
-    scored_passes = pass_events[~pass_events["is_turnover"]]
-    n_turnovers = int(pass_events["is_turnover"].sum())
-    print(
-        f"\nPass events: {len(scored_passes)} scored "
-        f"({n_turnovers} filtered as turnovers, not fake failed passes)"
-    )
-    print(team_pass_stats(scored_passes).to_string(index=False))
 
     # ---- 9. render ----
     # track_team_segments passed so render resolves team per-frame, same

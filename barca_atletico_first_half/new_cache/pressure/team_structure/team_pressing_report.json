@@ -1,0 +1,888 @@
+{
+ "ATM": {
+  "formation_in_possession": "2-4-4",
+  "press_sequences": 226,
+  "regain_rate": 0.19,
+  "where_grid": {
+   "count": {
+    "own": {
+     "left": 31,
+     "centre": 17,
+     "right": 29
+    },
+    "middle": {
+     "left": 29,
+     "centre": 31,
+     "right": 54
+    },
+    "attacking": {
+     "left": 10,
+     "centre": 12,
+     "right": 13
+    }
+   },
+   "regain_rate": {
+    "own": {
+     "left": 0.355,
+     "centre": 0.176,
+     "right": 0.207
+    },
+    "middle": {
+     "left": 0.138,
+     "centre": 0.097,
+     "right": 0.185
+    },
+    "attacking": {
+     "left": 0.1,
+     "centre": 0.167,
+     "right": 0.231
+    }
+   }
+  },
+  "third_share": {
+   "middle": 0.504,
+   "own": 0.341,
+   "attacking": 0.155
+  },
+  "lane_share": {
+   "right": 0.425,
+   "left": 0.31,
+   "centre": 0.265
+  },
+  "situations": {
+   "counter_press": {
+    "presses": 84,
+    "regain_rate": 0.226,
+    "mean_pressers": 1.37
+   },
+   "on_defenders": {
+    "presses": 42,
+    "regain_rate": 0.048,
+    "mean_pressers": 1.1
+   },
+   "on_forwards": {
+    "presses": 60,
+    "regain_rate": 0.283,
+    "mean_pressers": 1.48
+   },
+   "on_goal_kick": {
+    "presses": 1,
+    "regain_rate": 0.0,
+    "mean_pressers": 1.0
+   },
+   "on_goalkeeper": {
+    "presses": 1,
+    "regain_rate": 0.0,
+    "mean_pressers": 1.0
+   },
+   "on_midfielders": {
+    "presses": 38,
+    "regain_rate": 0.132,
+    "mean_pressers": 1.21
+   }
+  },
+  "median_reaction_s": 3.88,
+  "marking": {
+   "man_orientation_index": 0.7,
+   "man_oriented_pairs": [
+    {
+     "player": "ATM 15 Lenglet",
+     "marks": "BAR 9 Lewandowski",
+     "share": 0.82
+    },
+    {
+     "player": "ATM 8 Barrios",
+     "marks": "BAR 6 Gavi",
+     "share": 0.75
+    },
+    {
+     "player": "ATM 2 Gimenez",
+     "marks": "BAR 9 Lewandowski",
+     "share": 0.75
+    },
+    {
+     "player": "ATM 5 De Paul",
+     "marks": "BAR 8 Pedri",
+     "share": 0.71
+    },
+    {
+     "player": "ATM 14 Llorente",
+     "marks": "BAR 16 Fermin",
+     "share": 0.67
+    },
+    {
+     "player": "ATM 19 Alvarez",
+     "marks": "BAR 17 Casado",
+     "share": 0.65
+    },
+    {
+     "player": "ATM 21 Javi Galan",
+     "marks": "BAR 11 Raphinha",
+     "share": 0.61
+    }
+   ]
+  },
+  "shape_by_block": {
+   "high": {
+    "formation": "4-4-2",
+    "frames": 5768,
+    "width_m": 39.6,
+    "depth_m": 33.5,
+    "last_line_m_from_goal": 49.6,
+    "line_heights_m": [
+     49.6,
+     63.2,
+     74.8
+    ],
+    "gaps_between_lines_m": [
+     13.6,
+     11.6
+    ],
+    "players": {
+     "ATM 2 Gimenez": [
+      48.5,
+      36.7
+     ],
+     "ATM 4 Gallagher": [
+      67.6,
+      16.0
+     ],
+     "ATM 5 De Paul": [
+      61.2,
+      40.7
+     ],
+     "ATM 7 Griezmann": [
+      74.4,
+      36.8
+     ],
+     "ATM 8 Barrios": [
+      57.6,
+      26.9
+     ],
+     "ATM 14 Llorente": [
+      50.1,
+      51.6
+     ],
+     "ATM 15 Lenglet": [
+      47.6,
+      27.8
+     ],
+     "ATM 19 Alvarez": [
+      75.2,
+      27.9
+     ],
+     "ATM 21 Javi Galan": [
+      52.0,
+      14.8
+     ],
+     "ATM 22 Simeone": [
+      66.3,
+      48.9
+     ]
+    }
+   },
+   "mid": {
+    "formation": "4-4-2",
+    "frames": 13687,
+    "width_m": 37.4,
+    "depth_m": 22.8,
+    "last_line_m_from_goal": 30.1,
+    "line_heights_m": [
+     30.1,
+     39.5,
+     48.4
+    ],
+    "gaps_between_lines_m": [
+     9.3,
+     8.9
+    ],
+    "players": {
+     "ATM 2 Gimenez": [
+      30.2,
+      39.5
+     ],
+     "ATM 4 Gallagher": [
+      40.6,
+      18.3
+     ],
+     "ATM 5 De Paul": [
+      39.5,
+      43.0
+     ],
+     "ATM 7 Griezmann": [
+      48.6,
+      36.9
+     ],
+     "ATM 8 Barrios": [
+      36.6,
+      30.8
+     ],
+     "ATM 14 Llorente": [
+      30.8,
+      51.1
+     ],
+     "ATM 15 Lenglet": [
+      28.7,
+      30.3
+     ],
+     "ATM 19 Alvarez": [
+      48.1,
+      31.4
+     ],
+     "ATM 21 Javi Galan": [
+      30.8,
+      18.2
+     ],
+     "ATM 22 Simeone": [
+      41.2,
+      51.3
+     ]
+    }
+   },
+   "low": {
+    "formation": "8-2",
+    "frames": 9550,
+    "width_m": 33.8,
+    "depth_m": 20.1,
+    "last_line_m_from_goal": 19.8,
+    "line_heights_m": [
+     19.8,
+     33.3
+    ],
+    "gaps_between_lines_m": [
+     13.5
+    ],
+    "players": {
+     "ATM 2 Gimenez": [
+      16.0,
+      37.8
+     ],
+     "ATM 4 Gallagher": [
+      24.1,
+      18.9
+     ],
+     "ATM 5 De Paul": [
+      23.1,
+      40.4
+     ],
+     "ATM 7 Griezmann": [
+      34.2,
+      35.7
+     ],
+     "ATM 8 Barrios": [
+      21.3,
+      29.2
+     ],
+     "ATM 14 Llorente": [
+      16.7,
+      47.0
+     ],
+     "ATM 15 Lenglet": [
+      15.0,
+      29.9
+     ],
+     "ATM 19 Alvarez": [
+      32.5,
+      30.0
+     ],
+     "ATM 21 Javi Galan": [
+      18.0,
+      19.0
+     ],
+     "ATM 22 Simeone": [
+      24.4,
+      47.9
+     ]
+    }
+   }
+  },
+  "clips": [
+   {
+    "team": "ATM",
+    "situation": "counter_press",
+    "rank": 1,
+    "start_frame": 55759,
+    "end_frame": 55931,
+    "time": "37:10.4",
+    "pressers": "ATM 2 Gimenez, ATM 4 Gallagher, ATM 8 Barrios, ATM 19 Alvarez",
+    "carrier": "BAR 17 Casado",
+    "outcome": "forced_pass",
+    "third": "middle",
+    "lane": "left",
+    "path": "C:\\Users\\user\\Desktop\\Football_cv_project\\football-pipeline (1)\\project\\barca_atletico_first_half\\new_cache\\pressure\\team_structure\\clips\\ATM_counter_press_1_55759.mp4"
+   },
+   {
+    "team": "ATM",
+    "situation": "counter_press",
+    "rank": 2,
+    "start_frame": 62769,
+    "end_frame": 62825,
+    "time": "41:50.8",
+    "pressers": "ATM 5 De Paul, ATM 14 Llorente, ATM 22 Simeone",
+    "carrier": "BAR 16 Fermin",
+    "outcome": "regain_by_presser",
+    "third": "middle",
+    "lane": "right",
+    "path": "C:\\Users\\user\\Desktop\\Football_cv_project\\football-pipeline (1)\\project\\barca_atletico_first_half\\new_cache\\pressure\\team_structure\\clips\\ATM_counter_press_2_62769.mp4"
+   },
+   {
+    "team": "ATM",
+    "situation": "on_defenders",
+    "rank": 1,
+    "start_frame": 23459,
+    "end_frame": 23525,
+    "time": "15:38.4",
+    "pressers": "ATM 5 De Paul, ATM 7 Griezmann, ATM 22 Simeone",
+    "carrier": "BAR 2 Cubarsi",
+    "outcome": "forced_pass",
+    "third": "middle",
+    "lane": "centre",
+    "path": "C:\\Users\\user\\Desktop\\Football_cv_project\\football-pipeline (1)\\project\\barca_atletico_first_half\\new_cache\\pressure\\team_structure\\clips\\ATM_on_defenders_1_23459.mp4"
+   },
+   {
+    "team": "ATM",
+    "situation": "on_defenders",
+    "rank": 2,
+    "start_frame": 41136,
+    "end_frame": 41173,
+    "time": "27:25.4",
+    "pressers": "ATM 5 De Paul, ATM 19 Alvarez",
+    "carrier": "BAR 5 Inigo",
+    "outcome": "regain_by_presser",
+    "third": "middle",
+    "lane": "right",
+    "path": "C:\\Users\\user\\Desktop\\Football_cv_project\\football-pipeline (1)\\project\\barca_atletico_first_half\\new_cache\\pressure\\team_structure\\clips\\ATM_on_defenders_2_41136.mp4"
+   },
+   {
+    "team": "ATM",
+    "situation": "on_forwards",
+    "rank": 1,
+    "start_frame": 50054,
+    "end_frame": 50161,
+    "time": "33:22.2",
+    "pressers": "ATM 5 De Paul, ATM 7 Griezmann, ATM 14 Llorente, ATM 22 Simeone",
+    "carrier": "BAR 16 Fermin",
+    "outcome": "forced_pass",
+    "third": "middle",
+    "lane": "right",
+    "path": "C:\\Users\\user\\Desktop\\Football_cv_project\\football-pipeline (1)\\project\\barca_atletico_first_half\\new_cache\\pressure\\team_structure\\clips\\ATM_on_forwards_1_50054.mp4"
+   },
+   {
+    "team": "ATM",
+    "situation": "on_forwards",
+    "rank": 2,
+    "start_frame": 59658,
+    "end_frame": 59768,
+    "time": "39:46.3",
+    "pressers": "ATM 2 Gimenez, ATM 5 De Paul, ATM 8 Barrios, ATM 14 Llorente",
+    "carrier": "BAR 16 Fermin",
+    "outcome": "forced_pass",
+    "third": "middle",
+    "lane": "right",
+    "path": "C:\\Users\\user\\Desktop\\Football_cv_project\\football-pipeline (1)\\project\\barca_atletico_first_half\\new_cache\\pressure\\team_structure\\clips\\ATM_on_forwards_2_59658.mp4"
+   },
+   {
+    "team": "ATM",
+    "situation": "on_goal_kick",
+    "rank": 1,
+    "start_frame": 66175,
+    "end_frame": 66209,
+    "time": "44:07.0",
+    "pressers": "ATM 7 Griezmann",
+    "carrier": "BAR 5 Inigo",
+    "outcome": "forced_pass",
+    "third": "attacking",
+    "lane": "centre",
+    "path": "C:\\Users\\user\\Desktop\\Football_cv_project\\football-pipeline (1)\\project\\barca_atletico_first_half\\new_cache\\pressure\\team_structure\\clips\\ATM_on_goal_kick_1_66175.mp4"
+   },
+   {
+    "team": "ATM",
+    "situation": "on_goalkeeper",
+    "rank": 1,
+    "start_frame": 12940,
+    "end_frame": 12951,
+    "time": "08:37.6",
+    "pressers": "ATM 7 Griezmann",
+    "carrier": "BAR 13 Pena",
+    "outcome": "forced_pass",
+    "third": "attacking",
+    "lane": "centre",
+    "path": "C:\\Users\\user\\Desktop\\Football_cv_project\\football-pipeline (1)\\project\\barca_atletico_first_half\\new_cache\\pressure\\team_structure\\clips\\ATM_on_goalkeeper_1_12940.mp4"
+   },
+   {
+    "team": "ATM",
+    "situation": "on_midfielders",
+    "rank": 1,
+    "start_frame": 48656,
+    "end_frame": 48718,
+    "time": "32:26.2",
+    "pressers": "ATM 2 Gimenez, ATM 5 De Paul, ATM 7 Griezmann, ATM 8 Barrios, ATM 22 Simeone",
+    "carrier": "BAR 3 Balde",
+    "outcome": "forced_pass",
+    "third": "middle",
+    "lane": "right",
+    "path": "C:\\Users\\user\\Desktop\\Football_cv_project\\football-pipeline (1)\\project\\barca_atletico_first_half\\new_cache\\pressure\\team_structure\\clips\\ATM_on_midfielders_1_48656.mp4"
+   },
+   {
+    "team": "ATM",
+    "situation": "on_midfielders",
+    "rank": 2,
+    "start_frame": 56061,
+    "end_frame": 56104,
+    "time": "37:22.4",
+    "pressers": "ATM 4 Gallagher",
+    "carrier": "BAR 23 Kounde",
+    "outcome": "regain_by_presser",
+    "third": "own",
+    "lane": "left",
+    "path": "C:\\Users\\user\\Desktop\\Football_cv_project\\football-pipeline (1)\\project\\barca_atletico_first_half\\new_cache\\pressure\\team_structure\\clips\\ATM_on_midfielders_2_56061.mp4"
+   }
+  ]
+ },
+ "BAR": {
+  "formation_in_possession": "2-3-5",
+  "press_sequences": 181,
+  "regain_rate": 0.265,
+  "where_grid": {
+   "count": {
+    "own": {
+     "left": 7,
+     "centre": 1,
+     "right": 3
+    },
+    "middle": {
+     "left": 26,
+     "centre": 16,
+     "right": 34
+    },
+    "attacking": {
+     "left": 26,
+     "centre": 33,
+     "right": 35
+    }
+   },
+   "regain_rate": {
+    "own": {
+     "left": 0.571,
+     "centre": 1.0,
+     "right": 0.0
+    },
+    "middle": {
+     "left": 0.346,
+     "centre": 0.188,
+     "right": 0.206
+    },
+    "attacking": {
+     "left": 0.269,
+     "centre": 0.242,
+     "right": 0.257
+    }
+   }
+  },
+  "third_share": {
+   "attacking": 0.519,
+   "middle": 0.42,
+   "own": 0.061
+  },
+  "lane_share": {
+   "right": 0.398,
+   "left": 0.326,
+   "centre": 0.276
+  },
+  "situations": {
+   "counter_press": {
+    "presses": 79,
+    "regain_rate": 0.367,
+    "mean_pressers": 1.43
+   },
+   "on_defenders": {
+    "presses": 11,
+    "regain_rate": 0.091,
+    "mean_pressers": 1.0
+   },
+   "on_forwards": {
+    "presses": 35,
+    "regain_rate": 0.2,
+    "mean_pressers": 1.63
+   },
+   "on_goal_kick": {
+    "presses": 3,
+    "regain_rate": 0.0,
+    "mean_pressers": 1.0
+   },
+   "on_goalkeeper": {
+    "presses": 5,
+    "regain_rate": 0.2,
+    "mean_pressers": 1.0
+   },
+   "on_midfielders": {
+    "presses": 48,
+    "regain_rate": 0.208,
+    "mean_pressers": 1.35
+   }
+  },
+  "median_reaction_s": 1.6,
+  "marking": {
+   "man_orientation_index": 0.3,
+   "man_oriented_pairs": [
+    {
+     "player": "BAR 2 Cubarsi",
+     "marks": "ATM 19 Alvarez",
+     "share": 0.83
+    },
+    {
+     "player": "BAR 23 Kounde",
+     "marks": "ATM 4 Gallagher",
+     "share": 0.62
+    },
+    {
+     "player": "BAR 3 Balde",
+     "marks": "ATM 22 Simeone",
+     "share": 0.61
+    }
+   ]
+  },
+  "shape_by_block": {
+   "high": {
+    "formation": "2-4-4",
+    "frames": 9346,
+    "width_m": 39.1,
+    "depth_m": 32.9,
+    "last_line_m_from_goal": 56.0,
+    "line_heights_m": [
+     56.0,
+     64.9,
+     79.9
+    ],
+    "gaps_between_lines_m": [
+     8.9,
+     15.0
+    ],
+    "players": {
+     "BAR 2 Cubarsi": [
+      55.8,
+      41.7
+     ],
+     "BAR 3 Balde": [
+      61.5,
+      18.1
+     ],
+     "BAR 5 Inigo": [
+      56.2,
+      28.0
+     ],
+     "BAR 6 Gavi": [
+      76.7,
+      43.3
+     ],
+     "BAR 8 Pedri": [
+      69.1,
+      30.4
+     ],
+     "BAR 9 Lewandowski": [
+      81.1,
+      34.1
+     ],
+     "BAR 11 Raphinha": [
+      81.2,
+      50.3
+     ],
+     "BAR 16 Fermin": [
+      80.7,
+      23.9
+     ],
+     "BAR 17 Casado": [
+      64.2,
+      38.6
+     ],
+     "BAR 23 Kounde": [
+      64.8,
+      52.7
+     ]
+    }
+   },
+   "mid": {
+    "formation": "7-3",
+    "frames": 6685,
+    "width_m": 39.4,
+    "depth_m": 24.9,
+    "last_line_m_from_goal": 46.7,
+    "line_heights_m": [
+     46.7,
+     60.3
+    ],
+    "gaps_between_lines_m": [
+     13.6
+    ],
+    "players": {
+     "BAR 2 Cubarsi": [
+      41.6,
+      41.1
+     ],
+     "BAR 3 Balde": [
+      44.9,
+      22.1
+     ],
+     "BAR 5 Inigo": [
+      41.5,
+      30.4
+     ],
+     "BAR 6 Gavi": [
+      55.0,
+      41.9
+     ],
+     "BAR 8 Pedri": [
+      50.9,
+      30.1
+     ],
+     "BAR 9 Lewandowski": [
+      62.6,
+      33.0
+     ],
+     "BAR 11 Raphinha": [
+      59.1,
+      53.4
+     ],
+     "BAR 16 Fermin": [
+      59.1,
+      21.1
+     ],
+     "BAR 17 Casado": [
+      48.4,
+      38.9
+     ],
+     "BAR 23 Kounde": [
+      44.7,
+      51.7
+     ]
+    }
+   },
+   "low": {
+    "formation": "7-3",
+    "frames": 2880,
+    "width_m": 34.5,
+    "depth_m": 30.0,
+    "last_line_m_from_goal": 22.3,
+    "line_heights_m": [
+     22.3,
+     36.9
+    ],
+    "gaps_between_lines_m": [
+     14.6
+    ],
+    "players": {
+     "BAR 2 Cubarsi": [
+      17.7,
+      38.7
+     ],
+     "BAR 3 Balde": [
+      21.0,
+      24.7
+     ],
+     "BAR 5 Inigo": [
+      19.1,
+      32.1
+     ],
+     "BAR 6 Gavi": [
+      29.4,
+      37.6
+     ],
+     "BAR 8 Pedri": [
+      26.0,
+      29.2
+     ],
+     "BAR 9 Lewandowski": [
+      38.8,
+      36.0
+     ],
+     "BAR 11 Raphinha": [
+      38.0,
+      44.5
+     ],
+     "BAR 16 Fermin": [
+      34.0,
+      22.6
+     ],
+     "BAR 17 Casado": [
+      22.2,
+      36.4
+     ],
+     "BAR 23 Kounde": [
+      21.1,
+      47.6
+     ]
+    }
+   }
+  },
+  "clips": [
+   {
+    "team": "BAR",
+    "situation": "counter_press",
+    "rank": 1,
+    "start_frame": 17128,
+    "end_frame": 17221,
+    "time": "11:25.1",
+    "pressers": "BAR 6 Gavi, BAR 9 Lewandowski, BAR 11 Raphinha, BAR 23 Kounde",
+    "carrier": "ATM 4 Gallagher",
+    "outcome": "forced_pass",
+    "third": "attacking",
+    "lane": "right",
+    "path": "C:\\Users\\user\\Desktop\\Football_cv_project\\football-pipeline (1)\\project\\barca_atletico_first_half\\new_cache\\pressure\\team_structure\\clips\\BAR_counter_press_1_17128.mp4"
+   },
+   {
+    "team": "BAR",
+    "situation": "counter_press",
+    "rank": 2,
+    "start_frame": 2803,
+    "end_frame": 2875,
+    "time": "01:52.1",
+    "pressers": "BAR 3 Balde, BAR 6 Gavi, BAR 8 Pedri, BAR 9 Lewandowski",
+    "carrier": "ATM 5 De Paul",
+    "outcome": "forced_pass",
+    "third": "attacking",
+    "lane": "left",
+    "path": "C:\\Users\\user\\Desktop\\Football_cv_project\\football-pipeline (1)\\project\\barca_atletico_first_half\\new_cache\\pressure\\team_structure\\clips\\BAR_counter_press_2_2803.mp4"
+   },
+   {
+    "team": "BAR",
+    "situation": "on_defenders",
+    "rank": 1,
+    "start_frame": 67287,
+    "end_frame": 67294,
+    "time": "44:51.5",
+    "pressers": "BAR 9 Lewandowski",
+    "carrier": "ATM 2 Gimenez",
+    "outcome": "regain_by_teammate",
+    "third": "middle",
+    "lane": "left",
+    "path": "C:\\Users\\user\\Desktop\\Football_cv_project\\football-pipeline (1)\\project\\barca_atletico_first_half\\new_cache\\pressure\\team_structure\\clips\\BAR_on_defenders_1_67287.mp4"
+   },
+   {
+    "team": "BAR",
+    "situation": "on_defenders",
+    "rank": 2,
+    "start_frame": 25395,
+    "end_frame": 25450,
+    "time": "16:55.8",
+    "pressers": "BAR 16 Fermin",
+    "carrier": "ATM 2 Gimenez",
+    "outcome": "forced_pass",
+    "third": "middle",
+    "lane": "centre",
+    "path": "C:\\Users\\user\\Desktop\\Football_cv_project\\football-pipeline (1)\\project\\barca_atletico_first_half\\new_cache\\pressure\\team_structure\\clips\\BAR_on_defenders_2_25395.mp4"
+   },
+   {
+    "team": "BAR",
+    "situation": "on_forwards",
+    "rank": 1,
+    "start_frame": 62534,
+    "end_frame": 62621,
+    "time": "41:41.4",
+    "pressers": "BAR 3 Balde, BAR 8 Pedri, BAR 16 Fermin",
+    "carrier": "ATM 22 Simeone",
+    "outcome": "loose_ball",
+    "third": "own",
+    "lane": "left",
+    "path": "C:\\Users\\user\\Desktop\\Football_cv_project\\football-pipeline (1)\\project\\barca_atletico_first_half\\new_cache\\pressure\\team_structure\\clips\\BAR_on_forwards_1_62534.mp4"
+   },
+   {
+    "team": "BAR",
+    "situation": "on_forwards",
+    "rank": 2,
+    "start_frame": 64626,
+    "end_frame": 64675,
+    "time": "43:05.0",
+    "pressers": "BAR 11 Raphinha, BAR 16 Fermin",
+    "carrier": "ATM 4 Gallagher",
+    "outcome": "regain_by_presser",
+    "third": "attacking",
+    "lane": "centre",
+    "path": "C:\\Users\\user\\Desktop\\Football_cv_project\\football-pipeline (1)\\project\\barca_atletico_first_half\\new_cache\\pressure\\team_structure\\clips\\BAR_on_forwards_2_64626.mp4"
+   },
+   {
+    "team": "BAR",
+    "situation": "on_goal_kick",
+    "rank": 1,
+    "start_frame": 37717,
+    "end_frame": 37741,
+    "time": "25:08.7",
+    "pressers": "BAR 11 Raphinha",
+    "carrier": "ATM 21 Javi Galan",
+    "outcome": "forced_pass",
+    "third": "attacking",
+    "lane": "right",
+    "path": "C:\\Users\\user\\Desktop\\Football_cv_project\\football-pipeline (1)\\project\\barca_atletico_first_half\\new_cache\\pressure\\team_structure\\clips\\BAR_on_goal_kick_1_37717.mp4"
+   },
+   {
+    "team": "BAR",
+    "situation": "on_goal_kick",
+    "rank": 2,
+    "start_frame": 10600,
+    "end_frame": 10614,
+    "time": "07:04.0",
+    "pressers": "BAR 11 Raphinha",
+    "carrier": "ATM 15 Lenglet",
+    "outcome": "loose_ball",
+    "third": "attacking",
+    "lane": "centre",
+    "path": "C:\\Users\\user\\Desktop\\Football_cv_project\\football-pipeline (1)\\project\\barca_atletico_first_half\\new_cache\\pressure\\team_structure\\clips\\BAR_on_goal_kick_2_10600.mp4"
+   },
+   {
+    "team": "BAR",
+    "situation": "on_goalkeeper",
+    "rank": 1,
+    "start_frame": 13925,
+    "end_frame": 13949,
+    "time": "09:17.0",
+    "pressers": "BAR 17 Casado",
+    "carrier": "ATM 13 Oblak",
+    "outcome": "regain_by_presser",
+    "third": "attacking",
+    "lane": "centre",
+    "path": "C:\\Users\\user\\Desktop\\Football_cv_project\\football-pipeline (1)\\project\\barca_atletico_first_half\\new_cache\\pressure\\team_structure\\clips\\BAR_on_goalkeeper_1_13925.mp4"
+   },
+   {
+    "team": "BAR",
+    "situation": "on_goalkeeper",
+    "rank": 2,
+    "start_frame": 68372,
+    "end_frame": 68402,
+    "time": "45:34.9",
+    "pressers": "BAR 11 Raphinha",
+    "carrier": "ATM 13 Oblak",
+    "outcome": "loose_ball",
+    "third": "attacking",
+    "lane": "centre",
+    "path": "C:\\Users\\user\\Desktop\\Football_cv_project\\football-pipeline (1)\\project\\barca_atletico_first_half\\new_cache\\pressure\\team_structure\\clips\\BAR_on_goalkeeper_2_68372.mp4"
+   },
+   {
+    "team": "BAR",
+    "situation": "on_midfielders",
+    "rank": 1,
+    "start_frame": 15000,
+    "end_frame": 15092,
+    "time": "10:00.0",
+    "pressers": "BAR 6 Gavi, BAR 9 Lewandowski, BAR 11 Raphinha, BAR 23 Kounde",
+    "carrier": "ATM 21 Javi Galan",
+    "outcome": "forced_pass",
+    "third": "attacking",
+    "lane": "right",
+    "path": "C:\\Users\\user\\Desktop\\Football_cv_project\\football-pipeline (1)\\project\\barca_atletico_first_half\\new_cache\\pressure\\team_structure\\clips\\BAR_on_midfielders_1_15000.mp4"
+   },
+   {
+    "team": "BAR",
+    "situation": "on_midfielders",
+    "rank": 2,
+    "start_frame": 55002,
+    "end_frame": 55080,
+    "time": "36:40.1",
+    "pressers": "BAR 8 Pedri, BAR 9 Lewandowski, BAR 16 Fermin, BAR 17 Casado",
+    "carrier": "ATM 14 Llorente",
+    "outcome": "forced_pass",
+    "third": "attacking",
+    "lane": "left",
+    "path": "C:\\Users\\user\\Desktop\\Football_cv_project\\football-pipeline (1)\\project\\barca_atletico_first_half\\new_cache\\pressure\\team_structure\\clips\\BAR_on_midfielders_2_55002.mp4"
+   }
+  ]
+ }
+}

@@ -1,0 +1,4 @@
+﻿team,team_name,kind,start,end,from_m,to_m,change_m,ball_change_m,cause,time
+0,ATM,drop,13542,13592,16.0,7.6,-8.5,-10.4,with_ball,09:01.7
+1,BAR,drop,24870,24920,49.4,39.8,-9.6,-16.4,with_ball,16:34.8
+1,BAR,step_up,11057,11107,20.6,34.3,13.7,9.5,with_ball,07:22.3
