@@ -1,0 +1,23 @@
+team,number,name,position,seconds as carrier,% of it under pressure,mean pressers when pressed,moments,pressed moments,balls lost within 2 s
+ATM,8,Barrios,CM,44,59.3,1.19,28,24,2
+ATM,22,Simeone,RM,41,56.9,1.19,17,13,1
+ATM,5,De Paul,CM,43,49.1,1.17,17,15,3
+ATM,19,Alvarez,ST,19,49.0,1.63,8,5,0
+ATM,14,Llorente,RB,53,47.8,1.2,38,21,5
+ATM,4,Gallagher,LM,45,46.1,1.2,21,18,6
+ATM,21,Javi Galan,LB,83,40.1,1.09,65,40,7
+ATM,15,Lenglet,CB,59,28.8,1.01,50,22,2
+ATM,2,Gimenez,CB,42,16.3,1.0,37,7,3
+ATM,7,Griezmann,ST,78,12.2,1.23,37,5,2
+ATM,13,Oblak,GK,39,8.8,1.0,26,3,3
+BAR,6,Gavi,CM,53,52.1,1.33,8,5,0
+BAR,9,Lewandowski,ST,36,51.8,1.31,13,11,4
+BAR,8,Pedri,CM,75,46.9,1.12,36,20,1
+BAR,11,Raphinha,RW,75,43.8,1.12,10,8,1
+BAR,16,Fermin,LW,68,42.5,1.3,16,15,5
+BAR,17,Casado,CM,81,36.1,1.03,52,24,0
+BAR,23,Kounde,RB,62,32.7,1.25,36,6,1
+BAR,3,Balde,LB,64,31.0,1.1,23,9,1
+BAR,5,Inigo,CB,146,17.2,1.01,99,14,2
+BAR,2,Cubarsi,CB,110,15.8,1.05,97,19,0
+BAR,13,Pena,GK,36,4.4,1.0,28,1,0

@@ -1,0 +1,11 @@
+model,n moments,variable,odds ratio,95% interval,"adjusted effect of pressure, points"
+A: pressed only,1151,pressed in the last second,2.45,1.59 - 3.76,8.3
+"B: + team, ball height, carrier share",1151,pressed in the last second,2.34,1.53 - 3.63,7.3
+"B: + team, ball height, carrier share",1151,team = BAR,0.42,0.20 - 0.79,
+"B: + team, ball height, carrier share",1151,ball 10 m further up the pitch,1.1,0.94 - 1.32,
+"B: + team, ball height, carrier share",1151,target is a carrier (vs the ball),0.25,0.12 - 0.47,
+C: B + open passing lanes,745,pressed in the last second,6.46,2.61 - 18.82,9.9
+C: B + open passing lanes,745,team = BAR,0.45,0.16 - 1.03,
+C: B + open passing lanes,745,ball 10 m further up the pitch,1.02,0.80 - 1.28,
+C: B + open passing lanes,745,target is a carrier (vs the ball),2.28,0.73 - 11.49,
+C: B + open passing lanes,745,one more open passing lane,1.02,0.79 - 1.32,

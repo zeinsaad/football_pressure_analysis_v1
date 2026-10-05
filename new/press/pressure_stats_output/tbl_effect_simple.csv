@@ -1,0 +1,5 @@
+group,buildups,pressed_moments,pressed_loss_pct,unpressed_moments,unpressed_loss_pct,diff_pp,ci95
+ATM,77,273,17.9,289,10.7,7.2,0.5 to 14.0
+BAR,68,189,10.6,400,3.8,6.8,1.3 to 13.5
+BOTH,145,462,14.9,689,6.7,8.3,4.2 to 12.7
+"BOTH, carrier moments only (carrier share >= 50%)",129,307,13.7,439,2.5,11.2,6.8 to 16.3

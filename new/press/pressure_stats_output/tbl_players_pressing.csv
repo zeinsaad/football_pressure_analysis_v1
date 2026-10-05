@@ -1,0 +1,21 @@
+team,number,name,position,track_id,press seconds,episodes joined,episodes led,episodes started,mean distance when pressing m,closing speed at onset m/s,nearest defender % of defending time,mean pressing height m,share of team press seconds %,share of episodes led %
+ATM,19,Alvarez,ST,219,62.4,37,27,26,2.94,3.84,26.8,48.1,16.9,16.8
+ATM,4,Gallagher,LM,204,49.1,33,17,15,2.34,3.89,9.6,36.8,13.3,10.6
+ATM,7,Griezmann,ST,207,45.0,39,23,27,2.46,4.13,16.3,52.5,12.2,14.3
+ATM,21,Javi Galan,LB,221,43.3,27,15,14,2.64,3.41,7.9,19.0,11.7,9.3
+ATM,8,Barrios,CM,208,42.6,32,17,15,2.44,3.68,5.7,27.5,11.5,10.6
+ATM,22,Simeone,RM,222,41.8,35,25,23,2.69,3.53,13.0,41.3,11.3,15.5
+ATM,5,De Paul,CM,205,35.9,37,14,19,2.32,3.77,11.1,38.1,9.7,8.7
+ATM,14,Llorente,RB,214,26.2,20,12,11,2.5,3.68,4.5,39.6,7.1,7.5
+ATM,15,Lenglet,CB,215,11.4,12,5,4,2.36,2.98,2.0,27.7,3.1,3.1
+ATM,2,Gimenez,CB,202,11.2,12,6,7,2.53,2.87,3.1,25.7,3.0,3.7
+BAR,6,Gavi,CM,106,55.2,40,26,24,2.51,3.59,18.6,65.9,18.6,19.7
+BAR,11,Raphinha,RW,111,46.3,35,24,25,2.56,3.85,19.6,81.4,15.6,18.2
+BAR,16,Fermin,LW,116,46.0,33,24,22,2.35,3.49,18.0,63.4,15.5,18.2
+BAR,8,Pedri,CM,108,32.7,23,14,12,2.58,3.33,7.8,57.0,11.0,10.6
+BAR,17,Casado,CM,117,31.5,21,11,9,2.15,3.5,5.8,52.2,10.6,8.3
+BAR,3,Balde,LB,103,26.4,25,13,16,2.27,3.25,8.5,52.2,8.9,9.8
+BAR,9,Lewandowski,ST,109,24.6,17,9,13,2.85,3.88,11.7,74.4,8.3,6.8
+BAR,23,Kounde,RB,123,21.9,14,8,8,2.74,3.77,5.9,66.4,7.4,6.1
+BAR,5,Inigo,CB,105,7.1,6,3,2,2.53,4.69,2.3,44.7,2.4,2.3
+BAR,2,Cubarsi,CB,102,5.2,5,0,1,2.71,2.98,1.7,42.7,1.8,0.0

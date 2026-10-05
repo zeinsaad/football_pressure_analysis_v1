@@ -1,0 +1,13 @@
+[theme]
+base = "dark"
+primaryColor = "#6EA8FE"
+backgroundColor = "#0E1420"
+secondaryBackgroundColor = "#151D2E"
+textColor = "#E8EDF5"
+
+[server]
+maxMessageSize = 500
+runOnSave = true
+
+[browser]
+gatherUsageStats = false

@@ -1,0 +1,435 @@
+You are a football tactical analyst. Below are automated analyses of build-up clips under pressure
+from a Barcelona (BAR) vs Atletico Madrid (ATM) match. The team code in each clip label is assumed to be the
+team building up. LOST = the ball was lost under pressure, KEPT = the ball was kept under pressure.
+Each analysis has VERDICT, WHY, COUNTERFACTUAL.
+
+TASK: Read ALL clips and write a general conclusion about the strengths and weaknesses of each team.
+
+RULES:
+- Write GENERAL conclusions only. Describe tactical tendencies and principles, not individual events.
+- Do NOT give percentages, counts, ratios, success/failure rates, or win/loss statistics.
+- Do NOT mention clip IDs, timestamps, player names, shirt numbers, or specific moments.
+- Do NOT quote the clips or describe single situations. Speak at team level (e.g. "the press tends to...").
+- Use only themes supported by the clips. Do not invent facts.
+- Use qualitative wording such as "often", "tends to", "rarely" instead of numbers.
+- You may contrast what generally separates LOST from KEPT situations (presser count, closing speed,
+  free passing options, distance of the closest defender, block compactness), again without numbers.
+
+OUTPUT FORMAT:
+1. BAR: build-up under pressure (general strengths / weaknesses); pressing (general strengths / weaknesses)
+2. ATM: build-up under pressure (general strengths / weaknesses); pressing (general strengths / weaknesses)
+3. What generally separates a ball lost under pressure from a ball kept
+4. General tactical takeaways (3-5 bullets)
+5. Limitations (what this kind of data cannot show)
+
+CLIPS:
+
+### CLIP | team=ATM | outcome=LOST
+1. VERDICT
+BAR's pressure worked. ATM lost the ball at 00:11 with 2 pressers within 1.7 m and Gavi #6 taking control at 0.0s after the phase ended, so this was a turnover under a crowded press. 
+
+2. WHY
+
+A numbers advantage in the final seconds. At 00:09 Simeone #22 had 2 pressers on him (closest 2.3 m) and 3 BAR players within 7 m. Pedri #8 reached 0.5 m, Iñigo #5 closed at 3.7 m/s (0.9 m) and Balde #3 added 0.3s. At 00:10 Llorente #14 had 2 opponents within 5 m and 5 within 10 m, and Fermín #16 (4.0 m/s, closest 0.9 m, 1.6s) and Pedri #8 (1.4 m) kept pressing. At 00:11 the ball was lost with 2 pressers at 1.7 m, and Gavi #6 (5.1 m/s) arrived to collect it.
+ATM had thin cover in the pressed zone. At 00:10 BAR's block was compact, 23.0 m long by 30.5 m wide, with 6 defenders goal-side of the ball. Llorente #14 had 2 teammates within 10 m and 8 free options, but only Simeone #22 (7 m away, 4.3 m of space) and Alvarez #19 (19 m, 4.7 m) were ahead, both thin margins. Passing lanes aren't modelled, so I can't say whether any was playable.
+The ball went into the press. At 00:07 it was at (51.8, 67.7) and by 00:08 at (68.0, 64.5), about 16 m forward and wide, with the closest defender 5.9 m away. Simeone #22 then received it at 00:09 and was immediately pressed. Whether that was a long pass can't be known. ATM then retreated backwards: x went from 68.0 to 64.2, 61.6 and 57.8, so the ball was being pushed toward its own half.
+The early press was a warning, but alone. Fermín #16 pressed De Paul #5 at 00:05-00:06 (1.2 m, 4.3 m/s), with 0 other pressers. ATM escaped that with the ball at x=51.8 a second later (about 15 m forward), the closest defender 7.3 m away. Before that, ATM circulated for four seconds with 0 pressers (00:01-00:04, closest defender 6.5-12.3 m).
+
+3. COUNTERFACTUAL
+ATM could have kept the ball away from the right touchline after Simeone #22 received it at 00:09. At that point 3 BAR players were within 7 m and he had no support within 10 m. A back pass to De Paul #5 (8 m away, 5.9 m of space) or Gimenez #2 (13 m, 6.5 m) might have relieved the squeeze.
+
+### CLIP | team=ATM | outcome=LOST
+1. VERDICT
+BAR's pressure worked. ATM was under pressure for 75% of the phase, and the ball was lost at 00:11 with Fermín #16 taking control 0.0s after the phase ended. It was a sustained squeeze in the own third, not a single error, and the pressure was close enough that the data shows no other cause.
+
+2. WHY
+
+Constant pressure from the first second. At 00:01 Llorente #14 had a presser 1.9 m away, and pressure stayed on through 00:02, 00:04, 00:06 and 00:08-00:11. In episode 1 Pedri #8 got to 1.3 m, with Simeone #22 closing at 5.1 m/s and Llorente #14 (BAR's RB, per the data) reaching 1.7 m. Note that episode 1 starts at 00:00, before the phase, and its ball positions (72.8 m to 25.2 m) look like a carry-over from the previous play, so I have not relied on them.
+ATM kept the ball in the own third and could not break the press. From 00:01 to 00:06 the ball stayed at x=24-31 across Llorente #14, Barrios #8 and De Paul #5. Balde #3 reached 0.9 m at 00:03-00:04, Pedri #8 again 1.2 m at 00:05-00:06, and at 00:06 there were 4 BAR players within 7 m. ATM had 7 free options at 00:01, 5 ahead, including Gimenez #2 (4.5 m of space) and Griezmann #7 (4.1 m), but those are thin margins and passing lanes aren't modelled. The ball never got past x=31.8 in that stretch.
+The escape to the right touchline led into a second trap. At 00:07 the ball was at (28.1, 63.0) with the closest defender 10.1 m away, so ATM did find space, about 21 m across from y=41.9. Whether that was a pass can't be known. But Simeone #22 was pressed within a second (1.7 m at 00:08, 2.1 m at 00:09). Fermín #16 then pressed for 3.8s, closing at 4.7 m/s down to 0.0 m, with Balde #3 adding 1.0s.
+Cover behind the press was good. At 00:10 only 4 BAR defenders were goal-side of Fermín #16 (the carrier is labelled Fermín #16 at 00:10, which is a BAR name, so the carrier labels at 00:03, 00:06, 00:08 and 00:10 look unreliable). ATM's block was 28.8 m long by 49.2 m wide. At 00:10 ATM had 6 free options, only 1 ahead (Alvarez #19, 28 m away, 6.6 m of space), so nothing forward was close enough to relieve it.
+
+3. COUNTERFACTUAL
+ATM could have released the ball earlier to the free forward options at 00:01 (Gimenez #2, Griezmann #7, De Paul #5 with 8.7 m of space) instead of holding it for six seconds at x=24-31 under constant pressure.
+
+### CLIP | team=ATM | outcome=LOST
+1. VERDICT
+BAR's pressure worked, but over a long period. ATM was under pressure for 56% of the phase across 9 episodes, and the ball was lost at 00:23 with Gavi #6 and Casado #17 both on the carrier and Casado #17 taking control 0.0s after the phase ended. The loss came at the end of an attritional squeeze on the right touchline, and the data shows no separate error or tracking cause for the final moment.
+
+2. WHY
+
+The final trap on the touchline, with two pressers close. From 00:20 to 00:23 Casado #17 pressed for 2.8s (closest 0.4 m, 3.6 m/s) and Gavi #6 for 1.4s (0.5 m, 4.5 m/s). Gallagher #4 had 3 BAR players within 7 m at 00:21-00:23, and the closest defender went 1.8, 1.0, 0.6 m. He was at y=2.4-6.3, hugging the line, so the touchline cut off his space. At 00:22 he had only 2 teammates within 10 m and 4 free options, just 1 ahead: Griezmann #7, 31 m away with a thin 4.3 m margin. Passing lanes aren't modelled.
+BAR's pressers were persistent and kept re-engaging. Fermín #16 pressed at 00:01-00:06 (0.2 m, then 2.2 m, then 0.9 m, closing at 3.6-4.4 m/s). Raphinha #11 reached 1.4 m at 00:07-00:08, Kounde #23 reached 1.1 m (00:13-00:14) and 0.6 m (00:18-00:19), and Casado #17 reached 1.0 m at 00:16-00:18. There were 9 episodes, so ATM was never able to settle.
+ATM kept playing to the same wing. From 00:13 onward the ball stayed at y=2-11 near the right touchline (x=45-63), through Javi Galan #21, Gallagher #4 and Barrios #8, with pressers at 1.5-2.0 m at 00:14, 00:17, 00:18 and 00:19. The ball advanced from x=45.9 (00:18) to x=57.5 (00:19) and x=62.3 (00:20), but each time a defender was within 1.6-2.5 m. At 00:22 BAR's block was 28.4 m long by 41.3 m wide with 5 defenders goal-side, so cover behind the ball was real but not compact.
+ATM did escape for a while, which shows the press had gaps. At 00:07-00:12 the ball went from x=34.6 to 39.3 with the closest defender at 8.7-15.9 m, a clear gap of about 6 seconds. Whether those were passes or touches can't be known. The press only re-formed after the ball moved forward again at 00:13.
+
+
+3. COUNTERFACTUAL
+ATM could have switched play away from the touchline at 00:20, when Javi Galan #21 had the ball at x=62.3 with the closest defender 2.5 m away. Barrios #8 (11 m from the 00:22 carrier, 8.2 m of space) and De Paul #5 (24 m, 8.2 m) were free and away from the wing.
+
+### CLIP | team=ATM | outcome=LOST
+1. VERDICT
+BAR's pressure technically "succeeded" (the phase ended as a turnover at 00:06), but it barely caused the loss. Pressure covered only 17% of the phase, with one presser who never got closer than 2.9 m, and the ball was lost in the ATM own third by Oblak #13, most likely through an ATM error or a long clearance. 
+
+2. WHY
+
+The press was late and light. Casado #17 was the only presser, at 00:05-00:06, closing at 3.0 m/s to a closest distance of 2.9 m. At 00:05 Oblak #13 had 0 opponents within 5 m and the closest defender was 10.8 m away. At 00:06 it was 4.1 m. The turnover came with 1 BAR player 4.1 m away, so contact or a duel isn't evident.
+ATM had time and outlets, so the loss wasn't forced by pressure. From 00:01 to 00:05 pressers were 0 and the closest defender was 5.3-10.8 m away. De Paul #5 had 4 teammates within 10 m at 00:01. At 00:05 Oblak #13 had 5 teammates within 10 m and 4 free options, all ahead: Gimenez #2 (7 m, 4.5 m of space), Simeone #22 (10 m, 4.2 m), Javi Galan #21 (13 m, 4.9 m) and Alvarez #19 (15 m, 11.7 m). The first three are thin margins, and passing lanes aren't modelled.
+BAR's block was deep and compact enough to take the second ball. It was 33.8 m long by 39.7 m wide with 8 defenders goal-side at 00:05, and the ball stayed at x=4-7 throughout. What happened after the ball left Oblak #13 isn't logged: the last position is x=4.1, y=32.8, so it never left the area in the data. Casado #17 took control 0.0s after the phase ended, with the ball at 5.3 m. Whether that was an interception, a mis-hit pass or a loose touch can't be known.
+
+
+3. COUNTERFACTUAL
+Oblak #13 could have played early to a free teammate while the closest defender was 10.8 m away at 00:05, instead of holding the ball until Casado #17 arrived. Gimenez #2 (7 m away) was the nearest option.
+
+### CLIP | team=ATM | outcome=LOST
+1. VERDICT
+BAR's pressure worked, but only partly through pressure itself. ATM was pressed for 39% of the phase, and the ball was lost at 00:07 with Cubarsí #2 taking control 0.0s after the phase ended. The decisive moment was a single press by Pedri #8 on Javi Galan #21 as the ball moved forward, after ATM had escaped two earlier presses.
+
+2. WHY
+
+The final press came at the right moment. Javi Galan #21 carried from x=41.7 to 54.2 (00:05-00:07) with no pressure at 00:05 and 00:06 (closest defender 7.4 m, then 5.6 m). Pedri #8 then closed at 5.3 m/s for 0.9s (00:06-00:07), to 2.3 m, and Cubarsí #2 added 0.3s. At 00:06 Javi Galan #21 had 0 teammates within 10 m, and the ball was lost in the next second. His nearest option, Gallagher #4, was 11 m away with 10.0 m of space, and Alvarez #19 was 18 m away with only 4.6 m. Passing lanes aren't modelled.
+ATM was isolated in the wide channel. Javi Galan #21 was at y=11.8-14.9, near the touchline, with 1 opponent within 5 m and 7 BAR defenders goal-side at 00:06. BAR's block was 28.8 m long by 36.3 m wide, so cover behind the ball was good. How the ball was lost is not in the data: the last ball position is x=69.3, y=23.0, well ahead of his last carry row (x=54.2), so it may have been a long ball. Pass or touch can't be known, and an interception or a poor ball can't be separated.
+The early presses did not work, but they pushed ATM sideways. Pedri #8 closed at 5.1 m/s and reached 0.1 m at 00:01-00:03, with Raphinha #11 adding 0.4s. Barrios #8 and Lenglet #15 still got the ball away: by 00:04 it was at (36.9, 18.4) with the closest defender 9.2 m away, about 15 m across. Pedri #8 pressed alone, so ATM escaped. Barrios #8 had 8 free options at the first pressure, 5 ahead, including Alvarez #19 (4.8 m of space) and Gallagher #4 (4.1 m), both thin margins.
+
+
+3. COUNTERFACTUAL
+Javi Galan #21 could have played inside to Gallagher #4 (11 m away, 10.0 m of space) at 00:06, while the closest defender was still 5.6 m away, rather than keeping the ball up the touchline into Pedri #8's approach.
+
+### CLIP | team=ATM | outcome=LOST
+1. VERDICT
+BAR's pressure worked, but only in part. Pressure covered 37% of the phase, and the ball was lost at 00:09 after a tracking gap at 00:08, with Balde #3 taking control 0.0s after the phase ended. The final loss came from a long ball or loose ball ahead of the press, not from a visible squeeze, and the data cannot separate those.
+
+2. WHY
+
+The turnover happened outside the pressing sequence. At 00:07 Simeone #22 held the ball at x=19.0 with one presser (closest 2.6 m). At 00:08 the ball is lost to tracking. At 00:09 it is at x=40.6, y=61.6, about 21 m further forward, with Balde #3 0.7 m away. Balde #3 closed at -0.6 m/s, which means he was not running at it. The ball seems to have been played forward into him, but whether it was a clearance, a pass or a deflection can't be known. There is also no usable snapshot for the last second, so I cannot count free options or cover at the end.
+The early press was tight but ATM escaped it. Pedri #8 reached 0.0 m at 00:03-00:04 (3.3 m/s), with Lewandowski #9 adding 0.8s (3.8 m). At 00:04 two pressers were on the carrier (closest 0.1 m), yet by 00:05 Simeone #22 had the ball with the closest defender 4.2 m away. De Paul #5 (3 m away, 4.3 m of space) and Simeone #22 (3 m, 7.3 m) were free close by, and there were 5 teammates within 10 m. Passing lanes aren't modelled.
+ATM was never forced backwards or sideways for long. At 00:01 Alvarez #19 had 6 free options but none ahead, and BAR's block was 24.1 m long by 61.4 m wide with only 4 defenders goal-side, so it was stretched. Between 00:05 and 00:07 Simeone #22 kept the ball at x=17.7-19.3 with the closest defender 4.1-4.2 m, then 2.6 m. Fermín #16 and Pedri #8 pressed at 00:05 (3.8 m and 3.6 m, 3.2 and 2.5 m/s) but never got closer than that. The press was present but not decisive.
+
+
+3. COUNTERFACTUAL
+Simeone #22 could have moved the ball earlier or kept it on the ground at 00:05-00:06, when the closest defender was 4.1-4.2 m away and he had 3 BAR players within 7 m. A short pass to a nearby teammate such as De Paul #5 might have kept possession without risking a ball forward into Balde #3.
+
+### CLIP | team=ATM | outcome=LOST
+1. VERDICT
+BAR's pressure worked in the end, but it was a mostly passive press (24% of the phase, 4 episodes). The loss at 00:10 came after Lenglet #15 carried unpressed for four seconds and then the ball went about 11 m forward and wide, where Kounde #23 pressed it and took control 0.0s after the phase ended. It looks like a forward ball into a waiting press rather than a squeeze.
+
+2. WHY
+
+The ball was played into a ready BAR defender. From 00:06 to 00:09 Lenglet #15 carried from x=16.5 to 27.5 with 0 pressers and the closest defender 10.7-12.8 m away. At 00:10 the ball was at (38.8, 12.8), with Kounde #23 closing at 4.7 m/s to 1.3 m and Raphinha #11 adding 0.2s. At 00:09 Gallagher #4 was 8 m away with 5.9 m of space, and Alvarez #19 was 26 m away with only 4.9 m, so the forward option was thin. Passing lanes aren't modelled.
+ATM had time and options earlier, which makes the loss look like a choice. At 00:01 Lenglet #15 had 0 opponents within 10 m and 4 free options, all ahead: Griezmann #7 (10 m, 8.0 m of space), Javi Galan #21 (15 m, 9.2 m), Gallagher #4 (23 m, 8.2 m) and Alvarez #19 (29 m, 6.9 m). Pressers were 0 for 00:01-00:03, with the closest defender 10.9-12.0 m away. BAR's block was 38.9 m long at the start, so it was stretched and deep.
+The one real press, at 00:04-00:05, did not cause the loss. Lewandowski #9 reached 0.0 m (2.1 m/s) and Gavi #6 added 0.5s (2.8 m). The ball then went back to Lenglet #15 at (16.5, 42.3) with the closest defender 12.2 m away, so ATM escaped. Lewandowski #9 was the only carrier-side presser, with 2-3 BAR players within 7 m, which was not enough to win it.
+Cover behind the ball was good at the end. At 00:09 BAR's block was 26.9 m long by 44.8 m wide with 8 defenders goal-side. ATM had 7 free options, 3 ahead, but the closest ahead (Gallagher #4) had only 8 m to work with.
+
+
+3. COUNTERFACTUAL
+Lenglet #15 could have kept the ball on the ground at 00:09, with no presser and the closest defender 10.7 m away, instead of playing it forward and wide into Kounde #23's approach. A short pass to Javi Galan #21 (10 m away, 13.6 m of space) was the safest free option.
+
+### CLIP | team=ATM | outcome=LOST
+1. VERDICT
+BAR's pressure worked, but only in part. Pressure covered 57% of the phase, and Fermín #16 stayed on De Paul #5 at 00:01-00:02. The turnover itself came at 00:04 from a long ball played out of that press, with Cubarsí #2 taking control 0.0s after the phase ended, so the pressure forced the release but did not win the ball directly.
+
+2. WHY
+
+Fermín #16 pressed De Paul #5 closely and the ball was released under it. Fermín #16 closed at 3.7 m/s to 0.9 m over 1.2s (00:01-00:02). Pedri #8 added only 0.1s (4.8 m). At 00:02 there were 3 BAR players within 7 m of the carrier. By 00:03 the ball was at x=30.2, about 12 m forward, with the closest defender 7.5 m away. At 00:04 it was at x=42.2. Whether those were passes, a clearance or a loose ball can't be known, as no carrier is logged after 00:02.
+ATM had support, but the forward options were thin. At 00:01 De Paul #5 had 6 teammates within 10 m and 6 free options, only 1 ahead: Griezmann #7 (20 m away, 4.3 m of space). The rest were level or behind: Llorente #14 (8 m, 6.2 m), Simeone #22 (8 m, 5.4 m) and Gallagher #4 (10 m, 4.4 m). At 00:01 Alvarez #19 was 7 m away and ahead with only 4.0 m of space. Passing lanes aren't modelled.
+The ball left the pressed zone and ran into BAR cover further up. At 00:03 only 2 BAR defenders were goal-side of the ball and 0 teammates were within 10 m of it, so no ATM player was near it. Cubarsí #2 then reached 0.9 m at 4.1 m/s and took control at x≈42. BAR's block was 33.2 m long by 38.0 m wide at that point, so a defender was positioned to meet the ball.
+
+
+3. COUNTERFACTUAL
+De Paul #5 could have played short to Llorente #14 or Simeone #22 (both 8 m away, 5.4-6.2 m of space) at 00:01-00:02, rather than releasing the ball forward toward a lone target 20 m away.
+
+### CLIP | team=ATM | outcome=LOST
+1. VERDICT
+BAR's pressure worked. ATM was pressed for 46% of the phase, and the last sequence (00:15-00:19) was a progressive squeeze that grew from 1 to 4 pressers and ended in a turnover, with Casado #17 taking control 0.0s after the phase ended. The loss came directly from that squeeze, not from a tracking gap or a stoppage.
+
+2. WHY
+
+The press built up as the ball advanced. Llorente #14 had the ball from 00:15 to 00:18 with the closest defender at 4.8, 1.7, 2.1 and 1.2 m, and pressers went 1, 1, 1, 2. At 00:19 De Paul #5 had 4 pressers and 4 BAR players within 7 m (closest 1.1 m). Fermín #16 pressed for 2.9s (closest 0.7 m, 5.7 m/s), Lewandowski #9 for 1.3s (0.6 m), Balde #3 for 1.2s (1.6 m) and Casado #17 for 0.6s (1.0 m). By the end, the ball was surrounded.
+ATM's forward options were far away. At 00:18 Llorente #14 had 2 opponents within 5 m, 4 within 10 m and only 1 teammate within 10 m. He had 4 free options, just 1 ahead: Alvarez #19, 29 m away with 7.5 m of space. Simeone #22 (12 m, 7.0 m of space) was the only close outlet and was level or behind. Passing lanes aren't modelled, so I can't say whether any was playable. BAR's block was 30.9 m long with 6 defenders goal-side, so it was compact enough to cover the space behind.
+ATM carried into the squeeze rather than releasing early. From 00:14 to 00:19 the ball went from x=11.0 to x=36.5 along the right side (y≈56-64). At 00:14 the closest defender was 11.8 m away, so ATM had room to find a pass. By 00:16 it was 1.7 m, and the carry kept going into more pressers.
+Earlier, Raphinha #11 shows the same pattern at the touchline. He reached 0.0 m twice (00:03 and 00:06, 5.7 and 4.0 m/s) on Javi Galan #21 at y≈2.7, but alone, and ATM got out each time (closest defender 7.6 m at 00:04, 7.2 m at 00:08). The ball was played back toward x=3-7 by 00:09-00:11, so the early presses pushed ATM backwards without winning it.
+
+
+3. COUNTERFACTUAL
+Llorente #14 could have released the ball at 00:15-00:16, when only one presser was on him (4.8 m, then 1.7 m), to Simeone #22 (12 m away, 7.0 m of space) instead of carrying it from x=11.8 to x=27.6 into three more defenders.
+
+### CLIP | team=ATM | outcome=LOST
+1. VERDICT
+BAR's pressure worked, but only at the very end. ATM escaped two earlier squeezes (00:07-00:09 and 00:02-00:06), carried unpressed for four seconds, and lost the ball at 00:16 after a forward ball of about 15 m into a waiting BAR midfield. Casado #17 took control 0.0s after the phase ended. The loss looks like a forward ball into a ready press rather than a forced error.
+
+2. WHY
+
+A forward ball into BAR's cover. From 00:11 to 00:14 Lenglet #15 carried from x=26.4 to 30.8 with 0 pressers and the closest defender 8.1-11.3 m away. At 00:15 the ball was at x=45.9 with Gallagher #4 as carrier and Gavi #6 on him (0.9 m, 4.4 m/s). At 00:16 it was at x=56.4, with Casado #17 (0.4 m) and Gavi #6 (3.6 m) pressing, and 2 BAR players within 7 m. At 00:15 BAR had only 4 defenders goal-side, but they were compact (19.3 m long by 35.8 m wide) and 2 were within 5 m of the ball.
+ATM's options at the end were thin. At 00:15 Gallagher #4 had 1 teammate within 10 m and 7 free options, only 1 ahead: Griezmann #7 (12 m away, 5.8 m of space). Barrios #8, Simeone #22 and Javi Galan #21 were level or behind, 16-22 m away. Passing lanes aren't modelled, so I can't say whether any was playable.
+The mid-phase squeezes were strong but did not win it. At 00:07-00:08 Gavi #6 (0.6 m, 3.1 m/s) and Pedri #8 (0.5 m, 3.8 m/s) had Barrios #8 with 3 BAR players within 7 m. The ball then went back to x=29.0 by 00:10 with the closest defender 7.4 m away, so ATM played out of it. Raphinha #11 had pressed alone earlier (00:01-00:05, closest 1.8-2.5 m), and Javi Galan #21 was pinned at y=3-4, but ATM kept the ball.
+BAR let ATM carry freely in between. Pressers were 0 from 00:10 to 00:14. That gave ATM time, which makes the forward ball at 00:15 look like a choice, not a necessity.
+
+
+3. COUNTERFACTUAL
+Lenglet #15 or Gallagher #4 could have kept the ball moving on the ground at 00:14, when Lenglet #15 had no presser and the closest defender was 8.6 m away, rather than sending it forward to a lone target (Griezmann #7, 5.8 m of space) with BAR's midfield close behind.
+
+### CLIP | team=ATM | outcome=LOST
+1. VERDICT
+BAR's pressure worked. ATM was pressed for 63% of the phase deep in its own third, and the ball was lost at 00:05 at x≈2 with Pedri #8 taking control 0.0s after the phase ended. The ball was lost by Gallagher #4 under two pressers, with no tracking gap or stoppage involved.
+
+2. WHY
+
+A two-man press at the goal line. At 00:04 Kounde #23 (pressing 2.0s, closest 2.6 m, 4.4 m/s) and Raphinha #11 (1.9s, closest 0.1 m, 4.3 m/s) were both on Gallagher #4, with 2 BAR players within 7 m and the closest defender 1.4 m away. Raphinha #11 was in contact range from the first moment. By 00:05 the ball was at x=2.3, y=9.9 and the closest defender was 2.1 m away.
+ATM was pushed backwards into its own box. The ball went from x=9.3 and 9.1 (00:02-00:03) to 4.7 (00:04) and 2.3 (00:05), so Gallagher #4 was driven toward his own goal with no space left. At 00:01 Javi Galan #21 was already on the line (x=1.9, y=0.6) with a BAR player 0.8 m away and 0 teammates within 10 m.
+ATM's outlets were far away. At 00:04 Gallagher #4 had 1 teammate within 10 m and 6 free options, 5 ahead. The nearest were Javi Galan #21 (8 m, 8.4 m of space) and Barrios #8 (13 m, 7.5 m), while Gimenez #2 (26 m) and De Paul #5 (27 m, 5.7 m) were far. Passing lanes aren't modelled, so I can't say whether any was playable.
+BAR's block was stretched, but it didn't matter. It was 43.1 m long by 38.2 m wide, with 10 ATM players goal-side of the ball. BAR had cover only close to the ball, yet the local numbers (2 pressers vs 1-2 ATM players nearby) were enough.
+
+
+3. COUNTERFACTUAL
+Gallagher #4 could have released the ball at 00:03, when only one presser was near (3.0 m), to Javi Galan #21 (8 m away, 8.4 m of space) instead of holding it until the second presser arrived at 00:04.
+
+### CLIP | team=BAR | outcome=LOST
+1. VERDICT
+ATM's pressure worked, though it came from a single presser. Llorente #14 pressed alone for 2.4s (closest 0.0 m) and took control of the ball 0.0s after the phase ended at 00:04. The loss looks like a carry that ran into one defender, not a crowded squeeze, and the data cannot show whether it was a tackle, a poor touch or a pass.
+
+2. WHY
+
+One presser, and he stayed on the carrier. Llorente #14 closed at 4.5 m/s from 00:02 to 00:04, with the closest defender at 4.0 m at 00:03 and 0.0 m at 00:04. Only 1 opponent was within 5 m and 1 within 7 m at every moment, so BAR was never outnumbered. ATM won it with a one-on-one.
+Fermín #16 carried the ball into the press instead of releasing it. From 00:01 to 00:03 he carried from x=68.5 to 55.3 along the left (y 20 → 11), with the closest defender 6.2, 4.8 and 4.0 m away. The gap kept shrinking as he went. At 00:04 the ball was at x=48.2, y=7.5, near the touchline, and Llorente #14 had the ball by then. Whether Fermín #16 lost it or passed it away can't be known, since the carrier at 00:04 is already Llorente #14.
+BAR had short outlets, none ahead. At 00:01 Fermín #16 had 5 free options, 0 ahead: Pedri #8 (6 m away, 5.1 m of space), Balde #3 (13 m, 8.3 m), Gavi #6 (23 m, 8.0 m) and Cubarsí #2 (26 m, 6.3 m). At 00:02 Pedri #8 was 8 m away and ahead with 5.7 m of space. At 00:03 Pedri #8 (11 m, 6.8 m) and Balde #3 (9 m, 7.4 m) were still free. Passing lanes aren't modelled, so I can't say whether any was playable.
+ATM's block was wide and stretched. It was 26.5 m long by 53.1 m wide at 00:01 and 31.8 m by 52.7 m at 00:03, with 5-6 defenders goal-side. That is not a compact cover, yet one man was enough because no BAR player was near the carrier to help.
+
+
+3. COUNTERFACTUAL
+Fermín #16 could have released the ball at 00:02 or 00:03, while Llorente #14 was still 4.0-4.8 m away, to Pedri #8 or Balde #3 (both 6-11 m away with 5.7-7.4 m of space), rather than carrying toward the touchline.
+
+### CLIP | team=BAR | outcome=LOST
+1. VERDICT
+ATM's pressure worked. BAR was pressed for 50% of the phase, and at 00:07 Fermín #16 was still carrying under two pressers (1.5 m) when the ball was lost, with De Paul #5 taking control 0.0s after the phase ended. The squeeze happened on the touchline after a ball switch, so the loss came from pressure, not from a stoppage. The tracking gap at 00:04 hides how the ball reached the wing.
+
+2. WHY
+
+A sustained, close press on the touchline. From 00:05 to 00:07 Fermín #16 had a defender within 1.3-1.5 m at every second, with 2 pressers at 00:05 and again at 00:07. Simeone #22 pressed for 2.4s (closest 0.6 m, 5.5 m/s), De Paul #5 for 1.0s (1.5 m) and Llorente #14 for 0.6s (3.8 m). Fermín #16 was at y=2.3-3.6, so the line cut off one side. He carried from x=58.3 to 70.4, but never got free of the press.
+Fermín #16 was isolated. At 00:06 he had 0 teammates within 10 m and 2 opponents within 5 m. The nearest free options were Pedri #8 (15 m away, 5.6 m of space) and Lewandowski #9 (21 m, 4.7 m), both thin margins. Passing lanes aren't modelled. ATM's block was 37.9 m long by 41.0 m wide with 4 defenders goal-side, so it was stretched, but the local numbers were enough.
+The ball changed wing between 00:02 and 00:03. It moved from (55.6, 48.3) to (51.4, 1.9), about 46 m across the pitch, with the closest defender 6.0 m away. Tracking is lost at 00:04, so I can't say how it got there or whether ATM's press triggered it. Raphinha #11, the starting carrier, had a defender 1.3 m away at 00:01, and 0 teammates within 10 m.
+The loss came as the ball crossed the 70 m line. The last ball position was x=70.4, in the attacking third, but the phase is recorded as lost. The data cannot show whether it was a tackle, a heavy touch or a pass.
+
+
+3. COUNTERFACTUAL
+Fermín #16 could have played back inside at 00:05, when he first had 2 pressers 1.5 m away, to Pedri #8 (15 m away, 5.6 m of space), rather than carrying along the touchline for two more seconds.
+
+### CLIP | team=BAR | outcome=LOST
+1. VERDICT
+ATM's pressure worked, but only in the final second. BAR was pressed for just 19% of the phase, with a single presser at a time, and the ball was lost at 00:17 to Llorente #14 (closing at 5.0 m/s, closest 0.3 m), who took control 0.0s after the phase ended. BAR had been moving the ball without pressure for most of the clip, so the loss looks like a carry or pass into a waiting defender, not a sustained squeeze. Whether it was a tackle, a heavy touch or a pass can't be known.
+
+2. WHY
+
+A single, well-timed press at the end. Llorente #14 pressed for 0.9s at 00:16-00:17. At 00:16 Pedri #8 had the ball with the closest defender 2.9 m away, and at 00:17 the ball was at (52.8, 6.3) with the closest defender 4.8 m. The ball moved about 10 m forward and wide between those rows, near the touchline, and no carrier is logged at 00:17. At 00:16 ATM's block was 36.1 m long by 41.5 m wide with only 4 defenders goal-side, so it was stretched.
+BAR's options were all level or behind. At 00:16 there were 5 free options but none ahead: Balde #3 (5 m away, 10.7 m of space), Pedri #8 (10 m, 4.4 m), Iñigo #5 (22 m, 6.3 m) and Casado #17 (22 m, 5.4 m). With 3 teammates within 10 m, BAR had short passes available, so the forward ball looks like a choice. Passing lanes aren't modelled.
+BAR had a long stretch of free circulation. From 00:01 to 00:06 pressers were 0 and the closest defender was 16-21.5 m away. Pena #13 and Iñigo #5 built up from x=13 to x=25 with no one near. ATM's block at 00:01 was 38.1 m long by 44.9 m wide, a deep and passive shape.
+Earlier presses were brief and BAR escaped. Griezmann #7 reached 0.2 m at 00:07-00:08 (4.3 m/s, alone), yet by 00:09 the ball was at x=23.3 with the closest defender 8.2 m away, so BAR played back to Pena #13 at 00:11. Simeone #22 (00:12-00:13, closest 4.1 m) and Gimenez #2 (00:14-00:15, closest 3.6 m) were too far away. Each press was a single man and BAR escaped each time.
+
+3. COUNTERFACTUAL
+Pedri #8 could have played short to Balde #3 (5 m away, 10.7 m of space) at 00:16, with only 2.9 m to the closest defender, instead of moving the ball forward and wide toward the touchline where Llorente #14 was closing.
+
+### CLIP | team=BAR | outcome=LOST
+1. VERDICT
+ATM's pressure worked. BAR was under pressure for 89% of the phase, with a presser on the ball in every row from 00:01 to 00:08, and the ball was lost at 00:08 with Gallagher #4 taking control 0.0s after the phase ended. This was a sustained squeeze, not an error or tracking gap, and it grew to 3 pressers at 00:07.
+
+2. WHY
+
+Constant, close pressure from the first second. At 00:01 Fermín #16 had a presser at 0.9 m and 4 ATM players within 7 m. At 00:02 it was 1.0 m, and 4 players were still within 7 m. Llorente #14 reached 0.9 m, Fermín #16's marker reached 0.2 m (4.2 m/s), and Griezmann #7 added 0.5s (2.2 m). BAR never got a clear second on the ball.
+Later pressers were fast and arrived together. Alvarez #19 closed at 5.4 m/s and stayed on Casado #17 for 2.6s (closest 0.3 m, 00:02-00:05). Barrios #8 (5.6 m/s, 0.3 m) and Llorente #14 (5.7 m/s, 0.5 m) then pressed Fermín #16 at 00:05-00:07, with Javi Galan #21 briefly adding. At 00:07 there were 3 pressers and 5 ATM players within 10 m, against 1 BAR teammate within 10 m. Fermín #16 was isolated.
+BAR's outlets were behind or far away. At 00:01 Fermín #16 had 3 free options, none ahead: Balde #3 (10 m away, 4.7 m of space), Gavi #6 (22 m, 9.0 m) and Kounde #23 (28 m, 5.7 m). Lewandowski #9 was ahead but marked (1.7 m). At 00:07 there were 7 free options, only 1 ahead: Raphinha #11 (22 m away, 9.0 m of space). Casado #17 (13 m, 5.5 m) was the nearest outlet. Passing lanes aren't modelled.
+BAR advanced, but into more pressure, not away from it. The ball went from x=28.0 (00:01) to x=36.7 (00:05), 48.8 (00:06), 54.2 (00:07) and 58.7 (00:08), always with a defender within 0.5-2.3 m except one row at 3.7 m (00:03). ATM's block at 00:07 was 29.4 m long by 32.9 m wide with 6 defenders goal-side, so it was compact behind the ball. At 00:08 the carrier is blank, so a pass, tackle or loose touch can't be told apart.
+
+
+3. COUNTERFACTUAL
+Fermín #16 or Casado #17 could have released the ball earlier at 00:03, when Casado #17 had the ball and the closest defender was 3.7 m away, to Raphinha #11 or another forward outlet, instead of carrying through 00:04-00:07 as ATM added pressers.
+
+### CLIP | team=BAR | outcome=KEPT
+1. VERDICT
+ATM's pressure failed. It was real early (22% of the phase, 3 episodes between 00:01 and 00:05) but never won the ball, and BAR progressed through a long unpressed carry by Inigo #5 that began after a tracking gap (00:06-00:08), so the early press can't be credited or blamed for how the ball escaped.
+
+2. WHY
+
+The early press stayed close but didn't attack. At 00:01 Griezmann #7 (0.7 m away) and Gallagher #4 (1.4 m) were both on Gavi #6, with 2 opponents within 5 m. Their mean closing speeds were only 0.8 and 0.5 m/s, so they were near the ball without stepping in. Griezmann #7 pressed again at 00:02-00:03 (closest 1.3 m, 1.1 m/s). Gallagher #4 pressed at 00:04-00:05 (closest 2.1 m, 2.2 m/s). After 00:01 there was only ever one presser at a time.
+The carrier was never isolated. At 00:01 Gavi #6 had 7 teammates within 10 m and 5 free options: Fermin #16 (5.0 m from his nearest opponent), Raphinha #11 (7.3 m), Pedri #8 (7.6 m) and Kounde #23 (7.6 m). ATM's block was compact (24.5 m by 29.3 m, 7 defenders goal-side), but the ball only moved sideways (y 52→61, x 48→46), and BAR was never forced to play backwards or lose it.
+No pressure from 00:09 onward. After the tracking gap, Raphinha #11 has the ball at 00:09 with 0 pressers (closest defender 3.9 m). By 00:10 the ball is at y=44.4 with the closest defender 10.6 m away. The data doesn't show how it got there or whether it was a pass. Inigo #5 then carried from x=43.5 to 64.8 (00:12-00:17), with the closest defender 17.2 m away at 00:13, shrinking to 3.9 m at 00:17.
+Plenty of outlets at the end. At 00:16 Inigo #5 had 6 free options, 3 ahead: Pedri #8 (6.0 m of space), Balde #3 (13.2 m) and Gavi #6 (6.2 m). ATM's block was 18.8 m long with 8 defenders goal-side, so it was compact, but only 1 opponent was within 10 m and nobody stepped out to engage. The last ball position (x=73.9) is past Inigo #5's last carry row (x=64.8). Whether that was a pass or a touch can't be known.
+
+3. COUNTERFACTUAL
+ATM could have sent a second presser at 00:02, when Griezmann #7 was 1.3 m from the ball but closing at only 1.1 m/s, or stepped out onto Inigo #5 around 00:13-00:15, when his closest defender was 11-17 m away. The data doesn't show why they didn't, as pressing triggers and body orientation aren't modelled.
+
+### CLIP | team=BAR | outcome=KEPT
+1. VERDICT
+ATM's pressure failed. It was present for 50% of the phase, with 4 episodes and closing speeds of 4.3-5.3 m/s, but it mostly arrived one defender at a time and rarely got inside 3 m. Barcelona progressed by carrying through it, not by any error or tracking problem.
+
+2. WHY
+
+Fast closing, but no one got close and nobody doubled up. Gallagher #4 closed at 5.2 m/s for 1.7s (00:03-00:04) but only reached 4.0 m. De Paul #5 closed at 5.3 m/s at 00:05 and reached 3.2 m. Each was alone, and Pedri #8 carried from x=44.0 to 48.7 with the closest defender at 4.2-5.0 m (00:04-00:05).
+BAR reset between episodes. At 00:06 the closest defender was 9.1 m away with nobody within 7 m. At 00:07 it was 6.5 m, and Lewandowski #9 had the ball with 0 pressers.
+The final press was the best, but it was late and the cover was loose. Simeone #22 pressed for 2.0s (00:07-00:09), closing at 4.3 m/s to 1.6 m, with De Paul #5 adding 0.5s (closest 4.2 m). Even so, the timeline shows the closest defender at 4.7 m (00:08) and 3.4 m (00:09), and Lewandowski #9 carried from x=56.4 to 66.6. ATM's block was 34.0 m long by 34.0 m wide with 6 defenders goal-side, so it was not compact. The ball held 0.5s beyond 70 m.
+BAR had space and outlets throughout. At 00:01 Cubarsí #2 had 1 opponent within 10 m, ATM's block was 35.8 m long, and Kounde #23 was free (10.6 m of space). At 00:08 Lewandowski #9 had 0 teammates within 10 m but 8 free options, including Balde #3 (14 m away, 10.8 m of space) and Casado #17 (18 m, 6.6 m). Raphinha #11 (29 m) and Fermín #16 (22 m) were free but far away, and passing lanes aren't modelled. He never needed them, because he kept the ball.
+
+
+
+3. COUNTERFACTUAL
+ATM could have sent Simeone #22 and De Paul #5 together at 00:07, when Lewandowski #9 had the ball and the closest defender was 6.5 m away. Instead the pressure arrived piecemeal, with De Paul #5 adding only 0.5s. The data doesn't show why they didn't, since pressing triggers and body orientation aren't modelled.
+
+### CLIP | team=BAR | outcome=KEPT
+. VERDICT
+ATM's pressure failed. It appeared only once, at 00:13-00:14, with a single presser for 0.6s (4% of the phase). BAR's progression came from unpressured circulation and a fast ball down the left, not from beating a press.
+
+2. WHY
+
+No pressure for the first 12 seconds of the phase. Pressers were 0 on every row from 00:01 to 00:13, and the closest defender was 5.4-12.4 m away. At 00:04-00:06 Cubarsí #2 carried at x=31-34 with 9.2-12.4 m of space. At 00:01 Kounde #23 had 0 opponents within 5 m, and ATM's block was 31.8 m long with 10 defenders goal-side. They were deep and stretched, and they never forced a decision.
+Casado #17 was left alone at 00:08-00:09. He carried at x≈43-44 with the closest defender 5.7-5.9 m away and only 1 defender within 7 m. That is close enough to engage, but nobody stepped in. The ball then switched from y=41 to y=27 (00:10) and on to Inigo #5 (00:11), and still no press came.
+The only press was lone and late. Llorente #14 closed at 6.2 m/s but only got to 2.2 m, over 0.6s. Simeone #22 added 0.3s in the final second. Only 1 opponent was within 5 m (2 within 10 m). The ball covered about 13 m between 00:12 and 00:13 (49.6,15.1 → 62.6,5.2), consistent with a pass, though the pass type can't be known. Fermín #16 then took it at the touchline (y=0.4), where the line limited his space more than the press did.
+BAR always had free options. At 00:01 Casado #17 (6.4 m from his nearest opponent), Cubarsí #2 (11.3 m) and Inigo #5 (20.9 m) were free. At 00:13 Fermín #16 (4.8 m), Balde #3 (8.8 m) and Casado #17 (9.0 m) were free, though Lewandowski #9 was marked (3.8 m). One second before the end there were 5 free options, including Lewandowski #9 ahead with a thin 4.0 m margin. This is a geometric proxy only, and passing lanes aren't modelled. ATM's block was 22.4 m long with 4 defenders goal-side, so it was more compact than at the start but still never closed the carrier.
+
+The ball then reached x=72.6 and held 0.5s past the line. No carrier is logged for that last step, so whether it was a pass or a touch can't be known.
+
+3. COUNTERFACTUAL
+ATM could have pressed Casado #17 at 00:08-00:09, when he was 5.7-5.9 m from the nearest defender, before the switch to the left. The data doesn't show why they didn't, since pressing triggers and body orientation aren't modelled.
+
+### CLIP | team=BAR | outcome=KEPT
+1. VERDICT
+ATM's pressure failed, though it was the most sustained of the clips so far: 5 episodes, 52% of the phase under pressure, closing speeds up to 6.3 m/s. BAR escaped by switching play and re-circulating, and the final step into the attacking third came at 00:12 while De Paul #5 was 0.4 m away, so he was close but never won the ball.
+
+2. WHY
+
+Pressers arrived fast but alone, and BAR moved the ball away. Griezmann #7 closed at 5.1 m/s (00:01, closest 1.6 m). De Paul #5 closed at 6.3 m/s over 1.3s (00:02-00:03, closest 1.6 m) and 5.4 m/s at 00:07-00:08 (closest 2.4 m). Each was a single presser, so BAR kept moving the ball. At 00:02 the ball goes from y=34.8 to y=16.8 and the closest defender is 5.9 m away, so the press was shaken off there. Whether that was a pass can't be known from the data.
+The carrier was isolated, but the press got no second man. At 00:01 Cubarsí #2 had 0 teammates within 10 m and only 1 opponent within 5 m. ATM's block was 20.2 m long with 10 defenders goal-side, so it was compact and deep, with many players behind the ball. Even so, only one man engaged, and Kounde #23 (12.3 m of space), Fermín #16 (4.2 m), Balde #3 (7.8 m) and Iñigo #5 (11.1 m) were all free. Balde #3 is 32 m away, so passing lanes matter, and they aren't modelled.
+The touchline trap at 00:05-00:06 did not produce a turnover. Balde #3 had the ball at x≈62-64, y≈2-3, with the closest defender at 2.2 m then 1.9 m, and Simeone #22 and De Paul #5 near him (2 pressers at 00:05). That is the tightest ATM got, yet BAR got the ball away. At 00:07 it sits at x=49.1 with the closest defender 7.9 m away, so it went backwards and across, resetting the move. The pass type can't be known.
+The final press arrived too late. At 00:11 Pedri #8 had the ball with 1 opponent within 5 m, 1 teammate within 10 m, and Lewandowski #9 free ahead (8 m, 4.9 m margin, a thin proxy). At 00:12 De Paul #5 pressed at 6.1 m/s (closest 0.4 m, 1.2s) and Griezmann #7 added 1.4s, but the ball had already moved from x=48.5 (00:11) to x=64.7 (00:12), a jump of about 16 m, and held 0.5s beyond 70 m. Whether that was a pass or a carry can't be known.
+
+3. COUNTERFACTUAL
+ATM could have doubled up at 00:10-00:11, when Cubarsí #2 was on the ball at x≈48.5 and the closest defender was 3.9 m then 1.6 m away. A second presser then might have blocked the vertical ball to Pedri #8 before it travelled 16 m. The data doesn't show why they didn't, since pressing triggers and body orientation aren't modelled.
+
+### CLIP | team=BAR | outcome=KEPT
+1. VERDICT
+ATM's pressure failed. It was intense early (2 pressers within 0.5 m of Balde #3 at 00:02), but BAR got out with a quick ball across the pitch. The progression itself came from a long, mostly unpressed circulation and a carry by Casado #17.
+
+2. WHY
+
+The early press was tight but left an outlet open. At 00:02 Griezmann #7 (closest 0.3 m, 3.1 m/s) and Simeone #22 (4.0 m/s) pressed Balde #3 at the touchline (y=4.8). He had 0 teammates within 10 m. Even so, the ball went from (66.8, 4.8) to (61.5, 19.8) by 00:03, about 16 m in a second, and the closest defender was then 6.8 m away. Casado #17 had been free, with 10.1 m of space at 00:01. The pass type can't be known.
+De Paul #5 pressed alone and the ball moved on. At 00:03-00:04 he closed at 5.5 m/s and got to 0.9 m (1.2s). By 00:05 the ball was at y=37.5, about 14 m away across the pitch, with the closest defender 9.9 m away. Neither episode forced a loss.
+No pressure for 9 seconds. From 00:05 to 00:13 pressers were 0 and the closest defender was 7.3-12.2 m away. Cubarsí #2 and Kounde #23 circulated the ball at 00:06-00:08. Casado #17 then carried from x=59.0 to 68.9 (00:09-00:15) with nobody within 7 m until 00:14. ATM's block shrank to 14.8 m long by 32.5 m wide with 10 defenders goal-side at 00:14, so it was deep and compact but passive.
+The final press came too late. Griezmann #7 pressed at 00:14-00:15 (3.4 m, 3.9 m/s), and the ball crossed the line and held 0.5s. At 00:14 Casado #17 had 0 opponents within 5 m, and 6 free options, 3 ahead. Pedri #8 (15 m away, 6.5 m of space) and Fermín #16 (24 m, 5.7 m) were free, though passing lanes aren't modelled. He kept the ball rather than needing them.
+
+
+3. COUNTERFACTUAL
+ATM could have stepped out onto Casado #17 at 00:09-00:13, when he carried with the closest defender 7.3-11.3 m away and 0 players within 7 m. The data doesn't show why they stayed deep, since pressing triggers and body orientation aren't modelled.
+
+### CLIP | team=BAR | outcome=KEPT
+1. VERDICT
+ATM's pressure failed. It showed up in short bursts (4 episodes, 20% of the phase, never more than 2 pressers), and BAR then moved the ball away from it. The progression itself came from a long, unpressed carry by Inigo #5 from 00:15 to 00:21, not from beating a press.
+
+2. WHY
+
+Pressers arrived one at a time and were shaken off. Gallagher #4 closed at 4.1 m/s at 00:03 (closest 3.3 m) and was down to 1.2 m by 00:04 (1.8 m/s). Raphinha #11 had 0 teammates within 10 m and kept the ball at x≈10 for four seconds. Then at 00:05 the ball went from (10.4, 65.7) to (21.5, 52.7), about 17 m, and the closest defender was 5.6 m away. The pass type can't be known. Alvarez #19 (00:04, closest 3.5 m, 2.4 m/s) added nothing close.
+The best press, a two-man one, came at 00:07-00:08 and still didn't win it. Alvarez #19 (1.3 m, 4.1 m/s) and Griezmann #7 (1.0 m, 4.2 m/s) both closed on Casado #17 around x=31-33. Casado #17 had 5.5 m of space at 00:06, so they arrived late. By 00:09 pressers were 0 again, with 3 defenders within 7 m but none engaging. At 00:10 the ball was at x=23.7 with the closest defender 10.5 m away. It went backwards (x=34.8 to 23.7), so BAR reset rather than lost it.
+ATM's block was stretched at the start. At 00:02 it was 41.5 m long by 41.6 m wide, with 10 defenders goal-side of the ball. Raphinha #11 had 5 free options, 4 ahead: Kounde #23 (11 m away, 5.7 m of space), Casado #17 (26 m, 7.2 m), Iñigo #5 (33 m) and Gavi #6 (33 m). The long distances matter, since passing lanes aren't modelled. The block was far from the ball, so there was little to stop him.
+No pressure for the last 12 seconds. From 00:10 to 00:21 pressers were 0. Cubarsí #2 and Inigo #5 carried the ball from x=22 to x=61.6 with the closest defender 9.2-16.3 m away. At 00:20 Inigo #5 had 5 free options, 4 ahead, including Balde #3 (15.0 m of space) and Fermín #16 (12.0 m). ATM's block was 20.0 m long with 9 defenders goal-side, so it was compact and passive. The ball crossed the line and held 0.5s. No carrier is logged for the last step to x=70.3, so pass or touch can't be known.
+
+
+3. COUNTERFACTUAL
+ATM could have stepped out onto Inigo #5 at 00:15-00:19, when he carried the ball from x=36.5 to x=52.8 with the closest defender 13-16 m away.
+
+### CLIP | team=ATM | outcome=KEPT
+1. VERDICT
+BAR's pressure failed. Raphinha #11 pressed repeatedly in the first 8 seconds, but he did so alone and ATM kept finding outlets. After 00:15 there was no pressure at all, and ATM progressed through unpressed carries and a long ball to Simeone #22.
+
+2. WHY
+
+A lone presser, repeatedly shaken off. Raphinha #11 had four of the six episodes: 00:02-00:03 (closest 4.3 m, 4.0 m/s), 00:03 (4.8 m, 6.2 m/s), 00:04-00:05 (2.1 m, 5.1 m/s) and 00:07-00:08 (1.7 m, 4.8 m/s). Each time he was the only presser, and the closest he got was 1.7 m. At 00:01 Oblak #13 had 0 opponents within 10 m, and BAR's block was 35.4 m long, so there was no cover behind him. The ball went from the keeper (x=4.6) to x=13.1 by 00:03, about 20 m, so ATM was already past the first line. The pass type can't be known.
+ATM had outlets and escaped the touchline trap. At 00:02 there were 6 free options, 5 ahead: Barrios #8 (6.3 m of space), Javi Galan #21 (18.1 m), Gimenez #2 (4.7 m) and Gallagher #4 (6.7 m). At 00:05 Javi Galan #21 was pinned at y=2.0 with Raphinha #11 2.2 m away. By 00:06 the ball was at (7.9, 12.6) with the closest defender 8.5 m away. At 00:08 Lenglet #15 was pressed at 1.7 m but the ball reached Javi Galan #21 at 00:09 with 11.7 m of space. Whether those were passes can't be known.
+The two-man press at 00:11-00:14 came too late. Gavi #6 closed at 6.4 m/s and then 7.1 m/s (closest 1.3 m) and Lewandowski #9 added 0.6s (1.8 m), but only 1 presser was ever counted at a time in the timeline. The ball moved from x=15.0 (00:11) to x=30.5 (00:12) before they arrived, a jump of about 15 m. Barrios #8 then carried through x=30-35 with the closest defender 3.0-4.6 m away. By 00:15 pressers were 0, and at 00:16 Griezmann #7 was at x=41.8 with 6.9 m of space.
+No pressure for the last 5 seconds. From 00:15 to 00:19 pressers were 0. The ball moved from x=38.7 to x=68.3 and Simeone #22 carried it with the closest defender 10.3 m, then 9.4 m away. The jump from x=41.8 (00:16) to x=56.3 (00:17) is about 14 m. Whether it was a pass or a carry can't be known. At 00:19 BAR had 4 defenders goal-side, and the block was 41.4 m long, so ATM had room.
+
+
+3. COUNTERFACTUAL
+BAR could have supported Raphinha #11 at 00:04-00:05, when ATM was pinned at the touchline (Javi Galan #21 at y=2.0, Raphinha #11 2.2 m away). A second presser then might have cut the ball back across, which went to x=7.9 with 8.5 m of space.
+
+### CLIP | team=BAR | outcome=KEPT
+1. VERDICT
+ATM's pressure failed. The opening press at 00:01-00:03 was the most crowded of any clip so far, with 2 pressers recorded at 00:02-00:03 and up to 3 at once, but BAR released the ball and the pressure faded to nothing (27% of the phase). Progression came from the unpressed circulation and carries at 00:15-00:22, not from any BAR error.
+
+2. WHY
+
+A crowded press that was close but slow, and BAR got out of it at 00:03-00:04. Simeone #22 (0.6 m) and De Paul #5 (0.4 m) were on Balde #3 at 00:02, with Griezmann #7 and Barrios #8 also pressing at some point. Their mean closing speeds were only 2.3-3.2 m/s for the two closest men, so they were near the ball without attacking it. Gavi #6 had the ball at 00:03 with 5 opponents within 7 m. By 00:04 Pedri #8 had it with the closest defender 6.0 m away. Whether that was a pass can't be known. Balde #3 had 3 teammates within 10 m, so he was never isolated, and Fermín #16 (8.1 m of space), Iñigo #5 (5.8 m) and Cubarsí #2 (6.6 m) were free.
+Later pressers were alone and BAR switched away from them. Alvarez #19 closed at 5.0 m/s (00:11-00:12) but only reached 2.8 m on Cubarsí #2. The ball then went from y=46.9 (00:12) to y=59.4 (00:13). Gallagher #4 pressed Kounde #23 at 00:13-00:14 (closest 1.2 m, 4.4 m/s), also alone. By 00:15 Casado #17 had the ball with the closest defender 10.3 m away. The pass type can't be known.
+No pressure for the last 7 seconds. From 00:15 to 00:22, pressers were 0 apart from Alvarez #19's 0.4s at 00:17 (closest 3.9 m). The closest defender was 8.0-11.8 m away while Pedri #8 carried at 00:19-00:20. ATM's block at 00:21 was 22.0 m long by 38.2 m wide, with 8 defenders goal-side and nobody within 5 m. At that moment Balde #3 (12.2 m of space) and Fermín #16 (12.1 m) were free, though passing lanes aren't modelled. The ball reached x=69.1 at 00:22 with no carrier logged, so pass or touch can't be known.
+
+3. COUNTERFACTUAL
+At 00:03 ATM had 5 players within 7 m of the ball, but by 00:04 nobody was within 6.0 m of Pedri #8. Keeping one defender tight to the next receiver, instead of all of them closing on the ball, might have kept the press alive.
+
+### CLIP | team=BAR | outcome=KEPT
+1. VERDICT
+ATM's pressure failed. It was fast but brief (27% of the phase, 3 episodes). BAR escaped with a quick switch to the touchline and then progressed through unpressed circulation, with Pedri #8 carrying into the final third.
+
+2. WHY
+
+Two pressers arrived at speed but too late to stop the switch. At 00:02 Alvarez #19 closed at 6.1 m/s (closest 3.2 m) and Simeone #22 at 5.1 m/s (closest 0.5 m) on Cubarsí #2. By 00:03 the ball was at y=10.3, about 18 m across from y=28.8, and the closest defender was 13.8 m away. Whether that was a pass can't be known from the data. Cubarsí #2 had 0 teammates within 10 m at 00:01, but 6 free options, 5 ahead: Casado #17 (4.2 m of space), Pedri #8 (4.3 m), Gavi #6 (8.9 m) and Fermín #16 (5.1 m). Casado #17 and Pedri #8 were only just free, and passing lanes aren't modelled.
+ATM's block was compact but stayed deep. At 00:01 it was 31.8 m long by 29.6 m wide with 9 defenders goal-side, so there was cover behind the ball but nobody pressing it. After the switch, Balde #3 carried at the touchline from 00:04 to 00:07 (y from 8.7 down to -1.8 and back to 0.6) with the closest defender 4.4-9.1 m away. Pressers were 0 throughout.
+No pressure from 00:03 to 00:09. For six seconds the closest defender was 4.4-13.8 m away. Pedri #8 took over at 00:08 (7.1 m of space) and carried from y=15.5 to y=22.6, with the closest defender 5.6 m at 00:09. The ball moved about 14 m between 00:07 and 00:08 (from y=0.6 to y=15.5), so it was played back inside. The pass type can't be known.
+The final press came too late. Alvarez #19 closed at 5.6 m/s for 1.2s (00:09-00:10) but only reached 2.8 m. At 00:09 Pedri #8 had 1 opponent within 5 m and 8 free options, 3 ahead: Lewandowski #9 (18 m away, 5.9 m of space), Fermín #16 (22 m, 8.1 m) and Kounde #23 (30 m, 10.8 m). The ball crossed the line and held 0.5s. No carrier is logged for the last step to x=72.4, so pass or touch can't be known.
+
+
+3. COUNTERFACTUAL
+ATM could have kept Alvarez #19 and Simeone #22 on the near side while a third defender covered the wide channel at 00:02. The ball went about 18 m across to y=10.3 and then down the touchline with nobody within 8 m.
+
+### CLIP | team=BAR | outcome=KEPT
+1. VERDICT
+ATM's pressure failed, though it was the heaviest of the clips so far (82% of the phase under pressure, 2 pressers at most moments, closing speeds up to 5.5 m/s). BAR got through it with short, quick combinations ending in a forward ball to Lewandowski #9 at 00:07.
+
+2. WHY
+
+Pressers were close but rarely won the angle. Gallagher #4 reached 0.5 m at 00:01-00:02 (4.3 m/s) and 0.6 m in the last episode (5.5 m/s), and Alvarez #19 reached 0.9 m (3.2 m/s). Even so, the ball stayed with BAR. Casado #17 played it to Gavi #6 by 00:02, then Gavi #6 passed it to Cubarsí #2 by 00:04 and Pedri #8 by 00:05. Whether those were passes can't be known from the data. At 00:04 Cubarsí #2 was pressed at 1.3 m, yet the ball was with Pedri #8 a second later at x=54.8, 3.7 m from the closest defender.
+BAR was never isolated. At 00:01 Casado #17 had 3 teammates within 10 m and 7 free options, 3 ahead: Gavi #6 (3 m away, 6.1 m of space), Lewandowski #9 (11 m, 7.5 m) and Fermín #16 (23 m, 8.1 m). At 00:06 Lewandowski #9 had 2 teammates within 10 m and 6 free options. Fermín #16 and Gavi #6 each had 4.9 m of space, which is a thin margin, and passing lanes aren't modelled.
+ATM's cover behind the ball thinned out as it advanced. At 00:01 the block was 29.7 m long by 53.7 m wide, very wide, with 7 defenders goal-side. By 00:06 only 3 defenders were goal-side of Lewandowski #9, with 2 opponents within 5 m, so the press was committed forward with little behind it. The ball jumped from x=56.8 (00:06) to x=69.3 (00:07), about 12 m, and held 0.5s past the line with Barrios #8 and Gimenez #2 pressing at the end, 3.5 m away at best.
+Pressers were late to the second ball. At 00:03 the closest defender to Gavi #6 was 2.3 m with 0 pressers. At 00:05 Pedri #8 had a defender 3.7 m away. Barrios #8 (3.0 m) and Gimenez #2 (1.7 m) only joined in the last second, too late to stop the ball.
+
+
+3. COUNTERFACTUAL
+ATM could have kept a defender goal-side of the forward lane at 00:06, when only 3 players were behind the ball and Lewandowski #9 received it ahead of the line.
+
+### CLIP | team=BAR | outcome=KEPT
+1. VERDICT
+ATM's pressure failed. It did not appear until 00:19 (12% of the phase, 3 episodes), by which point BAR had already moved the ball from its own third to x≈63 unpressed, and the pressers who arrived late never won it. The ball then crossed the line at 00:23 under pressure from two defenders, so this one did involve BAR playing through a press, but only in the final five seconds.
+
+2. WHY
+
+No pressure for 18 seconds. From 00:01 to 00:17 pressers were 0 on every row with a press target. Kounde #23 carried at x=28-33 for most of 00:01-00:09 with the closest defender 9.4-13.7 m away, and he had 0 opponents within 10 m at the start. ATM's block was 31.4 m long by 40.1 m wide with 9 defenders goal-side, so it sat deep and never engaged.
+The ball escaped the own third unpressed. Cubarsí #2 had the ball at 00:11-00:12 with the closest defender 9.0 m then 5.6 m. By 00:13 the ball was at y=24.9 (about 21 m across from y=45.7), then at (43.3, 0.2) at 00:17 and (62.7, 10.3) at 00:19. Those jumps are consistent with long passes, but the pass type can't be known. Tracking is missing at 00:16 and 00:18 (ball lost to tracking), so I can't say what happened between those points.
+The late press was close but slow. De Paul #5 pressed at 00:18-00:19 (closest 2.4 m, 2.4 m/s) and again at 00:20-00:21 (1.0 m, 1.9 m/s). Gimenez #2 reached 0.5 m at 00:21 but closed at only 0.5 m/s. Those are the lowest closing speeds in the data for pressers that close. At 00:22 Gimenez #2 (4.5 m/s) and Llorente #14 (3.5 m/s) both pressed Fermín #16 and got to 2.4-2.5 m, but the ball still crossed the line.
+BAR always had short options. At 00:18 there were 5 free options, none ahead: Fermín #16 (9 m, 7.6 m of space), Lewandowski #13 m (5.7 m), Gavi #6 (22 m, 8.8 m) and Casado #17 (24 m, 6.0 m). At 00:22 Pedri #8 was 3 m from Fermín #16 with only 4.0 m of space, a thin margin, and passing lanes aren't modelled. ATM had 5 defenders goal-side at that moment, so there was cover, but BAR was progressing along the wing (y=10 to 28) rather than being forced back.
+
+
+3. COUNTERFACTUAL
+ATM could have pressed earlier, around 00:08-00:12, when Kounde #23 and Cubarsí #2 had the ball at x=25-33 with the closest defender 5.6-10.5 m away and ATM's 9 defenders goal-side were all sitting behind them.
+
+### CLIP | team=ATM | outcome=KEPT
+1. VERDICT
+BAR's pressure failed. It came in nine short, mostly one-man bursts (38% of the phase), and the one real three-man press at 00:21-00:24 arrived after ATM had already moved the ball up the pitch. The key moment was ATM's long recycling through Oblak #13 and Javi Galan #21, which pulled BAR's press out of shape rather than any ATM error.
+
+2. WHY
+
+The early press was fast but alone, and ATM played backwards out of it. Fermín #16 closed at 7.1 m/s (00:01, closest 0.9 m) and reached 0.1 m at 00:02 on De Paul #5. He was the only presser, though. At 00:03 the ball was at x=15.6 with the closest defender 8.5 m away, and by 00:06 it was with Oblak #13 at x=3.5. The data cannot show whether those were passes. De Paul #5 had 2 teammates within 10 m and 4 free options, including Gimenez #2 (7.1 m of space) and Llorente #14 (8.6 m).
+BAR's block was stretched, so the recycled ball found space. At 00:01 it was 32.2 m long by 42.9 m wide, with 10 defenders goal-side. From 00:07 to 00:10 Gimenez #2 and Llorente #14 had the ball with the closest defender 7.2-12.8 m away. Pedri #8 (4.2 m/s, closest 1.0 m, 00:10-00:11) and Gavi #6 (2.5 m/s, closest 2.4 m, 00:12-00:13) each pressed alone and the ball moved on within a second.
+No pressure at all from 00:14 to 00:21. Pressers were 0 on every row. The ball went from x=25.3 (00:14) to x=48.6 (00:19) with Javi Galan #21 carrying at y≈11 and the closest defender 9.3 m, then 5.3 m and 3.7 m. Raphinha #11 pressed briefly at 00:15 (closest 2.5 m, 5.2 m/s) and 00:18 (3.8 m), but never close enough to matter. The ball jumps about 17 m between 00:15 and 00:16, consistent with a long pass, though that can't be confirmed.
+The late three-man press was close but the ball was already moving forward. Gavi #6 (5.4 m/s, closest 0.9 m), Casado #17 (4.6 m/s, 1.5 m) and Pedri #8 (0.2s) were all on De Paul #5 and Griezmann #7 at 00:21-00:24. The ball still advanced from x=58.0 (00:22) to x=68.8 (00:24) and held 0.5s beyond 70 m. At 00:23 Griezmann #7 had 6 free options, 2 ahead: Gallagher #4 (13 m away, 7.5 m of space) and Simeone #22 (29 m, 13.4 m). Passing lanes aren't modelled, and whether the last step was a pass or a touch can't be known.
+
+
+3. COUNTERFACTUAL
+BAR could have sent a second presser alongside Fermín #16 at 00:01-00:02, when De Paul #5 was pinned with the closest defender at 0.1 m and 4 teammates were free. Cutting off the backward outlet might have forced a loss in the own third.
+
+### CLIP | team=ATM | outcome=KEPT
+1. VERDICT
+BAR's pressure failed. It came in seven short, mostly single-presser bursts (29% of the phase) and never got within 0.9 m of the ball in the phase itself. ATM progressed through circulation across the pitch and a long forward ball at 00:15-00:16, so the result came from ATM's passing.
+
+2. WHY
+
+Lone pressers, shaken off with a switch. Lewandowski #9 pressed Lenglet #15 at 00:02-00:04 (4.0 m/s, closest 2.2 m) as the only presser. At 00:05 the ball was at (49.3, 20.5), about 14 m across from y=34.0, and the closest defender was 7.6 m away. Whether that was a pass can't be known. Lenglet #15 had 0 teammates within 10 m, but 7 free options, 5 ahead, including De Paul #5 (7.6 m of space) and Llorente #14 (8.0 m).
+Later presses were weak or late. Raphinha #11 pressed Javi Galan #21 at the touchline at 00:07-00:08 (closest 3.4 m then 2.0 m, only 1.8-2.7 m/s), too slowly to trap him. Gavi #6 closed at 5.0 m/s on Barrios #8 at 00:09-00:10 (closest 1.3 m), again alone. By 00:12 the ball was at x=38.7, y=38.9, about 14 m from where it was a second earlier, with the closest defender 10.7 m away. ATM had played back into the middle, so the press had pushed it backwards but not won it.
+No pressure for the build to the final ball. From 00:12 to 00:14 pressers were 0 and Gimenez #2 carried from x=40.0 to 42.2 with the closest defender 9.4 m, then 8.2 m away. BAR's block at 00:15 was 19.7 m long by 45.1 m wide with 10 defenders goal-side of the ball, so it was deep and compact, but wide. Nobody stepped out onto Gimenez #2.
+The only two-man press came as the ball left. At 00:15 Pedri #8 (5.3 m/s, 4.5 m away) and Lewandowski #9 (3.6 m/s, 4.8 m away) pressed, with Fermín #16 (3.4 m) for 0.2s, but none was within 2.9 m. The ball went from x=47.4 (00:15) to x=65.4 (00:16), about 18 m, and held 0.5s past the line. At 00:15 Gimenez #2 had 5 free options, 3 ahead: Llorente #14 (21 m away, 11.2 m of space), Alvarez #22 m (4.1 m) and Griezmann #7 (33 m, 4.5 m). The last two had thin margins, and passing lanes aren't modelled. No carrier is logged for the last step, so pass or touch can't be known.
+
+3. COUNTERFACTUAL
+BAR could have shut off the long forward option at 00:14-00:15, when Gimenez #2 carried unpressed with 8.2-5.9 m of space and Alvarez #19 was ahead with 4.1 m. Stepping a presser onto him earlier might have forced a shorter pass.

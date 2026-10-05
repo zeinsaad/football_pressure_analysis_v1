@@ -1,0 +1,768 @@
+{
+  "generated": "2026-10-03",
+  "match": {
+    "half": "first half",
+    "teams": {
+      "0": "ATM",
+      "1": "BAR"
+    },
+    "attack_direction": {
+      "ATM": "towards -x (right to left)",
+      "BAR": "towards +x (left to right)"
+    },
+    "minutes_with_a_press_target": 35.0,
+    "half_length_min": 46.7
+  },
+  "key_facts": [
+    "success rate of decided build-ups: ATM 20% (12-31), BAR 64.8% (53-75); BAR is higher and the intervals do not overlap.",
+    "time under pressure when the ball is on a carrier: ATM 35.9% (29-43), BAR 31.8% (28-36); the intervals overlap, so the data do not show a reliable difference.",
+    "build-ups pressed at some point: ATM 80% (71-87), BAR 65.2% (55-74); the intervals overlap, so the data do not show a reliable difference.",
+    "pressure episodes per 10 min of defending: ATM 77.7 (69.4-86.5), BAR 92.2 (77-106.6); the intervals overlap, so the data do not show a reliable difference.",
+    "mean pressing height (ball distance from the pressing team's own goal when an episode starts): ATM 43.6 m, BAR 67.4 m; BAR presses higher up the pitch (a descriptive difference of 24 m).",
+    "last outfield defender's distance from his own goal while the team presses: ATM 23.6 m (20.7-26.7), BAR 44.8 m (41.6-48.1); BAR is higher and the intervals do not overlap.",
+    "share of pressure episodes that start within 5 s of losing the ball (counter-press): ATM 33.5%, BAR 44.7% (descriptive).",
+    "losing the ball within 2 s: 14.9% of pressed moments against 6.7% of unpressed moments, a difference of 8.3 points (95% interval 4.2 to 12.7).",
+    "after controlling for team, ball height and carrier share, being pressed is associated with 7.3 more points of loss probability within 2 s (an association, not proof of cause)."
+  ],
+  "build_ups": [
+    {
+      "team": "ATM",
+      "build-ups": 91,
+      "success": 13,
+      "lost": 52,
+      "undecided": 26,
+      "success of decided": "20.0% (12-31)",
+      "success of all %": 14.3,
+      "median duration s": 5.9,
+      "start own third %": 63.7,
+      "start middle third %": 36.3,
+      "after turnover %": 65.9,
+      "after restart %": 31.9,
+      "recycled %": 2.2
+    },
+    {
+      "team": "BAR",
+      "build-ups": 90,
+      "success": 46,
+      "lost": 25,
+      "undecided": 19,
+      "success of decided": "64.8% (53-75)",
+      "success of all %": 51.1,
+      "median duration s": 4.8,
+      "start own third %": 25.6,
+      "start middle third %": 74.4,
+      "after turnover %": 55.6,
+      "after restart %": 22.2,
+      "recycled %": 22.2
+    }
+  ],
+  "pressure_faced_time": [
+    {
+      "team": "ATM",
+      "minutes with the ball": 14.3,
+      "time under pressure": "29.3% (24-34)",
+      "... carrier frames only": "35.9% (29-43)",
+      "pressed frames with 2+ pressers": "16.4% (13-20)",
+      "mean pressers when pressed": 1.18,
+      "mean distance of nearest defender m": 7.7
+    },
+    {
+      "team": "BAR",
+      "minutes with the ball": 20.7,
+      "time under pressure": "26.1% (23-30)",
+      "... carrier frames only": "31.8% (28-36)",
+      "pressed frames with 2+ pressers": "12.7% (10-16)",
+      "mean pressers when pressed": 1.14,
+      "mean distance of nearest defender m": 6.8
+    }
+  ],
+  "pressure_faced_buildups": [
+    {
+      "team": "ATM",
+      "build-ups used": 90,
+      "pressed at some point": "80.0% (71-87)",
+      "pressed from the start (<=1 s)": "46.7% (37-57)",
+      "pressed in the last second": "51.1% (41-61)",
+      "median time to first pressure s": 0.72,
+      "75th percentile s": 2.13,
+      "mean share of build-up under pressure %": 35.3,
+      "mean max pressers": 1.39
+    },
+    {
+      "team": "BAR",
+      "build-ups used": 89,
+      "pressed at some point": "65.2% (55-74)",
+      "pressed from the start (<=1 s)": "38.2% (29-49)",
+      "pressed in the last second": "40.4% (31-51)",
+      "median time to first pressure s": 0.62,
+      "75th percentile s": 3.0,
+      "mean share of build-up under pressure %": 22.1,
+      "mean max pressers": 1.09
+    }
+  ],
+  "pressing_delivered": [
+    {
+      "pressing team": "ATM",
+      "minutes defending": 20.7,
+      "time pressing": "26.1% (23-30)",
+      "... carrier frames only": "31.8% (28-36)",
+      "episodes": 161,
+      "episodes per 10 min": "77.7 (69.4-86.5)",
+      "median duration s": 2.28,
+      "mean duration s": 3.08,
+      "75th pct duration s": 4.2,
+      "longest s": 15.4,
+      "episodes with 2+ pressers %": 36.0,
+      "mean pressers per episode": 0.84,
+      "counter-press episodes % (<=5 s after losing the ball)": 33.5,
+      "mean pressing height m (from own goal)": 43.6
+    },
+    {
+      "pressing team": "BAR",
+      "minutes defending": 14.3,
+      "time pressing": "29.3% (24-34)",
+      "... carrier frames only": "35.9% (29-43)",
+      "episodes": 132,
+      "episodes per 10 min": "92.2 (77.0-106.6)",
+      "median duration s": 2.12,
+      "mean duration s": 2.73,
+      "75th pct duration s": 3.74,
+      "longest s": 14.2,
+      "episodes with 2+ pressers %": 33.3,
+      "mean pressers per episode": 0.89,
+      "counter-press episodes % (<=5 s after losing the ball)": 44.7,
+      "mean pressing height m (from own goal)": 67.4
+    }
+  ],
+  "pressing_by_third": [
+    {
+      "pressing team": "ATM",
+      "ball is in the pressing team's": "own third",
+      "minutes defending there": 6.9,
+      "pressing rate": "38.2% (32-44)",
+      "share of all its pressing frames %": 49.0
+    },
+    {
+      "pressing team": "ATM",
+      "ball is in the pressing team's": "middle third",
+      "minutes defending there": 9.8,
+      "pressing rate": "23.3% (18-29)",
+      "share of all its pressing frames %": 42.1
+    },
+    {
+      "pressing team": "ATM",
+      "ball is in the pressing team's": "attacking third",
+      "minutes defending there": 4.0,
+      "pressing rate": "12.1% (8-17)",
+      "share of all its pressing frames %": 8.9
+    },
+    {
+      "pressing team": "BAR",
+      "ball is in the pressing team's": "own third",
+      "minutes defending there": 2.2,
+      "pressing rate": "20.5% (10-34)",
+      "share of all its pressing frames %": 10.8
+    },
+    {
+      "pressing team": "BAR",
+      "ball is in the pressing team's": "middle third",
+      "minutes defending there": 5.2,
+      "pressing rate": "35.5% (29-43)",
+      "share of all its pressing frames %": 44.3
+    },
+    {
+      "pressing team": "BAR",
+      "ball is in the pressing team's": "attacking third",
+      "minutes defending there": 6.9,
+      "pressing rate": "27.4% (21-34)",
+      "share of all its pressing frames %": 44.8
+    }
+  ],
+  "episode_definition_sensitivity": [
+    {
+      "definition": "raw runs of sustained pressure",
+      "episodes": 498,
+      "ATM per 10 min": 137.5,
+      "BAR per 10 min": 148.8,
+      "median duration s": 0.92,
+      "75th pct s": 1.44,
+      "share >= 3 s %": 3.2
+    },
+    {
+      "definition": "bridge gaps up to 0.5 s",
+      "episodes": 371,
+      "ATM per 10 min": 101.3,
+      "BAR per 10 min": 112.5,
+      "median duration s": 1.16,
+      "75th pct s": 1.92,
+      "share >= 3 s %": 11.1
+    },
+    {
+      "definition": "bridge gaps up to 1 s",
+      "episodes": 324,
+      "ATM per 10 min": 87.8,
+      "BAR per 10 min": 99.2,
+      "median duration s": 1.4,
+      "75th pct s": 2.6,
+      "share >= 3 s %": 19.8
+    },
+    {
+      "definition": "bridge gaps up to 2 s",
+      "episodes": 259,
+      "ATM per 10 min": 69.5,
+      "BAR per 10 min": 80.3,
+      "median duration s": 2.28,
+      "75th pct s": 4.04,
+      "share >= 3 s %": 37.1
+    },
+    {
+      "definition": "stay while a defender is within 7 m, gaps <= 0.5 s",
+      "episodes": 293,
+      "ATM per 10 min": 77.7,
+      "BAR per 10 min": 92.2,
+      "median duration s": 2.2,
+      "75th pct s": 3.88,
+      "share >= 3 s %": 38.2
+    },
+    {
+      "definition": "stay while within 7 m, gaps <= 1 s",
+      "episodes": 268,
+      "ATM per 10 min": 70.4,
+      "BAR per 10 min": 85.2,
+      "median duration s": 2.52,
+      "75th pct s": 4.42,
+      "share >= 3 s %": 44.4
+    }
+  ],
+  "where": {
+    "share_of_pressing_frames": [
+      {
+        "pressing team": "ATM",
+        "ball in pressing team's": "own third",
+        "left": 24.7,
+        "centre": 10.6,
+        "right": 13.7
+      },
+      {
+        "pressing team": "ATM",
+        "ball in pressing team's": "middle third",
+        "left": 10.5,
+        "centre": 14.9,
+        "right": 16.6
+      },
+      {
+        "pressing team": "ATM",
+        "ball in pressing team's": "attacking third",
+        "left": 4.0,
+        "centre": 2.5,
+        "right": 2.4
+      },
+      {
+        "pressing team": "BAR",
+        "ball in pressing team's": "own third",
+        "left": 6.7,
+        "centre": 2.1,
+        "right": 2.1
+      },
+      {
+        "pressing team": "BAR",
+        "ball in pressing team's": "middle third",
+        "left": 14.9,
+        "centre": 9.1,
+        "right": 20.3
+      },
+      {
+        "pressing team": "BAR",
+        "ball in pressing team's": "attacking third",
+        "left": 11.6,
+        "centre": 11.2,
+        "right": 22.0
+      }
+    ],
+    "pressing_rate": [
+      {
+        "pressing team": "ATM",
+        "ball in pressing team's": "own third",
+        "left": 46.0,
+        "centre": 39.7,
+        "right": 28.6,
+        "defending minutes in this third": 6.9
+      },
+      {
+        "pressing team": "ATM",
+        "ball in pressing team's": "middle third",
+        "left": 23.9,
+        "centre": 23.8,
+        "right": 22.4,
+        "defending minutes in this third": 9.8
+      },
+      {
+        "pressing team": "ATM",
+        "ball in pressing team's": "attacking third",
+        "left": 18.2,
+        "centre": 7.2,
+        "right": 14.0,
+        "defending minutes in this third": 4.0
+      },
+      {
+        "pressing team": "BAR",
+        "ball in pressing team's": "own third",
+        "left": 22.4,
+        "centre": 28.3,
+        "right": 13.1,
+        "defending minutes in this third": 2.2
+      },
+      {
+        "pressing team": "BAR",
+        "ball in pressing team's": "middle third",
+        "left": 42.0,
+        "centre": 23.5,
+        "right": 40.1,
+        "defending minutes in this third": 5.2
+      },
+      {
+        "pressing team": "BAR",
+        "ball in pressing team's": "attacking third",
+        "left": 32.2,
+        "centre": 16.2,
+        "right": 37.8,
+        "defending minutes in this third": 6.9
+      }
+    ]
+  },
+  "defensive_shape": [
+    {
+      "team": "ATM",
+      "state": "while pressing",
+      "frames with shape data": 8051,
+      "last defender, m from own goal": "23.6 (20.7-26.7)",
+      "defensive line (3 deepest), m from own goal": "25.1 (21.9-28.3)",
+      "team depth (last to most advanced outfield player), m": "25.8 (24.0-27.7)",
+      "team width, m": "36.4 (35.0-37.8)"
+    },
+    {
+      "team": "ATM",
+      "state": "not pressing",
+      "frames with shape data": 22226,
+      "last defender, m from own goal": "27.5 (24.7-30.5)",
+      "defensive line (3 deepest), m from own goal": "28.8 (25.9-31.9)",
+      "team depth (last to most advanced outfield player), m": "25.4 (23.7-27.2)",
+      "team width, m": "37.2 (36.2-38.2)"
+    },
+    {
+      "team": "BAR",
+      "state": "while pressing",
+      "frames with shape data": 6202,
+      "last defender, m from own goal": "44.8 (41.6-48.1)",
+      "defensive line (3 deepest), m from own goal": "47.0 (43.6-50.7)",
+      "team depth (last to most advanced outfield player), m": "29.5 (27.1-31.9)",
+      "team width, m": "39.4 (38.1-40.6)"
+    },
+    {
+      "team": "BAR",
+      "state": "not pressing",
+      "frames with shape data": 13971,
+      "last defender, m from own goal": "42.8 (39.2-46.3)",
+      "defensive line (3 deepest), m from own goal": "45.0 (41.2-48.6)",
+      "team depth (last to most advanced outfield player), m": "29.7 (27.3-32.3)",
+      "team width, m": "38.3 (36.6-39.6)"
+    }
+  ],
+  "effect": {
+    "simple": [
+      {
+        "group": "ATM",
+        "buildups": 77,
+        "pressed_moments": 273,
+        "pressed_loss_pct": 17.9,
+        "unpressed_moments": 289,
+        "unpressed_loss_pct": 10.7,
+        "diff_pp": 7.2,
+        "ci95": "0.5 to 14.0"
+      },
+      {
+        "group": "BAR",
+        "buildups": 68,
+        "pressed_moments": 189,
+        "pressed_loss_pct": 10.6,
+        "unpressed_moments": 400,
+        "unpressed_loss_pct": 3.8,
+        "diff_pp": 6.8,
+        "ci95": "1.3 to 13.5"
+      },
+      {
+        "group": "BOTH",
+        "buildups": 145,
+        "pressed_moments": 462,
+        "pressed_loss_pct": 14.9,
+        "unpressed_moments": 689,
+        "unpressed_loss_pct": 6.7,
+        "diff_pp": 8.3,
+        "ci95": "4.2 to 12.7"
+      },
+      {
+        "group": "BOTH, carrier moments only (carrier share >= 50%)",
+        "buildups": 129,
+        "pressed_moments": 307,
+        "pressed_loss_pct": 13.7,
+        "unpressed_moments": 439,
+        "unpressed_loss_pct": 2.5,
+        "diff_pp": 11.2,
+        "ci95": "6.8 to 16.3"
+      }
+    ],
+    "by_pressers": [
+      {
+        "index": [
+          "ATM",
+          "1 presser"
+        ],
+        "moments": 214,
+        "losses": 33,
+        "loss_pct": 15.4
+      },
+      {
+        "index": [
+          "ATM",
+          "2+ pressers"
+        ],
+        "moments": 59,
+        "losses": 16,
+        "loss_pct": 27.1
+      },
+      {
+        "index": [
+          "ATM",
+          "none"
+        ],
+        "moments": 289,
+        "losses": 31,
+        "loss_pct": 10.7
+      },
+      {
+        "index": [
+          "BAR",
+          "1 presser"
+        ],
+        "moments": 154,
+        "losses": 11,
+        "loss_pct": 7.1
+      },
+      {
+        "index": [
+          "BAR",
+          "2+ pressers"
+        ],
+        "moments": 35,
+        "losses": 9,
+        "loss_pct": 25.7
+      },
+      {
+        "index": [
+          "BAR",
+          "none"
+        ],
+        "moments": 400,
+        "losses": 15,
+        "loss_pct": 3.8
+      }
+    ],
+    "by_open_lanes": [
+      {
+        "lanes_cat": "0-1 open",
+        "moments": 42,
+        "losses": 7,
+        "pressed_pct": 76.2,
+        "loss_pct": 16.7
+      },
+      {
+        "lanes_cat": "2-3 open",
+        "moments": 247,
+        "losses": 13,
+        "pressed_pct": 59.1,
+        "loss_pct": 5.3
+      },
+      {
+        "lanes_cat": "4+ open",
+        "moments": 456,
+        "losses": 27,
+        "pressed_pct": 26.1,
+        "loss_pct": 5.9
+      }
+    ],
+    "logistic": [
+      {
+        "model": "A: pressed only",
+        "n moments": 1151,
+        "variable": "pressed in the last second",
+        "odds ratio": 2.45,
+        "95% interval": "1.59 - 3.76",
+        "adjusted effect of pressure, points": 8.3
+      },
+      {
+        "model": "B: + team, ball height, carrier share",
+        "n moments": 1151,
+        "variable": "pressed in the last second",
+        "odds ratio": 2.34,
+        "95% interval": "1.53 - 3.63",
+        "adjusted effect of pressure, points": 7.3
+      },
+      {
+        "model": "B: + team, ball height, carrier share",
+        "n moments": 1151,
+        "variable": "team = BAR",
+        "odds ratio": 0.42,
+        "95% interval": "0.20 - 0.79",
+        "adjusted effect of pressure, points": ""
+      },
+      {
+        "model": "B: + team, ball height, carrier share",
+        "n moments": 1151,
+        "variable": "ball 10 m further up the pitch",
+        "odds ratio": 1.1,
+        "95% interval": "0.94 - 1.32",
+        "adjusted effect of pressure, points": ""
+      },
+      {
+        "model": "B: + team, ball height, carrier share",
+        "n moments": 1151,
+        "variable": "target is a carrier (vs the ball)",
+        "odds ratio": 0.25,
+        "95% interval": "0.12 - 0.47",
+        "adjusted effect of pressure, points": ""
+      },
+      {
+        "model": "C: B + open passing lanes",
+        "n moments": 745,
+        "variable": "pressed in the last second",
+        "odds ratio": 6.46,
+        "95% interval": "2.61 - 18.82",
+        "adjusted effect of pressure, points": 9.9
+      },
+      {
+        "model": "C: B + open passing lanes",
+        "n moments": 745,
+        "variable": "team = BAR",
+        "odds ratio": 0.45,
+        "95% interval": "0.16 - 1.03",
+        "adjusted effect of pressure, points": ""
+      },
+      {
+        "model": "C: B + open passing lanes",
+        "n moments": 745,
+        "variable": "ball 10 m further up the pitch",
+        "odds ratio": 1.02,
+        "95% interval": "0.80 - 1.28",
+        "adjusted effect of pressure, points": ""
+      },
+      {
+        "model": "C: B + open passing lanes",
+        "n moments": 745,
+        "variable": "target is a carrier (vs the ball)",
+        "odds ratio": 2.28,
+        "95% interval": "0.73 - 11.49",
+        "adjusted effect of pressure, points": ""
+      },
+      {
+        "model": "C: B + open passing lanes",
+        "n moments": 745,
+        "variable": "one more open passing lane",
+        "odds ratio": 1.02,
+        "95% interval": "0.79 - 1.32",
+        "adjusted effect of pressure, points": ""
+      }
+    ]
+  },
+  "top_pressers": {
+    "ATM": [
+      {
+        "number": 19,
+        "name": "Alvarez",
+        "position": "ST",
+        "press seconds": 62.4,
+        "share of team press seconds %": 16.9,
+        "episodes led": 27,
+        "mean pressing height m": 48.1
+      },
+      {
+        "number": 4,
+        "name": "Gallagher",
+        "position": "LM",
+        "press seconds": 49.1,
+        "share of team press seconds %": 13.3,
+        "episodes led": 17,
+        "mean pressing height m": 36.8
+      },
+      {
+        "number": 7,
+        "name": "Griezmann",
+        "position": "ST",
+        "press seconds": 45.0,
+        "share of team press seconds %": 12.2,
+        "episodes led": 23,
+        "mean pressing height m": 52.5
+      },
+      {
+        "number": 21,
+        "name": "Javi Galan",
+        "position": "LB",
+        "press seconds": 43.3,
+        "share of team press seconds %": 11.7,
+        "episodes led": 15,
+        "mean pressing height m": 19.0
+      },
+      {
+        "number": 8,
+        "name": "Barrios",
+        "position": "CM",
+        "press seconds": 42.6,
+        "share of team press seconds %": 11.5,
+        "episodes led": 17,
+        "mean pressing height m": 27.5
+      }
+    ],
+    "BAR": [
+      {
+        "number": 6,
+        "name": "Gavi",
+        "position": "CM",
+        "press seconds": 55.2,
+        "share of team press seconds %": 18.6,
+        "episodes led": 26,
+        "mean pressing height m": 65.9
+      },
+      {
+        "number": 11,
+        "name": "Raphinha",
+        "position": "RW",
+        "press seconds": 46.3,
+        "share of team press seconds %": 15.6,
+        "episodes led": 24,
+        "mean pressing height m": 81.4
+      },
+      {
+        "number": 16,
+        "name": "Fermin",
+        "position": "LW",
+        "press seconds": 46.0,
+        "share of team press seconds %": 15.5,
+        "episodes led": 24,
+        "mean pressing height m": 63.4
+      },
+      {
+        "number": 8,
+        "name": "Pedri",
+        "position": "CM",
+        "press seconds": 32.7,
+        "share of team press seconds %": 11.0,
+        "episodes led": 14,
+        "mean pressing height m": 57.0
+      },
+      {
+        "number": 17,
+        "name": "Casado",
+        "position": "CM",
+        "press seconds": 31.5,
+        "share of team press seconds %": 10.6,
+        "episodes led": 11,
+        "mean pressing height m": 52.2
+      }
+    ]
+  },
+  "most_pressed_carriers": {
+    "ATM": [
+      {
+        "number": 8,
+        "name": "Barrios",
+        "position": "CM",
+        "seconds as carrier": 44,
+        "% of it under pressure": 59.3
+      },
+      {
+        "number": 22,
+        "name": "Simeone",
+        "position": "RM",
+        "seconds as carrier": 41,
+        "% of it under pressure": 56.9
+      },
+      {
+        "number": 5,
+        "name": "De Paul",
+        "position": "CM",
+        "seconds as carrier": 43,
+        "% of it under pressure": 49.1
+      }
+    ],
+    "BAR": [
+      {
+        "number": 6,
+        "name": "Gavi",
+        "position": "CM",
+        "seconds as carrier": 53,
+        "% of it under pressure": 52.1
+      },
+      {
+        "number": 9,
+        "name": "Lewandowski",
+        "position": "ST",
+        "seconds as carrier": 36,
+        "% of it under pressure": 51.8
+      },
+      {
+        "number": 8,
+        "name": "Pedri",
+        "position": "CM",
+        "seconds as carrier": 75,
+        "% of it under pressure": 46.9
+      }
+    ]
+  },
+  "caveats": [
+    "First half only, one match; tracking comes from broadcast video, so on average about one outfield player per team is not tracked in a frame: all pressure figures are lower bounds.",
+    "About half of the possession frames have no tracked carrier; there the press target is the ball position, and pressure on a loose or airborne ball is less well defined. Carrier-only figures are given where it matters.",
+    "Pressure is a geometric proxy (distance and closing speed of defenders); it does not use body orientation or intent. Episodes include sustained single-defender pressure and have not yet been validated against video (see the validation sample).",
+    "Player positions are inferred from average locations and checked by hand; they are not official line-up data.",
+    "Intervals are 95% intervals from resampling possession spells or build-ups; with about 90 build-ups per team, differences with overlapping intervals should not be presented as real.",
+    "The effect estimates are associations (pressed vs not pressed within a build-up), adjusted for a few covariates; they are not causal."
+  ],
+  "parameters": {
+    "analysis": {
+      "BOUNDS_TOL_M": 3.0,
+      "BALL_BOUNDS_TOL_M": 5.0,
+      "POSSESSION_FLICKER_SEC": 0.4,
+      "MIN_HOLD_SEC": 1.5,
+      "THIRD_1_M": 35.0,
+      "THIRD_2_M": 70.0,
+      "TURNOVER_MAX_GAP_SEC": 2.0,
+      "MERGE_GAP_SEC": 2.0,
+      "LOC_FILL_FRAMES": 12,
+      "LOC_MEDIAN_FRAMES": 11,
+      "ENTRY_HOLD_SEC": 0.5,
+      "RESET_BUFFER_M": 10.0,
+      "SMOOTH_WINDOW_FRAMES": 9,
+      "SMOOTH_POLY": 2,
+      "MAX_FILL_FRAMES": 5,
+      "MAX_SPEED_MPS": 9.5,
+      "PRESS_DIST_M": 5.0,
+      "PRESS_TIGHT_M": 2.0,
+      "CLOSING_WINDOW_SEC": 0.5,
+      "CLOSING_SPEED_MPS": 1.5,
+      "NEAR_DIST_M": 7.0,
+      "PRESS_SUSTAIN_SEC": 0.4,
+      "PRESSED_AT_START_SEC": 1.0,
+      "PRESS_AT_END_SEC": 1.0,
+      "LANDMARK_SEC": 3.0,
+      "GRACE_SEC": 1.0,
+      "HAZ_GRACE_SEC": 1.0,
+      "HAZ_LOOKBACK_SEC": 1.0,
+      "HAZ_HORIZON_SEC": 2.0,
+      "HAZ_STEP_SEC": 1.0
+    },
+    "press_episode": {
+      "stay_near": true,
+      "bridge_sec": 0.5,
+      "min_sec": 0.5
+    },
+    "min_coverage": 0.5
+  }
+}

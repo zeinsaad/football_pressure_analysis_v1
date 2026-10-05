@@ -1,0 +1,5 @@
+team,state,frames with shape data,"last defender, m from own goal","defensive line (3 deepest), m from own goal","team depth (last to most advanced outfield player), m","team width, m"
+ATM,while pressing,8051,23.6 (20.7-26.7),25.1 (21.9-28.3),25.8 (24.0-27.7),36.4 (35.0-37.8)
+ATM,not pressing,22226,27.5 (24.7-30.5),28.8 (25.9-31.9),25.4 (23.7-27.2),37.2 (36.2-38.2)
+BAR,while pressing,6202,44.8 (41.6-48.1),47.0 (43.6-50.7),29.5 (27.1-31.9),39.4 (38.1-40.6)
+BAR,not pressing,13971,42.8 (39.2-46.3),45.0 (41.2-48.6),29.7 (27.3-32.3),38.3 (36.6-39.6)

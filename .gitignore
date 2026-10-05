@@ -1,0 +1,38 @@
+﻿# Python environments
+venv/
+venv_clean/
+.venv/
+
+# Python cache
+__pycache__/
+*.pyc
+.ipynb_checkpoints/
+
+# Video files
+*.mp4
+*.mkv
+*.avi
+*.mov
+
+# Generated caches / outputs
+**/.cache/
+**/cache/
+**/new_cache/
+**/output/
+**/outputs/
+**/clips/
+**/clips1/
+**/buildup_output/
+
+# Large model files
+*.pt
+*.pth
+*.onnx
+
+# Archives
+*.zip
+
+# Environment files
+.env
+
+*.pkl

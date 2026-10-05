@@ -1,0 +1,7 @@
+definition,episodes,ATM per 10 min,BAR per 10 min,median duration s,75th pct s,share >= 3 s %
+raw runs of sustained pressure,498,137.5,148.8,0.92,1.44,3.2
+bridge gaps up to 0.5 s,371,101.3,112.5,1.16,1.92,11.1
+bridge gaps up to 1 s,324,87.8,99.2,1.4,2.6,19.8
+bridge gaps up to 2 s,259,69.5,80.3,2.28,4.04,37.1
+"stay while a defender is within 7 m, gaps <= 0.5 s",293,77.7,92.2,2.2,3.88,38.2
+"stay while within 7 m, gaps <= 1 s",268,70.4,85.2,2.52,4.42,44.4

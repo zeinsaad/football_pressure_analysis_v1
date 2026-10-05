@@ -1,0 +1,2776 @@
+{
+ "generated": "2026-10-05T15:16:14",
+ "source_notebook": "1791212940460_pressure_stats_metrics_frames_only__1_.ipynb",
+ "overview_md": "# Pressing metrics: Barça vs Atlético (first half)\n\nStandalone stats notebook. It reads the folder written by **section 16 of the build-up pressure notebook** (`pressure_stats_input/`), so no video and no re-detection are needed.\n\n**Run order:** run the setup cell once, then any metric cell on its own (each metric cell only needs the setup cell).\n\n| # | Metric | Main output |\n|---|---|---|\n| 1 | Average defensive line depth per team | m from own goal |\n| 2 | Pressing intensity | % of out-of-possession time spent pressing |\n| 3 | Pressure by pitch zone (middle and attacking third) | counts and % |\n| 4 | Pressure heatmap | where each team's pressure is concentrated |\n| 5 | Pressing intensity over time | 5-minute bins, low-sample bins masked |\n| 6 | PPDA | passes allowed per defensive action, own third excluded |\n| 7 | Time-to-press after losing the ball | mean / median / min / max within 10 s |\n| 8 | Pass success rate, under pressure vs not | by team |\n| 9 | Defensive line height | last-1 and last-3 defenders, IQR outlier removal |\n| 10 | Team compactness out of possession | depth, width, area |\n| 11 | Compactness while pressing vs not | depth, width, area |\n| 12 | Third x channel grid | where each team's pressure happens (3 x 3) |\n| 13 | Zone intensity per time in zone | % of the time the ball is in a zone that the team is pressing |\n| 14 | Press-to-regain rate | % of pressing episodes that end with the team getting the ball back within 5 s |\n| 15 | Pressing time per player | seconds and share of the team's pressing |\n| 16 | Where each player presses | third x channel per player |\n\n(8b is a check on section 8.) Sections 15 and 16 need `defenders.parquet` from the export; the rest need only frames, positions, spells and roster.\n\n**Orientation of every figure:** Barça attacks left → right and Atlético right → left (heatmaps, grids, minimaps). The team is found from the team names (set `LTR_TEAM_ID` in the setup cell to override); if the tracking has Barça attacking towards -x, the figures are rotated 180° so the rule still holds.\n\n**Real-frame checks:** after each metric a cell renders about 3 real frames of the match (separate full frames, not a collage), annotated with that metric's numbers. **Photo frames only: no video and no GIF is written.** They need the match video and the original tracking tables: set the paths in `VERIFY` in *Setup 2*. Without them the checks print a message and are skipped; the metrics are not affected. The PNG files go to `<export folder>/../verification/<metric>/`.\n\n**Definitions inherited from the build-up notebook**\n- *Pressing / under pressure* (`frames.under_pressure`): at least one defender within 5 m of the ball carrier who is either within 2 m or closing at 1.5 m/s or more, held for 0.4 s in a row. It is a per-frame flag for the **defending** team (`def_team`).\n- *Out of possession* = frames of the export in which the team is `def_team`. Stoppages are already excluded by the possession spells.\n- Zones are thirds of the pitch in the **pressing team's own attacking direction** (own third 0-35 m, middle 35-70 m, attacking 70-105 m, measured from the pressing team's own goal).\n- **Pressure in the pressing team's own third is not counted as pressing** (it is deep defending, not a press). This is one switch in the setup cell, `EXCLUDE_OWN_PRESS_UP_TO_M`, applied once to `frames.under_pressure`, so every metric below uses the same definition. The original flag is kept as `under_pressure_raw`. Set the switch to 16.5 to exclude only the own penalty box, or to `None` to count everything.",
+ "meta": {
+  "fps": 25.0,
+  "pitch": [
+   105,
+   68
+  ],
+  "possession_minutes": 35.0,
+  "match_minutes": 46.7,
+  "out_of_possession_frames": {
+   "ATM": 30954,
+   "BAR": 21512
+  },
+  "thirds_m": [
+   35.0,
+   70.0
+  ],
+  "own_third_pressure_not_counted": {
+   "ATM": 3953,
+   "BAR": 702
+  },
+  "teams": {
+   "0": "ATM",
+   "1": "BAR"
+  }
+ },
+ "sections": [
+  {
+   "id": "m01",
+   "number": "1",
+   "title": "Average defensive line depth per team",
+   "group": "shape",
+   "intro_md": "Mean distance from own goal of the **last three outfield defenders**, measured only in frames where the team is out of possession (its real defensive shape, not inflated by attacking-phase positioning). Higher number = higher line.",
+   "tables": [
+    {
+     "header": [
+      "",
+      "frames",
+      "seconds",
+      "avg_line_depth_m",
+      "avg_line_depth_pct_of_pitch"
+     ],
+     "n_index": 1,
+     "rows": [
+      [
+       "ATM",
+       "30934",
+       "1237.0",
+       "27.5",
+       "26.2"
+      ],
+      [
+       "BAR",
+       "20804",
+       "832.0",
+       "45.2",
+       "43.1"
+      ]
+     ],
+     "id": "m01_t1",
+     "caption": "Back-three depth while out of possession"
+    }
+   ],
+   "figures": [],
+   "summary": [
+    {
+     "text": "ATM's back three sit 27.5 m from their own goal on average, BAR's 45.2 m.",
+     "kind": "insight"
+    },
+    {
+     "text": "BAR defend 17.7 m higher up the pitch than ATM (out-of-possession frames only).",
+     "kind": "insight"
+    }
+   ],
+   "notes": [],
+   "frame_groups": [
+    {
+     "id": "g1",
+     "title": "Real frames",
+     "intro_md": "Three real frames: a typical back-three line of each team and the highest line of the match. White line = the team's match average, coloured line = this frame's back three, the three players counted are marked L1 to L3.",
+     "frames": [
+      {
+       "file": "frames/m01_g1_01.jpg",
+       "thumb": "thumbs/m01_g1_01.jpg",
+       "caption": "typical frame: BAR's back three at 45.2 m (its match average is 45.2 m)",
+       "frame": 62360,
+       "clock": "41:34.4",
+       "team": "BAR",
+       "player": null
+      },
+      {
+       "file": "frames/m01_g1_02.jpg",
+       "thumb": "thumbs/m01_g1_02.jpg",
+       "caption": "typical frame: ATM's back three at 27.5 m (its match average is 27.5 m)",
+       "frame": 9015,
+       "clock": "06:00.6",
+       "team": "ATM",
+       "player": null
+      },
+      {
+       "file": "frames/m01_g1_03.jpg",
+       "thumb": "thumbs/m01_g1_03.jpg",
+       "caption": "highest line of the match: BAR at 97.5 m",
+       "frame": 14447,
+       "clock": "09:37.9",
+       "team": "BAR",
+       "player": null
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "m02",
+   "number": "2",
+   "title": "Pressing intensity",
+   "group": "pressing",
+   "intro_md": "Share of a team's out-of-possession time during which it is pressing the ball carrier (the pipeline's sustained `under_pressure` flag).\n`pressing intensity % = pressing frames / out-of-possession frames`. Pressure in the team's own third is not counted as pressing (see `EXCLUDE_OWN_PRESS_UP_TO_M`), while the time spent defending there stays in the denominator.",
+   "tables": [
+    {
+     "header": [
+      "",
+      "out_of_possession_frames",
+      "pressing_frames",
+      "out_of_possession_sec",
+      "pressing_sec",
+      "pressing_intensity_pct",
+      "avg_pressers_when_pressing"
+     ],
+     "n_index": 1,
+     "rows": [
+      [
+       "ATM",
+       "30954",
+       "4150",
+       "1238.2",
+       "166.0",
+       "13.4",
+       "1.14"
+      ],
+      [
+       "BAR",
+       "21512",
+       "5679",
+       "860.5",
+       "227.2",
+       "26.4",
+       "1.18"
+      ]
+     ],
+     "id": "m02_t1",
+     "caption": "Pressing intensity by team"
+    }
+   ],
+   "figures": [],
+   "summary": [
+    {
+     "text": "ATM pressed the ball carrier for 13.4% of their out-of-possession time, BAR for 26.4%.",
+     "kind": "insight"
+    },
+    {
+     "text": "BAR pressed more, by 13.0 percentage points.",
+     "kind": "insight"
+    }
+   ],
+   "notes": [],
+   "frame_groups": [
+    {
+     "id": "g1",
+     "title": "Real frames",
+     "intro_md": "Two pressing frames (one per team) and one frame where a team defends without pressing. Rings show the 5 m and 2 m radius around the ball carrier; lines go to the defenders whose press flag is on.",
+     "frames": [
+      {
+       "file": "frames/m02_g1_01.jpg",
+       "thumb": "thumbs/m02_g1_01.jpg",
+       "caption": "BAR pressing: counts toward its 26.4% pressing intensity",
+       "frame": 46010,
+       "clock": "30:40.4",
+       "team": "BAR",
+       "player": "pressing"
+      },
+      {
+       "file": "frames/m02_g1_02.jpg",
+       "thumb": "thumbs/m02_g1_02.jpg",
+       "caption": "ATM pressing: counts toward its 13.4% pressing intensity",
+       "frame": 55901,
+       "clock": "37:16.0",
+       "team": "ATM",
+       "player": "pressing"
+      },
+      {
+       "file": "frames/m02_g1_03.jpg",
+       "thumb": "thumbs/m02_g1_03.jpg",
+       "caption": "ATM out of possession but NOT pressing: counts in the denominator only",
+       "frame": 28909,
+       "clock": "19:16.4",
+       "team": "ATM",
+       "player": "out of possession but NOT pressing"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "m03",
+   "number": "3",
+   "title": "Pressure by pitch zone (middle and attacking third)",
+   "group": "pressing",
+   "intro_md": "Pressure frames are placed by **where the pressed ball carrier is**, in the pressing team's own attacking frame. Only the middle and attacking third count: pressure in the team's own third is not counted as pressing (the number of frames dropped for that is printed under the table).",
+   "tables": [
+    {
+     "header": [
+      "team",
+      "zone",
+      "pressure_frames",
+      "seconds",
+      "pct_of_middle_plus_attacking",
+      "pct_of_all_pressure"
+     ],
+     "n_index": 2,
+     "rows": [
+      [
+       "ATM",
+       "middle_third",
+       "3431",
+       "137.2",
+       "82.7",
+       "82.7"
+      ],
+      [
+       "ATM",
+       "attacking_third",
+       "719",
+       "28.8",
+       "17.3",
+       "17.3"
+      ],
+      [
+       "BAR",
+       "middle_third",
+       "2811",
+       "112.4",
+       "49.5",
+       "49.5"
+      ],
+      [
+       "BAR",
+       "attacking_third",
+       "2868",
+       "114.7",
+       "50.5",
+       "50.5"
+      ]
+     ],
+     "id": "m03_t1",
+     "caption": "Pressure frames by third"
+    }
+   ],
+   "figures": [],
+   "summary": [
+    {
+     "text": "ATM: 719 attacking-third and 3431 middle-third pressure frames -> 17.3% of their middle+attacking pressure came in the attacking third.",
+     "kind": "insight"
+    },
+    {
+     "text": "BAR: 2868 attacking-third and 2811 middle-third pressure frames -> 50.5% of their middle+attacking pressure came in the attacking third.",
+     "kind": "insight"
+    }
+   ],
+   "notes": [
+    "raw pressure frames NOT counted because the ball was in the team's own third: {'ATM': 3953, 'BAR': 702}"
+   ],
+   "frame_groups": [
+    {
+     "id": "g1",
+     "title": "Real frames",
+     "intro_md": "Pressing frames in the attacking and middle third. The third where the ball is while the team presses is shaded; the panel gives the team's counts per zone.",
+     "frames": [
+      {
+       "file": "frames/m03_g1_01.jpg",
+       "thumb": "thumbs/m03_g1_01.jpg",
+       "caption": "BAR pressing in the attacking third",
+       "frame": 16688,
+       "clock": "11:07.5",
+       "team": "BAR",
+       "player": null
+      },
+      {
+       "file": "frames/m03_g1_02.jpg",
+       "thumb": "thumbs/m03_g1_02.jpg",
+       "caption": "ATM pressing in the attacking third",
+       "frame": 35519,
+       "clock": "23:40.8",
+       "team": "ATM",
+       "player": null
+      },
+      {
+       "file": "frames/m03_g1_03.jpg",
+       "thumb": "thumbs/m03_g1_03.jpg",
+       "caption": "BAR pressing in the middle third",
+       "frame": 55518,
+       "clock": "37:00.7",
+       "team": "BAR",
+       "player": null
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "m04",
+   "number": "4",
+   "title": "Pressure heatmap",
+   "group": "pressing",
+   "intro_md": "Where each team's pressure is concentrated: position of the pressed ball carrier in every pressure frame, **in the pressing team's attacking frame** (both teams attack left to right, own goal on the left). Each map is normalised to its own team's total, so it shows *where* pressure concentrates, not how much there is.",
+   "tables": [
+    {
+     "header": [
+      "team",
+      "pressure_frames",
+      "centroid_x_m",
+      "centroid_y_m",
+      "pct_in_opponent_half",
+      "pct_left",
+      "pct_centre",
+      "pct_right"
+     ],
+     "n_index": 1,
+     "rows": [
+      [
+       "ATM",
+       "4150",
+       "55.3",
+       "36.8",
+       "48.0",
+       "28.3",
+       "33.5",
+       "38.2"
+      ],
+      [
+       "BAR",
+       "5679",
+       "69.9",
+       "39.0",
+       "77.6",
+       "29.7",
+       "23.1",
+       "47.2"
+      ]
+     ],
+     "id": "m04_t1",
+     "caption": "Heatmap summary by team"
+    }
+   ],
+   "figures": [
+    {
+     "file": "figures/m04_f1.png",
+     "caption": "Pressure density in each team's own attacking direction (both attack left to right)"
+    }
+   ],
+   "summary": [
+    {
+     "text": "ATM: pressure centred 55 m from their own goal, 48% of it in the opponent half; most pressure in the right channel (left / right as seen by the pressing team, looking at the opponent's goal).",
+     "kind": "insight"
+    },
+    {
+     "text": "BAR: pressure centred 70 m from their own goal, 78% of it in the opponent half; most pressure in the right channel (left / right as seen by the pressing team, looking at the opponent's goal).",
+     "kind": "insight"
+    }
+   ],
+   "notes": [
+    "dropped 0 / 9829 pressure points outside the pitch (+/- 2.0 m)",
+    "(centroid_x_m = metres from the pressing team's own goal; centroid_y_m and left / right are in its own attacking direction)"
+   ],
+   "frame_groups": [
+    {
+     "id": "g1",
+     "title": "Real frames",
+     "intro_md": "Pressing moments inside the hottest 10 m cell of each team's heatmap (shaded).",
+     "frames": [
+      {
+       "file": "frames/m04_g1_01.jpg",
+       "thumb": "thumbs/m04_g1_01.jpg",
+       "caption": "BAR: hottest-cell #1 (5.6% of its pressure frames in this 10 m cell)",
+       "frame": 24892,
+       "clock": "16:35.7",
+       "team": "BAR",
+       "player": null
+      },
+      {
+       "file": "frames/m04_g1_02.jpg",
+       "thumb": "thumbs/m04_g1_02.jpg",
+       "caption": "ATM: hottest-cell #1 (6.8% of its pressure frames in this 10 m cell)",
+       "frame": 64103,
+       "clock": "42:44.1",
+       "team": "ATM",
+       "player": null
+      },
+      {
+       "file": "frames/m04_g1_03.jpg",
+       "thumb": "thumbs/m04_g1_03.jpg",
+       "caption": "BAR: hottest-cell #2 (5.3% of its pressure frames in this 10 m cell)",
+       "frame": 46014,
+       "clock": "30:40.6",
+       "team": "BAR",
+       "player": null
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "m05",
+   "number": "5",
+   "title": "Pressing intensity over time (5-minute bins)",
+   "group": "pressing",
+   "intro_md": "% of a team's out-of-possession frames spent pressing, per 5-minute block of the match clock. A team/bin with fewer than `MIN_BIN_FRAMES` out-of-possession frames is **masked** (shown as NaN and left out of the plot), because one short sequence would swing the average.",
+   "tables": [
+    {
+     "header": [
+      "",
+      "ATM pressing %",
+      "ATM frames",
+      "BAR pressing %",
+      "BAR frames"
+     ],
+     "n_index": 1,
+     "rows": [
+      [
+       "0-5 min",
+       "10.1",
+       "5123",
+       "51.2",
+       "1647"
+      ],
+      [
+       "5-10 min",
+       "8.0",
+       "3692",
+       "31.0",
+       "1974"
+      ],
+      [
+       "10-15 min",
+       "12.8",
+       "3084",
+       "21.2",
+       "2733"
+      ],
+      [
+       "15-20 min",
+       "18.4",
+       "3444",
+       "39.8",
+       "1224"
+      ],
+      [
+       "20-25 min",
+       "6.6",
+       "2938",
+       "23.6",
+       "1380"
+      ],
+      [
+       "25-30 min",
+       "9.1",
+       "2818",
+       "15.3",
+       "2619"
+      ],
+      [
+       "30-35 min",
+       "19.7",
+       "3651",
+       "18.2",
+       "2318"
+      ],
+      [
+       "35-40 min",
+       "11.8",
+       "3818",
+       "29.3",
+       "2417"
+      ],
+      [
+       "40-45 min",
+       "23.1",
+       "1945",
+       "29.0",
+       "3913"
+      ],
+      [
+       "45-50 min",
+       "NaN",
+       "441",
+       "13.1",
+       "1287"
+      ]
+     ],
+     "id": "m05_t1",
+     "caption": "Pressing % in each 5-minute block"
+    }
+   ],
+   "figures": [
+    {
+     "file": "figures/m05_f1.png",
+     "caption": "Pressing intensity per 5-minute block"
+    }
+   ],
+   "summary": [
+    {
+     "text": "ATM: highest in 40-45 min (23.1%), lowest in 20-25 min (6.6%), 9 reliable bins out of 10.",
+     "kind": "insight"
+    },
+    {
+     "text": "BAR: highest in 0-5 min (51.2%), lowest in 45-50 min (13.1%), 10 reliable bins out of 10.",
+     "kind": "insight"
+    }
+   ],
+   "notes": [
+    "masked team/bin cells (fewer than 500 out-of-possession frames = 20 s): 1"
+   ],
+   "frame_groups": [
+    {
+     "id": "g1",
+     "title": "Real frames",
+     "intro_md": "A pressing moment from the peak 5-minute bin of each team and from the lowest reliable bin, with the bin's percentage.",
+     "frames": [
+      {
+       "file": "frames/m05_g1_01.jpg",
+       "thumb": "thumbs/m05_g1_01.jpg",
+       "caption": "BAR, peak bin 0-5 min: pressing 51.2% of its out-of-possession frames",
+       "frame": 5143,
+       "clock": "03:25.7",
+       "team": "BAR",
+       "player": null
+      },
+      {
+       "file": "frames/m05_g1_02.jpg",
+       "thumb": "thumbs/m05_g1_02.jpg",
+       "caption": "ATM, peak bin 40-45 min: pressing 23.1% of its out-of-possession frames",
+       "frame": 64098,
+       "clock": "42:43.9",
+       "team": "ATM",
+       "player": null
+      },
+      {
+       "file": "frames/m05_g1_03.jpg",
+       "thumb": "thumbs/m05_g1_03.jpg",
+       "caption": "ATM, lowest bin 20-25 min: pressing 6.6% of its out-of-possession frames",
+       "frame": 35522,
+       "clock": "23:40.9",
+       "team": "ATM",
+       "player": null
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "m06",
+   "number": "6",
+   "title": "PPDA (passes per defensive action)",
+   "group": "passing",
+   "intro_md": "`PPDA = opponent completed passes / defensive actions` (interceptions + tackles) of the defending team, **both counted outside that team's own defensive third** (own third = the first 35 m from its own goal). Zones are always taken in the *defending* team's frame. Lower PPDA = more aggressive, higher-up pressing.\nPasses and actions are rebuilt from carrier transitions in `frames`: same-team handover >= 3 m = completed pass, team change >= 3 m = interception, team change < 3 m = tackle, keeper claims excluded.",
+   "tables": [
+    {
+     "header": [
+      "team",
+      "passes_allowed",
+      "defensive_actions",
+      "interceptions",
+      "tackles",
+      "PPDA",
+      "excluded_own_third_passes",
+      "excluded_own_third_actions"
+     ],
+     "n_index": 1,
+     "rows": [
+      [
+       "ATM",
+       "171",
+       "25",
+       "18",
+       "7",
+       "6.84",
+       "58",
+       "34"
+      ],
+      [
+       "BAR",
+       "122",
+       "49",
+       "34",
+       "15",
+       "2.49",
+       "8",
+       "7"
+      ]
+     ],
+     "id": "m06_t1",
+     "caption": "PPDA by team (own third excluded)"
+    }
+   ],
+   "figures": [],
+   "summary": [
+    {
+     "text": "PPDA: ATM 6.84, BAR 2.49 (lower = more aggressive pressing).",
+     "kind": "insight"
+    },
+    {
+     "text": "BAR press more aggressively by this measure.",
+     "kind": "insight"
+    }
+   ],
+   "notes": [
+    "detection: 684 carrier runs, 683 transitions (497 within 2.0 s), 13 skipped for missing positions, 3 keeper claims excluded -> 437 pass attempts, 115 defensive actions"
+   ],
+   "frame_groups": [
+    {
+     "id": "g1",
+     "title": "Real frames",
+     "intro_md": "An interception, a tackle (or a second interception if there is no tackle) and a pass allowed, each outside the defending team's own third. The pass line runs from the release point to the receiver.",
+     "frames": [
+      {
+       "file": "frames/m06_g1_01.jpg",
+       "thumb": "thumbs/m06_g1_01.jpg",
+       "caption": "BAR interception: counts as a defensive action in the PPDA of BAR",
+       "frame": 41904,
+       "clock": "27:56.2",
+       "team": "BAR",
+       "player": "interception"
+      },
+      {
+       "file": "frames/m06_g1_02.jpg",
+       "thumb": "thumbs/m06_g1_02.jpg",
+       "caption": "BAR tackle: counts as a defensive action in the PPDA of BAR",
+       "frame": 53778,
+       "clock": "35:51.1",
+       "team": "BAR",
+       "player": "tackle"
+      },
+      {
+       "file": "frames/m06_g1_03.jpg",
+       "thumb": "thumbs/m06_g1_03.jpg",
+       "caption": "pass allowed to BAR: counts in the numerator of ATM's PPDA",
+       "frame": 32556,
+       "clock": "21:42.2",
+       "team": "BAR",
+       "player": null
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "m07",
+   "number": "7",
+   "title": "Time-to-press after losing the ball",
+   "group": "pressing",
+   "intro_md": "For every **turnover** (a possession spell that starts right after the opponent had the ball, `start_type == \"turnover\"`), the time from the start of the new spell until the team that just lost the ball is first pressing the new carrier, searched within `TTP_WINDOW_SEC` (10 s). Turnovers with no press in the window are counted but have no time, so they are not in the mean / median / min / max.",
+   "tables": [
+    {
+     "header": [
+      "team_that_lost_ball",
+      "turnovers",
+      "pressed_within_window",
+      "pressed_pct",
+      "mean_sec",
+      "median_sec",
+      "min_sec",
+      "max_sec",
+      "not_pressed",
+      "of_which_new_spell_shorter_than_window"
+     ],
+     "n_index": 1,
+     "rows": [
+      [
+       "ATM",
+       "57",
+       "34",
+       "59.6",
+       "1.22",
+       "0.54",
+       "0.0",
+       "6.32",
+       "23",
+       "12"
+      ],
+      [
+       "BAR",
+       "58",
+       "49",
+       "84.5",
+       "1.39",
+       "0.48",
+       "0.0",
+       "9.76",
+       "9",
+       "7"
+      ]
+     ],
+     "id": "m07_t1",
+     "caption": "Time-to-press after losing the ball"
+    }
+   ],
+   "figures": [],
+   "summary": [
+    {
+     "text": "ATM: after losing the ball 57 times they pressed within 10 s on 34 (60%), median 0.54 s (mean 1.22, min 0.00, max 6.32).",
+     "kind": "insight"
+    },
+    {
+     "text": "BAR: after losing the ball 58 times they pressed within 10 s on 49 (84%), median 0.48 s (mean 1.39, min 0.00, max 9.76).",
+     "kind": "insight"
+    },
+    {
+     "text": "NOTE: with TTP_GRACE_SEC = 0 the shortest times can just be the turnover contest itself (the player who lost the ball is still beside the new carrier). Set TTP_GRACE_SEC = 1.0 to ignore the first second.",
+     "kind": "note"
+    }
+   ],
+   "notes": [
+    "window = 10 s, grace = 0.0 s, 115 turnovers in total"
+   ],
+   "frame_groups": [
+    {
+     "id": "g1",
+     "title": "Real frames",
+     "intro_md": "Three real turnovers (median, fastest and slowest press). The clock starts when the new team wins the ball and stops at the first press.",
+     "frames": [
+      {
+       "file": "frames/m07_g1_01.jpg",
+       "thumb": "thumbs/m07_g1_01.jpg",
+       "caption": "closest to the median: ATM win the ball, BAR first press after 0.48 s",
+       "frame": 14421,
+       "clock": "09:36.8",
+       "team": "ATM",
+       "player": null
+      },
+      {
+       "file": "frames/m07_g1_02.jpg",
+       "thumb": "thumbs/m07_g1_02.jpg",
+       "caption": "fastest press: ATM win the ball, BAR first press after 0.00 s",
+       "frame": 2736,
+       "clock": "01:49.4",
+       "team": "ATM",
+       "player": null
+      },
+      {
+       "file": "frames/m07_g1_03.jpg",
+       "thumb": "thumbs/m07_g1_03.jpg",
+       "caption": "slowest press: ATM win the ball, BAR first press after 9.76 s",
+       "frame": 51892,
+       "clock": "34:35.7",
+       "team": "ATM",
+       "player": null
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "m08",
+   "number": "8",
+   "title": "Pass success rate, under pressure vs not",
+   "group": "passing",
+   "intro_md": "A pass attempt (completed or intercepted; tackles and keeper claims are not passes) counts as **under pressure** if the opponent was pressing (sustained `under_pressure`) at any frame in the `PRESSURE_LOOKBACK_SEC` (1 s) up to the release. Success = completed. 95% Wilson intervals are shown because the counts are small.\n\n**What this measures:** completion among *resolved* passes only. A pass counts as failed only when an opponent takes the ball at 3 m or more from the passer. Duel losses (dispossessed within 3 m) and balls out of play (gap over 2 s) are not in this table, and both are more common under pressure, so a higher rate under pressure does not mean pressure helps. See 8b for the check.",
+   "tables": [
+    {
+     "header": [
+      "team",
+      "state",
+      "passes",
+      "completed",
+      "intercepted",
+      "success_rate_pct",
+      "ci95"
+     ],
+     "n_index": 2,
+     "rows": [
+      [
+       "ATM",
+       "under pressure",
+       "99",
+       "82",
+       "17",
+       "82.8",
+       "74-89"
+      ],
+      [
+       "ATM",
+       "not under pressure",
+       "69",
+       "48",
+       "21",
+       "69.6",
+       "58-79"
+      ],
+      [
+       "BAR",
+       "under pressure",
+       "87",
+       "79",
+       "8",
+       "90.8",
+       "83-95"
+      ],
+      [
+       "BAR",
+       "not under pressure",
+       "182",
+       "150",
+       "32",
+       "82.4",
+       "76-87"
+      ]
+     ],
+     "id": "m08_t1",
+     "caption": "Pass success rate, under pressure vs not"
+    }
+   ],
+   "figures": [],
+   "summary": [
+    {
+     "text": "ATM: 82.8% of passes completed under pressure (99 passes) vs 69.6% without (69), a gap of +13.2 points; 59% of their passes were under pressure.",
+     "kind": "insight"
+    },
+    {
+     "text": "BAR: 90.8% of passes completed under pressure (87 passes) vs 82.4% without (182), a gap of +8.4 points; 32% of their passes were under pressure.",
+     "kind": "insight"
+    },
+    {
+     "text": "Wide intervals mean the difference between the two states may not be reliable. Duel losses and out-of-play balls are NOT counted as failures here (see 8b).",
+     "kind": "note"
+    }
+   ],
+   "notes": [],
+   "frame_groups": [
+    {
+     "id": "g1",
+     "title": "Real frames",
+     "intro_md": "A pressed completed pass, a pressed intercepted pass and an unpressed completed pass. The one-second lookback window before the release is flagged.",
+     "frames": [
+      {
+       "file": "frames/m08_g1_01.jpg",
+       "thumb": "thumbs/m08_g1_01.jpg",
+       "caption": "pressed + completed: BAR pass, under pressure, completed",
+       "frame": 35439,
+       "clock": "23:37.6",
+       "team": "BAR",
+       "player": null
+      },
+      {
+       "file": "frames/m08_g1_02.jpg",
+       "thumb": "thumbs/m08_g1_02.jpg",
+       "caption": "pressed + intercepted: ATM pass, under pressure, intercepted",
+       "frame": 32497,
+       "clock": "21:39.9",
+       "team": "ATM",
+       "player": null
+      },
+      {
+       "file": "frames/m08_g1_03.jpg",
+       "thumb": "thumbs/m08_g1_03.jpg",
+       "caption": "unpressed + completed: BAR pass, not under pressure, completed",
+       "frame": 32163,
+       "clock": "21:26.5",
+       "team": "BAR",
+       "player": null
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "m08b",
+   "number": "8b",
+   "title": "Check on section 8: what the pressed / unpressed passes look like, and retention with duel losses counted",
+   "group": "passing",
+   "intro_md": "Section 8 can show a *higher* completion rate under pressure because (a) duel losses are not counted as failed passes and (b) pressed carriers play shorter, safer passes. This cell prints both effects:\n1. pass length and direction by pressure state;\n2. **retention** = completed passes / (all pass attempts + duel losses), where a duel loss is a carrier dispossessed within 3 m of the next carrier.",
+   "tables": [
+    {
+     "header": [
+      "team",
+      "state",
+      "passes",
+      "median_length_m",
+      "mean_length_m",
+      "pct_forward_3m",
+      "pct_backward_3m",
+      "pct_intercepted"
+     ],
+     "n_index": 2,
+     "rows": [
+      [
+       "ATM",
+       "under pressure",
+       "99",
+       "12.5",
+       "13.6",
+       "34.3",
+       "33.3",
+       "17.2"
+      ],
+      [
+       "ATM",
+       "not under pressure",
+       "69",
+       "10.8",
+       "13.0",
+       "49.3",
+       "30.4",
+       "30.4"
+      ],
+      [
+       "BAR",
+       "under pressure",
+       "87",
+       "14.3",
+       "15.1",
+       "39.1",
+       "34.5",
+       "9.2"
+      ],
+      [
+       "BAR",
+       "not under pressure",
+       "182",
+       "14.2",
+       "15.8",
+       "49.5",
+       "27.5",
+       "17.6"
+      ]
+     ],
+     "id": "m08b_t1",
+     "caption": "What the passes look like"
+    },
+    {
+     "header": [
+      "team",
+      "state",
+      "passes",
+      "completed",
+      "intercepted",
+      "lost_in_duel",
+      "pass_completion_pct",
+      "retention_pct",
+      "ci95"
+     ],
+     "n_index": 2,
+     "rows": [
+      [
+       "ATM",
+       "under pressure",
+       "99",
+       "82",
+       "17",
+       "11",
+       "82.8",
+       "74.5",
+       "66-82"
+      ],
+      [
+       "ATM",
+       "not under pressure",
+       "69",
+       "48",
+       "21",
+       "7",
+       "69.6",
+       "63.2",
+       "52-73"
+      ],
+      [
+       "BAR",
+       "under pressure",
+       "87",
+       "79",
+       "8",
+       "6",
+       "90.8",
+       "84.9",
+       "76-91"
+      ],
+      [
+       "BAR",
+       "not under pressure",
+       "182",
+       "150",
+       "32",
+       "13",
+       "82.4",
+       "76.9",
+       "71-82"
+      ]
+     ],
+     "id": "m08b_t2",
+     "caption": "Retention = completed / (passes + duel losses)"
+    }
+   ],
+   "figures": [],
+   "summary": [
+    {
+     "text": "ATM: pass completion 82.8% pressed vs 69.6% unpressed; with 11 pressed and 7 unpressed duel losses counted, retention is 74.5% vs 63.2%.",
+     "kind": "insight"
+    },
+    {
+     "text": "BAR: pass completion 90.8% pressed vs 82.4% unpressed; with 6 pressed and 13 unpressed duel losses counted, retention is 84.9% vs 76.9%.",
+     "kind": "insight"
+    },
+    {
+     "text": "If the pressed rate stays above the unpressed one, look at table 1: shorter, more backward passes under pressure explain it.",
+     "kind": "note"
+    }
+   ],
+   "notes": [
+    "balls with a gap over 2 s (out of play / long loose ball), not counted in either table: 186"
+   ],
+   "frame_groups": []
+  },
+  {
+   "id": "m09",
+   "number": "9",
+   "title": "Defensive line height (last-1 and last-3 defenders)",
+   "group": "shape",
+   "intro_md": "Distance from own goal of the **last outfield defender** and of the **mean of the last three**, per frame, out-of-possession frames only. Outliers (tracking glitches) are removed per team with the 1.5 x IQR rule before the mean / median / std are computed.",
+   "tables": [
+    {
+     "header": [
+      "line",
+      "team",
+      "mean_m",
+      "median_m",
+      "std_m",
+      "frames_kept",
+      "outliers_removed"
+     ],
+     "n_index": 2,
+     "rows": [
+      [
+       "last-1 defender",
+       "ATM",
+       "26.2",
+       "23.5",
+       "13.7",
+       "30894",
+       "54"
+      ],
+      [
+       "last-1 defender",
+       "BAR",
+       "44.8",
+       "48.2",
+       "13.1",
+       "20283",
+       "1220"
+      ],
+      [
+       "last-3 defenders (mean)",
+       "ATM",
+       "27.4",
+       "24.4",
+       "13.9",
+       "30866",
+       "68"
+      ],
+      [
+       "last-3 defenders (mean)",
+       "BAR",
+       "46.4",
+       "49.0",
+       "14.6",
+       "20068",
+       "736"
+      ]
+     ],
+     "id": "m09_t1",
+     "caption": "Line height, outliers removed (1.5 x IQR)"
+    }
+   ],
+   "figures": [],
+   "summary": [
+    {
+     "text": "last-1 defender: ATM 26.2 m (median 23.5, std 13.7) vs BAR 44.8 m (median 48.2, std 13.1); BAR defend higher.",
+     "kind": "insight"
+    },
+    {
+     "text": "last-3 defenders (mean): ATM 27.4 m (median 24.4, std 13.9) vs BAR 46.4 m (median 49.0, std 14.6); BAR defend higher.",
+     "kind": "insight"
+    },
+    {
+     "text": "A larger std means the line moves up and down the pitch more.",
+     "kind": "note"
+    }
+   ],
+   "notes": [],
+   "frame_groups": [
+    {
+     "id": "g1",
+     "title": "Real frames",
+     "intro_md": "A typical last-1 / last-3 line, the highest line that is kept, and a frame that the 1.5 x IQR rule removes as an outlier (if the match has one).",
+     "frames": [
+      {
+       "file": "frames/m09_g1_01.jpg",
+       "thumb": "thumbs/m09_g1_01.jpg",
+       "caption": "typical frame: BAR, last-3 line 48.5 m (median 48.5 m), kept",
+       "frame": 24883,
+       "clock": "16:35.3",
+       "team": "BAR",
+       "player": null
+      },
+      {
+       "file": "frames/m09_g1_02.jpg",
+       "thumb": "thumbs/m09_g1_02.jpg",
+       "caption": "highest line that is still kept: BAR, last-3 80.3 m",
+       "frame": 14437,
+       "clock": "09:37.5",
+       "team": "BAR",
+       "player": null
+      },
+      {
+       "file": "frames/m09_g1_03.jpg",
+       "thumb": "thumbs/m09_g1_03.jpg",
+       "caption": "OUTLIER removed from the statistics: ATM, last-1 76.0 m / last-3 83.9 m",
+       "frame": 35479,
+       "clock": "23:39.2",
+       "team": "ATM",
+       "player": null
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "m10",
+   "number": "10",
+   "title": "Team compactness while out of possession",
+   "group": "shape",
+   "intro_md": "Per frame, out-of-possession outfield block of the defending team:\n- **depth** = mean distance from own goal of the front 3 outfield players minus that of the back 3 (needs at least 6 tracked outfield players)\n- **width** = lateral spread (max y - min y) after removing outliers with the 1.5 x IQR rule\n- **area** = depth x width (m²). Smaller = more compact block.",
+   "tables": [
+    {
+     "header": [
+      "team",
+      "frames",
+      "depth_mean",
+      "depth_median",
+      "depth_std",
+      "width_mean",
+      "width_median",
+      "width_std",
+      "area_mean",
+      "area_median",
+      "area_std"
+     ],
+     "n_index": 1,
+     "rows": [
+      [
+       "ATM",
+       "30713",
+       "19.2",
+       "17.9",
+       "6.7",
+       "35.8",
+       "36.6",
+       "7.8",
+       "704.0",
+       "639.7",
+       "324.1"
+      ],
+      [
+       "BAR",
+       "20684",
+       "22.5",
+       "23.0",
+       "8.0",
+       "35.9",
+       "37.6",
+       "8.9",
+       "840.4",
+       "835.1",
+       "373.4"
+      ]
+     ],
+     "id": "m10_t1",
+     "caption": "Team compactness out of possession"
+    }
+   ],
+   "figures": [],
+   "summary": [
+    {
+     "text": "ATM: block 19.2 m deep and 35.8 m wide on average -> 704 m² (median 640).",
+     "kind": "insight"
+    },
+    {
+     "text": "BAR: block 22.5 m deep and 35.9 m wide on average -> 840 m² (median 835).",
+     "kind": "insight"
+    },
+    {
+     "text": "ATM defend in the more compact block, about 16% smaller by area than BAR.",
+     "kind": "insight"
+    }
+   ],
+   "notes": [],
+   "frame_groups": [
+    {
+     "id": "g1",
+     "title": "Real frames",
+     "intro_md": "The out-of-possession block on its tightest, a typical and its loosest frame: shaded rectangle = depth x width.",
+     "frames": [
+      {
+       "file": "frames/m10_g1_01.jpg",
+       "thumb": "thumbs/m10_g1_01.jpg",
+       "caption": "tightest block of the match: BAR, 7 m2",
+       "frame": 69506,
+       "clock": "46:20.2",
+       "team": "BAR",
+       "player": null
+      },
+      {
+       "file": "frames/m10_g1_02.jpg",
+       "thumb": "thumbs/m10_g1_02.jpg",
+       "caption": "typical block: BAR, 840 m2 (match average 840 m2)",
+       "frame": 16673,
+       "clock": "11:06.9",
+       "team": "BAR",
+       "player": null
+      },
+      {
+       "file": "frames/m10_g1_03.jpg",
+       "thumb": "thumbs/m10_g1_03.jpg",
+       "caption": "loosest block of the match: BAR, 1810 m2",
+       "frame": 54917,
+       "clock": "36:36.7",
+       "team": "BAR",
+       "player": null
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "m11",
+   "number": "11",
+   "title": "Compactness while actively pressing vs not",
+   "group": "shape",
+   "intro_md": "Same shape metrics as section 10, split by whether the team is pressing the ball carrier in that frame (`under_pressure` = True) or sitting in its resting out-of-possession shape (False). This shows how the block changes when it presses; it does not by itself show that pressing causes the change.",
+   "tables": [
+    {
+     "header": [
+      "team",
+      "state",
+      "frames",
+      "depth_mean",
+      "width_mean",
+      "area_mean",
+      "area_median",
+      "area_std"
+     ],
+     "n_index": 2,
+     "rows": [
+      [
+       "ATM",
+       "pressing",
+       "4144",
+       "21.4",
+       "37.9",
+       "824.0",
+       "758.7",
+       "305.9"
+      ],
+      [
+       "ATM",
+       "not pressing",
+       "26569",
+       "18.8",
+       "35.5",
+       "685.3",
+       "617.6",
+       "322.9"
+      ],
+      [
+       "BAR",
+       "pressing",
+       "5652",
+       "22.8",
+       "37.0",
+       "854.7",
+       "831.3",
+       "319.6"
+      ],
+      [
+       "BAR",
+       "not pressing",
+       "15032",
+       "22.4",
+       "35.5",
+       "835.0",
+       "836.1",
+       "391.6"
+      ]
+     ],
+     "id": "m11_t1",
+     "caption": "Compactness while pressing vs not"
+    }
+   ],
+   "figures": [],
+   "summary": [
+    {
+     "text": "ATM: 824 m² while pressing vs 685 m² when not -> the block is 139 m² (20%) looser while pressing (depth 21.4 vs 18.8 m, width 37.9 vs 35.5 m).",
+     "kind": "insight"
+    },
+    {
+     "text": "BAR: 855 m² while pressing vs 835 m² when not -> the block is 20 m² (2%) looser while pressing (depth 22.8 vs 22.4 m, width 37.0 vs 35.5 m).",
+     "kind": "insight"
+    }
+   ],
+   "notes": [],
+   "frame_groups": [
+    {
+     "id": "g1",
+     "title": "Real frames",
+     "intro_md": "The same block while pressing and while not pressing.",
+     "frames": [
+      {
+       "file": "frames/m11_g1_01.jpg",
+       "thumb": "thumbs/m11_g1_01.jpg",
+       "caption": "ATM pressing: block 825 m2 (its average while pressing: 824 m2)",
+       "frame": 64078,
+       "clock": "42:43.1",
+       "team": "ATM",
+       "player": "pressing"
+      },
+      {
+       "file": "frames/m11_g1_02.jpg",
+       "thumb": "thumbs/m11_g1_02.jpg",
+       "caption": "ATM not pressing: block 685 m2 (its average while not pressing: 685 m2)",
+       "frame": 3242,
+       "clock": "02:09.7",
+       "team": "ATM",
+       "player": "not pressing"
+      },
+      {
+       "file": "frames/m11_g1_03.jpg",
+       "thumb": "thumbs/m11_g1_03.jpg",
+       "caption": "BAR pressing: block 854 m2 (its average while pressing: 855 m2)",
+       "frame": 56431,
+       "clock": "37:37.2",
+       "team": "BAR",
+       "player": "pressing"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "m12",
+   "number": "12",
+   "title": "Third x channel grid",
+   "group": "pressing",
+   "intro_md": "Where each team's pressure happens: the thirds that count as pressing (middle and attacking, in the pressing team's attacking direction) x three lateral channels (thirds of the pitch width), 6 cells. Each cell is the % of the team's pressure frames. `left` / `right` follow `LEFT_IS_LOW_Y_ATT` from your build-up notebook (looking towards the opponent's goal); flip that switch in the setup cell if they look mirrored on the video.",
+   "tables": [
+    {
+     "header": [
+      "team",
+      "channel",
+      "middle_third",
+      "attacking_third"
+     ],
+     "n_index": 2,
+     "rows": [
+      [
+       "BAR",
+       "left",
+       "16.3",
+       "13.3"
+      ],
+      [
+       "BAR",
+       "centre",
+       "10.4",
+       "12.7"
+      ],
+      [
+       "BAR",
+       "right",
+       "22.8",
+       "24.4"
+      ],
+      [
+       "ATM",
+       "left",
+       "20.5",
+       "7.8"
+      ],
+      [
+       "ATM",
+       "centre",
+       "28.6",
+       "4.9"
+      ],
+      [
+       "ATM",
+       "right",
+       "33.6",
+       "4.7"
+      ]
+     ],
+     "id": "m12_t1",
+     "caption": "Share of each team's pressure by third and channel"
+    }
+   ],
+   "figures": [
+    {
+     "file": "figures/m12_f1.png",
+     "caption": "Third x channel grid: % of each team's pressure frames"
+    }
+   ],
+   "summary": [
+    {
+     "text": "ATM: biggest cell = right channel of the middle third (33.6% of their pressure). By third (middle/attacking): 83/17%. By channel left/centre/right: 28/34/38%.",
+     "kind": "insight"
+    },
+    {
+     "text": "BAR: biggest cell = right channel of the attacking third (24.4% of their pressure). By third (middle/attacking): 50/50%. By channel left/centre/right: 30/23/47%.",
+     "kind": "insight"
+    }
+   ],
+   "notes": [],
+   "frame_groups": [
+    {
+     "id": "g1",
+     "title": "Real frames",
+     "intro_md": "Pressing in the biggest third x channel cell of each team and in the biggest attacking-third cell (shaded).",
+     "frames": [
+      {
+       "file": "frames/m12_g1_01.jpg",
+       "thumb": "thumbs/m12_g1_01.jpg",
+       "caption": "BAR, biggest cell: attacking third / right channel (24.4% of its pressure)",
+       "frame": 16688,
+       "clock": "11:07.5",
+       "team": "BAR",
+       "player": null
+      },
+      {
+       "file": "frames/m12_g1_02.jpg",
+       "thumb": "thumbs/m12_g1_02.jpg",
+       "caption": "ATM, biggest cell: middle third / right channel (33.6% of its pressure)",
+       "frame": 64090,
+       "clock": "42:43.6",
+       "team": "ATM",
+       "player": null
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "m13",
+   "number": "13",
+   "title": "Zone intensity per time in zone",
+   "group": "pressing",
+   "intro_md": "Sections 3 and 12 count pressure frames, but a team that spends more time defending in a zone naturally has more pressure there. This normalises by the time the ball is in the zone while the team is out of possession (only the middle and attacking third, since pressure in the team's own third is not counted):\n`zone intensity % = pressing frames with the ball in the zone / out-of-possession frames with the ball in the zone`. Cells with fewer than `MIN_CELL_FRAMES` ball-in-cell frames are greyed out.",
+   "tables": [
+    {
+     "header": [
+      "team",
+      "third",
+      "ball_in_zone_sec",
+      "pct_of_out_of_possession_time",
+      "pressing_sec",
+      "zone_intensity_pct"
+     ],
+     "n_index": 2,
+     "rows": [
+      [
+       "ATM",
+       "middle_third",
+       "584.7",
+       "47.2",
+       "137.2",
+       "23.5"
+      ],
+      [
+       "ATM",
+       "attacking_third",
+       "240.7",
+       "19.4",
+       "28.8",
+       "11.9"
+      ],
+      [
+       "BAR",
+       "middle_third",
+       "313.5",
+       "36.4",
+       "112.4",
+       "35.9"
+      ],
+      [
+       "BAR",
+       "attacking_third",
+       "416.4",
+       "48.4",
+       "114.7",
+       "27.6"
+      ]
+     ],
+     "id": "m13_t1",
+     "caption": "Zone intensity per time in zone"
+    }
+   ],
+   "figures": [
+    {
+     "file": "figures/m13_f1.png",
+     "caption": "Zone intensity: % of ball-in-cell time spent pressing"
+    }
+   ],
+   "summary": [
+    {
+     "text": "ATM: presses most when the ball is in the middle third (24% of that time) and least in the attacking third (12%). Time with the ball in the middle/attacking third: 47%/19% of their out-of-possession time.",
+     "kind": "insight"
+    },
+    {
+     "text": "BAR: presses most when the ball is in the middle third (36% of that time) and least in the attacking third (28%). Time with the ball in the middle/attacking third: 36%/48% of their out-of-possession time.",
+     "kind": "insight"
+    }
+   ],
+   "notes": [],
+   "frame_groups": [
+    {
+     "id": "g1",
+     "title": "Real frames",
+     "intro_md": "The highest-intensity cell with a pressing frame and with a frame without pressing, and the lowest-intensity cell.",
+     "frames": [
+      {
+       "file": "frames/m13_g1_01.jpg",
+       "thumb": "thumbs/m13_g1_01.jpg",
+       "caption": "highest-intensity cell: BAR, middle third / left cell, intensity 43% (pressing frame)",
+       "frame": 62600,
+       "clock": "41:44.0",
+       "team": "BAR",
+       "player": null
+      },
+      {
+       "file": "frames/m13_g1_02.jpg",
+       "thumb": "thumbs/m13_g1_02.jpg",
+       "caption": "same cell, a frame WITHOUT pressing: BAR, middle third / left cell, intensity 43% (not pressing frame)",
+       "frame": 61766,
+       "clock": "41:10.6",
+       "team": "BAR",
+       "player": null
+      },
+      {
+       "file": "frames/m13_g1_03.jpg",
+       "thumb": "thumbs/m13_g1_03.jpg",
+       "caption": "lowest-intensity cell: ATM, attacking third / centre cell, intensity 7% (not pressing frame)",
+       "frame": 48019,
+       "clock": "32:00.8",
+       "team": "ATM",
+       "player": null
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "m14",
+   "number": "14",
+   "title": "Press-to-regain rate",
+   "group": "pressing",
+   "intro_md": "A **pressing episode** (own-third pressure is not counted, so every episode starts in the middle or attacking third) = a run of pressing frames (`under_pressure`) inside one possession spell, gaps of up to `EPISODE_GAP_FRAMES` bridged, lasting at least `MIN_EPISODE_SEC`. It counts as a **regain** if the pressing team becomes the ball carrier within `REGAIN_WINDOW_SEC` (5 s) after the episode ends. `regained and held` is stricter: the pressing team also starts a stable possession spell (holds the ball 1.5 s or more) in that window.",
+   "tables": [
+    {
+     "header": [
+      "team",
+      "scope",
+      "episodes",
+      "regained",
+      "regain_pct",
+      "regained_and_held",
+      "regain_and_held_pct"
+     ],
+     "n_index": 2,
+     "rows": [
+      [
+       "ATM",
+       "all episodes",
+       "132",
+       "30",
+       "22.7",
+       "28",
+       "21.2"
+      ],
+      [
+       "BAR",
+       "all episodes",
+       "159",
+       "60",
+       "37.7",
+       "55",
+       "34.6"
+      ]
+     ],
+     "id": "m14_t1",
+     "caption": "Overall"
+    },
+    {
+     "header": [
+      "team",
+      "pressers",
+      "episodes",
+      "regained",
+      "regain_pct",
+      "regained_and_held",
+      "regain_and_held_pct"
+     ],
+     "n_index": 2,
+     "rows": [
+      [
+       "ATM",
+       "1 presser",
+       "102",
+       "21",
+       "20.6",
+       "20",
+       "19.6"
+      ],
+      [
+       "ATM",
+       "2+ pressers",
+       "30",
+       "9",
+       "30.0",
+       "8",
+       "26.7"
+      ],
+      [
+       "BAR",
+       "1 presser",
+       "117",
+       "36",
+       "30.8",
+       "34",
+       "29.1"
+      ],
+      [
+       "BAR",
+       "2+ pressers",
+       "42",
+       "24",
+       "57.1",
+       "21",
+       "50.0"
+      ]
+     ],
+     "id": "m14_t2",
+     "caption": "By number of pressers (max at the same time in the episode)"
+    },
+    {
+     "header": [
+      "team",
+      "start_third",
+      "episodes",
+      "regained",
+      "regain_pct",
+      "regained_and_held",
+      "regain_and_held_pct"
+     ],
+     "n_index": 2,
+     "rows": [
+      [
+       "ATM",
+       "middle_third",
+       "103",
+       "24",
+       "23.3",
+       "22",
+       "21.4"
+      ],
+      [
+       "ATM",
+       "attacking_third",
+       "29",
+       "6",
+       "20.7",
+       "6",
+       "20.7"
+      ],
+      [
+       "BAR",
+       "middle_third",
+       "75",
+       "32",
+       "42.7",
+       "31",
+       "41.3"
+      ],
+      [
+       "BAR",
+       "attacking_third",
+       "84",
+       "28",
+       "33.3",
+       "24",
+       "28.6"
+      ]
+     ],
+     "id": "m14_t3",
+     "caption": "By third where the episode started (pressing team's attacking frame)"
+    },
+    {
+     "header": [
+      "team",
+      "count",
+      "mean",
+      "50%",
+      "max"
+     ],
+     "n_index": 1,
+     "rows": [
+      [
+       "ATM",
+       "132.0",
+       "1.2",
+       "1.0",
+       "4.2"
+      ],
+      [
+       "BAR",
+       "159.0",
+       "1.4",
+       "1.1",
+       "5.6"
+      ]
+     ],
+     "id": "m14_t4",
+     "caption": "Episode length (s)"
+    }
+   ],
+   "figures": [],
+   "summary": [
+    {
+     "text": "ATM: 132 pressing episodes, ball back within 5 s after 30 (22.7%); 28 (21.2%) were regained and held.",
+     "kind": "insight"
+    },
+    {
+     "text": "BAR: 159 pressing episodes, ball back within 5 s after 60 (37.7%); 55 (34.6%) were regained and held.",
+     "kind": "insight"
+    },
+    {
+     "text": "There is no baseline here: a regain rate says how often a press is followed by the ball, not how much of that the press caused.",
+     "kind": "note"
+    }
+   ],
+   "notes": [
+    "291 pressing episodes (>= 0.5 s, gaps <= 5 frames bridged); regain window 5 s"
+   ],
+   "frame_groups": [
+    {
+     "id": "g1",
+     "title": "Real frames",
+     "intro_md": "Two pressing episodes that ended with the ball regained and one that did not; the 5 s regain window counts down on screen.",
+     "frames": [
+      {
+       "file": "frames/m14_g1_01.jpg",
+       "thumb": "thumbs/m14_g1_01.jpg",
+       "caption": "BAR press episode (1.6 s), ball regained",
+       "frame": 28139,
+       "clock": "18:45.6",
+       "team": "BAR",
+       "player": null
+      },
+      {
+       "file": "frames/m14_g1_02.jpg",
+       "thumb": "thumbs/m14_g1_02.jpg",
+       "caption": "ATM press episode (2.2 s), ball regained",
+       "frame": 52126,
+       "clock": "34:45.0",
+       "team": "ATM",
+       "player": null
+      },
+      {
+       "file": "frames/m14_g1_03.jpg",
+       "thumb": "thumbs/m14_g1_03.jpg",
+       "caption": "BAR press episode (2.8 s), ball NOT regained",
+       "frame": 37736,
+       "clock": "25:09.4",
+       "team": "BAR",
+       "player": null
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "m15",
+   "number": "15",
+   "title": "Pressing time per player and share of the team's pressing",
+   "group": "players",
+   "intro_md": "A defender counts as pressing in a frame when his own press flag is on (within 5 m of the ball carrier and within 2 m or closing at 1.5 m/s or more) **and** the team is in a sustained pressing phase (`under_pressure`), so one-frame flickers are ignored. Per player:\n- `share_of_team_presser_time_pct`: his pressing frames / all pressing frames of all his team's players (sums to 100%; several players press at once)\n- `involved_in_pct_of_team_pressing`: the % of the team's pressing frames in which he was one of the pressers\n- `pressing_rate_pct`: his pressing frames / the frames he was tracked while his team defended (fair to players with less time on the pitch)",
+   "tables": [
+    {
+     "header": [
+      "player",
+      "number",
+      "defending_sec",
+      "pressing_sec",
+      "share_of_team_presser_time_pct",
+      "involved_in_pct_of_team_pressing",
+      "pressing_rate_pct"
+     ],
+     "n_index": 1,
+     "rows": [
+      [
+       "Alvarez",
+       "19",
+       "1236.0",
+       "49.0",
+       "25.9",
+       "29.5",
+       "4.0"
+      ],
+      [
+       "Griezmann",
+       "7",
+       "1220.0",
+       "35.0",
+       "18.5",
+       "21.1",
+       "2.9"
+      ],
+      [
+       "Simeone",
+       "22",
+       "1183.0",
+       "22.9",
+       "12.1",
+       "13.8",
+       "1.9"
+      ],
+      [
+       "De Paul",
+       "5",
+       "1199.0",
+       "21.9",
+       "11.5",
+       "13.2",
+       "1.8"
+      ],
+      [
+       "Gallagher",
+       "4",
+       "1217.0",
+       "21.7",
+       "11.4",
+       "13.1",
+       "1.8"
+      ],
+      [
+       "Llorente",
+       "14",
+       "1198.0",
+       "16.3",
+       "8.6",
+       "9.8",
+       "1.4"
+      ],
+      [
+       "Barrios",
+       "8",
+       "1185.0",
+       "11.2",
+       "5.9",
+       "6.7",
+       "0.9"
+      ],
+      [
+       "Javi Galan",
+       "21",
+       "1233.0",
+       "5.0",
+       "2.6",
+       "3.0",
+       "0.4"
+      ],
+      [
+       "Gimenez",
+       "2",
+       "1215.0",
+       "3.4",
+       "1.8",
+       "2.0",
+       "0.3"
+      ],
+      [
+       "Lenglet",
+       "15",
+       "1222.0",
+       "3.2",
+       "1.7",
+       "2.0",
+       "0.3"
+      ]
+     ],
+     "id": "m15_t1",
+     "caption": "ATM (team pressing time 166 s; players listed by pressing time)"
+    },
+    {
+     "header": [
+      "player",
+      "number",
+      "defending_sec",
+      "pressing_sec",
+      "share_of_team_presser_time_pct",
+      "involved_in_pct_of_team_pressing",
+      "pressing_rate_pct"
+     ],
+     "n_index": 1,
+     "rows": [
+      [
+       "Gavi",
+       "6",
+       "839.0",
+       "53.2",
+       "19.9",
+       "23.4",
+       "6.3"
+      ],
+      [
+       "Raphinha",
+       "11",
+       "819.0",
+       "45.5",
+       "17.0",
+       "20.0",
+       "5.6"
+      ],
+      [
+       "Fermin",
+       "16",
+       "825.0",
+       "38.7",
+       "14.5",
+       "17.0",
+       "4.7"
+      ],
+      [
+       "Pedri",
+       "8",
+       "818.0",
+       "30.6",
+       "11.5",
+       "13.5",
+       "3.7"
+      ],
+      [
+       "Casado",
+       "17",
+       "809.0",
+       "28.8",
+       "10.8",
+       "12.7",
+       "3.6"
+      ],
+      [
+       "Lewandowski",
+       "9",
+       "826.0",
+       "25.2",
+       "9.4",
+       "11.1",
+       "3.0"
+      ],
+      [
+       "Balde",
+       "3",
+       "822.0",
+       "19.1",
+       "7.2",
+       "8.4",
+       "2.3"
+      ],
+      [
+       "Kounde",
+       "23",
+       "789.0",
+       "18.1",
+       "6.8",
+       "8.0",
+       "2.3"
+      ],
+      [
+       "Inigo",
+       "5",
+       "824.0",
+       "4.1",
+       "1.5",
+       "1.8",
+       "0.5"
+      ],
+      [
+       "Cubarsi",
+       "2",
+       "804.0",
+       "3.6",
+       "1.4",
+       "1.6",
+       "0.5"
+      ]
+     ],
+     "id": "m15_t2",
+     "caption": "BAR (team pressing time 227 s; players listed by pressing time)"
+    }
+   ],
+   "figures": [],
+   "summary": [
+    {
+     "text": "ATM: most pressing time = Alvarez (49 s, 26% of the team's presser time), Griezmann (35 s, 18% of the team's presser time), Simeone (23 s, 12% of the team's presser time). The top three account for 56% of it.\nhighest pressing rate (at least 5 min tracked while defending): Alvarez at 4.0% of his defending time.",
+     "kind": "insight"
+    },
+    {
+     "text": "BAR: most pressing time = Gavi (53 s, 20% of the team's presser time), Raphinha (46 s, 17% of the team's presser time), Fermin (39 s, 14% of the team's presser time). The top three account for 51% of it.\nhighest pressing rate (at least 5 min tracked while defending): Gavi at 6.3% of his defending time.",
+     "kind": "insight"
+    }
+   ],
+   "notes": [],
+   "frame_groups": [
+    {
+     "id": "g1",
+     "title": "Real frames",
+     "intro_md": "The player with the most pressing time of each team, pressing on real frames, with his share of the team's pressing.",
+     "frames": [
+      {
+       "file": "frames/m15_g1_01.jpg",
+       "thumb": "thumbs/m15_g1_01.jpg",
+       "caption": "BAR #6 Gavi: most pressing time of his team (53.2 s)",
+       "frame": 51429,
+       "clock": "34:17.2",
+       "team": "BAR",
+       "player": "#6 Gavi"
+      },
+      {
+       "file": "frames/m15_g1_02.jpg",
+       "thumb": "thumbs/m15_g1_02.jpg",
+       "caption": "ATM #19 Alvarez: most pressing time of his team (49.0 s)",
+       "frame": 22769,
+       "clock": "15:10.8",
+       "team": "ATM",
+       "player": "#19 Alvarez"
+      },
+      {
+       "file": "frames/m15_g1_03.jpg",
+       "thumb": "thumbs/m15_g1_03.jpg",
+       "caption": "BAR #11 Raphinha: second most pressing time of his team (45.5 s)",
+       "frame": 37709,
+       "clock": "25:08.4",
+       "team": "BAR",
+       "player": "#11 Raphinha"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "m16",
+   "number": "16",
+   "title": "Where each player presses (third x channel)",
+   "group": "players",
+   "intro_md": "For each player, the % of his pressing frames (as defined in section 15) by the third (middle / attacking) and channel where the ball carrier was, in his team's attacking frame. Players with fewer than `MIN_PLAYER_PRESS_FRAMES` pressing frames are greyed out in the figure: too little to read.",
+   "tables": [
+    {
+     "header": [
+      "team",
+      "player",
+      "pressing_sec",
+      "enough_data",
+      "mid_left",
+      "mid_centre",
+      "mid_right",
+      "att_left",
+      "att_centre",
+      "att_right",
+      "main_cell",
+      "pct_attacking_third"
+     ],
+     "n_index": 2,
+     "rows": [
+      [
+       "ATM",
+       "Alvarez",
+       "49.0",
+       "True",
+       "20.7",
+       "48.9",
+       "10.4",
+       "7.5",
+       "11.1",
+       "1.4",
+       "middle / centre",
+       "20.0"
+      ],
+      [
+       "ATM",
+       "Griezmann",
+       "35.0",
+       "True",
+       "11.4",
+       "25.5",
+       "39.8",
+       "8.4",
+       "6.1",
+       "8.8",
+       "middle / right",
+       "23.2"
+      ],
+      [
+       "ATM",
+       "Simeone",
+       "22.9",
+       "True",
+       "0.0",
+       "27.8",
+       "60.5",
+       "0.0",
+       "0.0",
+       "11.7",
+       "middle / right",
+       "11.7"
+      ],
+      [
+       "ATM",
+       "De Paul",
+       "21.9",
+       "True",
+       "2.7",
+       "19.2",
+       "77.9",
+       "0.0",
+       "0.0",
+       "0.2",
+       "middle / right",
+       "0.2"
+      ],
+      [
+       "ATM",
+       "Gallagher",
+       "21.7",
+       "True",
+       "65.7",
+       "10.7",
+       "0.0",
+       "23.6",
+       "0.0",
+       "0.0",
+       "middle / left",
+       "23.6"
+      ],
+      [
+       "ATM",
+       "Llorente",
+       "16.3",
+       "True",
+       "2.2",
+       "14.7",
+       "72.3",
+       "0.0",
+       "0.0",
+       "10.8",
+       "middle / right",
+       "10.8"
+      ],
+      [
+       "ATM",
+       "Barrios",
+       "11.2",
+       "True",
+       "47.3",
+       "32.6",
+       "7.9",
+       "12.2",
+       "0.0",
+       "0.0",
+       "middle / left",
+       "12.2"
+      ],
+      [
+       "ATM",
+       "Javi Galan",
+       "5.0",
+       "True",
+       "66.9",
+       "10.5",
+       "0.0",
+       "22.6",
+       "0.0",
+       "0.0",
+       "middle / left",
+       "22.6"
+      ],
+      [
+       "ATM",
+       "Gimenez",
+       "3.4",
+       "True",
+       "7.1",
+       "50.0",
+       "42.9",
+       "0.0",
+       "0.0",
+       "0.0",
+       "middle / centre",
+       "0.0"
+      ],
+      [
+       "ATM",
+       "Lenglet",
+       "3.2",
+       "True",
+       "45.7",
+       "34.6",
+       "1.2",
+       "0.0",
+       "18.5",
+       "0.0",
+       "middle / left",
+       "18.5"
+      ],
+      [
+       "BAR",
+       "Gavi",
+       "53.2",
+       "True",
+       "0.4",
+       "17.6",
+       "36.4",
+       "5.5",
+       "11.6",
+       "28.5",
+       "middle / right",
+       "45.6"
+      ],
+      [
+       "BAR",
+       "Raphinha",
+       "45.5",
+       "True",
+       "0.0",
+       "0.0",
+       "20.1",
+       "4.4",
+       "15.1",
+       "60.4",
+       "attacking / right",
+       "79.9"
+      ],
+      [
+       "BAR",
+       "Fermin",
+       "38.7",
+       "True",
+       "42.4",
+       "10.0",
+       "0.0",
+       "31.0",
+       "11.9",
+       "4.8",
+       "middle / left",
+       "47.6"
+      ],
+      [
+       "BAR",
+       "Pedri",
+       "30.6",
+       "True",
+       "45.1",
+       "8.6",
+       "17.3",
+       "16.3",
+       "12.5",
+       "0.1",
+       "middle / left",
+       "29.0"
+      ],
+      [
+       "BAR",
+       "Casado",
+       "28.8",
+       "True",
+       "13.1",
+       "14.9",
+       "60.1",
+       "0.0",
+       "12.0",
+       "0.0",
+       "middle / right",
+       "12.0"
+      ],
+      [
+       "BAR",
+       "Lewandowski",
+       "25.2",
+       "True",
+       "10.5",
+       "8.9",
+       "9.4",
+       "14.8",
+       "27.0",
+       "29.4",
+       "attacking / right",
+       "71.2"
+      ],
+      [
+       "BAR",
+       "Balde",
+       "19.1",
+       "True",
+       "37.0",
+       "9.4",
+       "10.7",
+       "41.6",
+       "1.3",
+       "0.0",
+       "attacking / left",
+       "42.9"
+      ],
+      [
+       "BAR",
+       "Kounde",
+       "18.1",
+       "True",
+       "0.0",
+       "0.0",
+       "30.0",
+       "0.0",
+       "0.0",
+       "70.0",
+       "attacking / right",
+       "70.0"
+      ],
+      [
+       "BAR",
+       "Inigo",
+       "4.1",
+       "True",
+       "47.6",
+       "32.0",
+       "0.0",
+       "0.0",
+       "0.0",
+       "20.4",
+       "middle / left",
+       "20.4"
+      ],
+      [
+       "BAR",
+       "Cubarsi",
+       "3.6",
+       "True",
+       "0.0",
+       "18.7",
+       "73.6",
+       "0.0",
+       "7.7",
+       "0.0",
+       "middle / right",
+       "7.7"
+      ]
+     ],
+     "id": "m16_t1",
+     "caption": "Where each player presses (% of his pressing frames)"
+    }
+   ],
+   "figures": [
+    {
+     "file": "figures/m16_f1.png",
+     "caption": "Barcelona: where each player presses (% of his pressing frames)"
+    },
+    {
+     "file": "figures/m16_f2.png",
+     "caption": "Atletico Madrid: where each player presses (% of his pressing frames)"
+    }
+   ],
+   "summary": [
+    {
+     "text": "ATM: most of their pressing in the attacking third = Gallagher (24%), Griezmann (23%), Javi Galan (23%); least = Gimenez (0%), De Paul (0%).\nmost common cell per player: Alvarez: middle / centre; Griezmann: middle / right; Simeone: middle / right; De Paul: middle / right; Gallagher: middle / left (top 5 by pressing time).",
+     "kind": "insight"
+    },
+    {
+     "text": "BAR: most of their pressing in the attacking third = Raphinha (80%), Lewandowski (71%), Kounde (70%); least = Cubarsi (8%), Casado (12%).\nmost common cell per player: Gavi: middle / right; Raphinha: attacking / right; Fermin: middle / left; Pedri: middle / left; Casado: middle / right (top 5 by pressing time).",
+     "kind": "insight"
+    }
+   ],
+   "notes": [],
+   "frame_groups": [
+    {
+     "id": "g1",
+     "title": "Real frames",
+     "intro_md": "**One photo frame per player** (every player with enough pressing frames). Each frame shows the player pressing inside **his main cell** (shaded). Among his stable pressing frames with the ball in that cell, the one where **the player stands closest to the centre of the cell** is chosen (white ring = cell centre); the frame prints how far he is from it.",
+     "frames": [
+      {
+       "file": "frames/m16_g1_01.jpg",
+       "thumb": "thumbs/m16_g1_01.jpg",
+       "caption": "ATM Alvarez: main cell middle third / centre (49% of his pressing), he is 1.7 m from the cell centre",
+       "frame": 692,
+       "clock": "00:27.7",
+       "team": "ATM",
+       "player": "Alvarez"
+      },
+      {
+       "file": "frames/m16_g1_02.jpg",
+       "thumb": "thumbs/m16_g1_02.jpg",
+       "caption": "ATM Griezmann: main cell middle third / right (40% of his pressing), he is 2.7 m from the cell centre",
+       "frame": 68184,
+       "clock": "45:27.4",
+       "team": "ATM",
+       "player": "Griezmann"
+      },
+      {
+       "file": "frames/m16_g1_03.jpg",
+       "thumb": "thumbs/m16_g1_03.jpg",
+       "caption": "ATM Simeone: main cell middle third / right (60% of his pressing), he is 1.3 m from the cell centre",
+       "frame": 52477,
+       "clock": "34:59.1",
+       "team": "ATM",
+       "player": "Simeone"
+      },
+      {
+       "file": "frames/m16_g1_04.jpg",
+       "thumb": "thumbs/m16_g1_04.jpg",
+       "caption": "ATM De Paul: main cell middle third / right (78% of his pressing), he is 3.0 m from the cell centre",
+       "frame": 64090,
+       "clock": "42:43.6",
+       "team": "ATM",
+       "player": "De Paul"
+      },
+      {
+       "file": "frames/m16_g1_05.jpg",
+       "thumb": "thumbs/m16_g1_05.jpg",
+       "caption": "ATM Gallagher: main cell middle third / left (66% of his pressing), he is 5.6 m from the cell centre",
+       "frame": 978,
+       "clock": "00:39.1",
+       "team": "ATM",
+       "player": "Gallagher"
+      },
+      {
+       "file": "frames/m16_g1_06.jpg",
+       "thumb": "thumbs/m16_g1_06.jpg",
+       "caption": "ATM Llorente: main cell middle third / right (72% of his pressing), he is 0.7 m from the cell centre",
+       "frame": 64082,
+       "clock": "42:43.3",
+       "team": "ATM",
+       "player": "Llorente"
+      },
+      {
+       "file": "frames/m16_g1_07.jpg",
+       "thumb": "thumbs/m16_g1_07.jpg",
+       "caption": "ATM Barrios: main cell middle third / left (47% of his pressing), he is 1.2 m from the cell centre",
+       "frame": 50304,
+       "clock": "33:32.2",
+       "team": "ATM",
+       "player": "Barrios"
+      },
+      {
+       "file": "frames/m16_g1_08.jpg",
+       "thumb": "thumbs/m16_g1_08.jpg",
+       "caption": "ATM Javi Galan: main cell middle third / left (67% of his pressing), he is 17.6 m from the cell centre",
+       "frame": 2393,
+       "clock": "01:35.7",
+       "team": "ATM",
+       "player": "Javi Galan"
+      },
+      {
+       "file": "frames/m16_g1_09.jpg",
+       "thumb": "thumbs/m16_g1_09.jpg",
+       "caption": "ATM Gimenez: main cell middle third / centre (50% of his pressing), he is 17.0 m from the cell centre",
+       "frame": 55898,
+       "clock": "37:15.9",
+       "team": "ATM",
+       "player": "Gimenez"
+      },
+      {
+       "file": "frames/m16_g1_10.jpg",
+       "thumb": "thumbs/m16_g1_10.jpg",
+       "caption": "ATM Lenglet: main cell middle third / left (46% of his pressing), he is 5.6 m from the cell centre",
+       "frame": 39883,
+       "clock": "26:35.3",
+       "team": "ATM",
+       "player": "Lenglet"
+      },
+      {
+       "file": "frames/m16_g1_11.jpg",
+       "thumb": "thumbs/m16_g1_11.jpg",
+       "caption": "BAR Gavi: main cell middle third / right (36% of his pressing), he is 1.8 m from the cell centre",
+       "frame": 25329,
+       "clock": "16:53.2",
+       "team": "BAR",
+       "player": "Gavi"
+      },
+      {
+       "file": "frames/m16_g1_12.jpg",
+       "thumb": "thumbs/m16_g1_12.jpg",
+       "caption": "BAR Raphinha: main cell attacking third / right (60% of his pressing), he is 1.0 m from the cell centre",
+       "frame": 37697,
+       "clock": "25:07.9",
+       "team": "BAR",
+       "player": "Raphinha"
+      },
+      {
+       "file": "frames/m16_g1_13.jpg",
+       "thumb": "thumbs/m16_g1_13.jpg",
+       "caption": "BAR Fermin: main cell middle third / left (42% of his pressing), he is 3.4 m from the cell centre",
+       "frame": 269,
+       "clock": "00:10.8",
+       "team": "BAR",
+       "player": "Fermin"
+      },
+      {
+       "file": "frames/m16_g1_14.jpg",
+       "thumb": "thumbs/m16_g1_14.jpg",
+       "caption": "BAR Pedri: main cell middle third / left (45% of his pressing), he is 2.1 m from the cell centre",
+       "frame": 62001,
+       "clock": "41:20.0",
+       "team": "BAR",
+       "player": "Pedri"
+      },
+      {
+       "file": "frames/m16_g1_15.jpg",
+       "thumb": "thumbs/m16_g1_15.jpg",
+       "caption": "BAR Casado: main cell middle third / right (60% of his pressing), he is 2.1 m from the cell centre",
+       "frame": 34940,
+       "clock": "23:17.6",
+       "team": "BAR",
+       "player": "Casado"
+      },
+      {
+       "file": "frames/m16_g1_16.jpg",
+       "thumb": "thumbs/m16_g1_16.jpg",
+       "caption": "BAR Lewandowski: main cell attacking third / right (29% of his pressing), he is 3.4 m from the cell centre",
+       "frame": 15021,
+       "clock": "10:00.8",
+       "team": "BAR",
+       "player": "Lewandowski"
+      },
+      {
+       "file": "frames/m16_g1_17.jpg",
+       "thumb": "thumbs/m16_g1_17.jpg",
+       "caption": "BAR Balde: main cell attacking third / left (42% of his pressing), he is 6.0 m from the cell centre",
+       "frame": 54989,
+       "clock": "36:39.6",
+       "team": "BAR",
+       "player": "Balde"
+      },
+      {
+       "file": "frames/m16_g1_18.jpg",
+       "thumb": "thumbs/m16_g1_18.jpg",
+       "caption": "BAR Kounde: main cell attacking third / right (70% of his pressing), he is 2.5 m from the cell centre",
+       "frame": 16686,
+       "clock": "11:07.4",
+       "team": "BAR",
+       "player": "Kounde"
+      },
+      {
+       "file": "frames/m16_g1_19.jpg",
+       "thumb": "thumbs/m16_g1_19.jpg",
+       "caption": "BAR Inigo: main cell middle third / left (48% of his pressing), he is 11.0 m from the cell centre",
+       "frame": 32487,
+       "clock": "21:39.5",
+       "team": "BAR",
+       "player": "Inigo"
+      },
+      {
+       "file": "frames/m16_g1_20.jpg",
+       "thumb": "thumbs/m16_g1_20.jpg",
+       "caption": "BAR Cubarsi: main cell middle third / right (74% of his pressing), he is 9.2 m from the cell centre",
+       "frame": 34969,
+       "clock": "23:18.8",
+       "team": "BAR",
+       "player": "Cubarsi"
+      }
+     ]
+    },
+    {
+     "id": "g2",
+     "title": "On the pitch: share of each player's pressing by zone",
+     "intro_md": "Each photo shows the player pressing, with the pitch grid drawn on the grass. Each cell shows the share of that player's pressing frames that happened there (as seen by his own team, attacking the opponent's goal).",
+     "frames": [
+      {
+       "file": "frames/m16_g2_01.jpg",
+       "thumb": "thumbs/m16_g2_01.jpg",
+       "caption": "ATM Alvarez: where he presses (% of his 49 s of pressing)",
+       "frame": 692,
+       "clock": "00:27.7",
+       "team": "ATM",
+       "player": "Alvarez"
+      },
+      {
+       "file": "frames/m16_g2_02.jpg",
+       "thumb": "thumbs/m16_g2_02.jpg",
+       "caption": "ATM Griezmann: where he presses (% of his 35 s of pressing)",
+       "frame": 68184,
+       "clock": "45:27.4",
+       "team": "ATM",
+       "player": "Griezmann"
+      },
+      {
+       "file": "frames/m16_g2_03.jpg",
+       "thumb": "thumbs/m16_g2_03.jpg",
+       "caption": "ATM Simeone: where he presses (% of his 23 s of pressing)",
+       "frame": 52477,
+       "clock": "34:59.1",
+       "team": "ATM",
+       "player": "Simeone"
+      },
+      {
+       "file": "frames/m16_g2_04.jpg",
+       "thumb": "thumbs/m16_g2_04.jpg",
+       "caption": "ATM De Paul: where he presses (% of his 22 s of pressing)",
+       "frame": 64090,
+       "clock": "42:43.6",
+       "team": "ATM",
+       "player": "De Paul"
+      },
+      {
+       "file": "frames/m16_g2_05.jpg",
+       "thumb": "thumbs/m16_g2_05.jpg",
+       "caption": "ATM Gallagher: where he presses (% of his 22 s of pressing)",
+       "frame": 978,
+       "clock": "00:39.1",
+       "team": "ATM",
+       "player": "Gallagher"
+      },
+      {
+       "file": "frames/m16_g2_06.jpg",
+       "thumb": "thumbs/m16_g2_06.jpg",
+       "caption": "ATM Llorente: where he presses (% of his 16 s of pressing)",
+       "frame": 64082,
+       "clock": "42:43.3",
+       "team": "ATM",
+       "player": "Llorente"
+      },
+      {
+       "file": "frames/m16_g2_07.jpg",
+       "thumb": "thumbs/m16_g2_07.jpg",
+       "caption": "ATM Barrios: where he presses (% of his 11 s of pressing)",
+       "frame": 50304,
+       "clock": "33:32.2",
+       "team": "ATM",
+       "player": "Barrios"
+      },
+      {
+       "file": "frames/m16_g2_08.jpg",
+       "thumb": "thumbs/m16_g2_08.jpg",
+       "caption": "ATM Javi Galan: where he presses (% of his 5 s of pressing)",
+       "frame": 2393,
+       "clock": "01:35.7",
+       "team": "ATM",
+       "player": "Javi Galan"
+      },
+      {
+       "file": "frames/m16_g2_09.jpg",
+       "thumb": "thumbs/m16_g2_09.jpg",
+       "caption": "ATM Gimenez: where he presses (% of his 3 s of pressing)",
+       "frame": 55898,
+       "clock": "37:15.9",
+       "team": "ATM",
+       "player": "Gimenez"
+      },
+      {
+       "file": "frames/m16_g2_10.jpg",
+       "thumb": "thumbs/m16_g2_10.jpg",
+       "caption": "ATM Lenglet: where he presses (% of his 3 s of pressing)",
+       "frame": 39883,
+       "clock": "26:35.3",
+       "team": "ATM",
+       "player": "Lenglet"
+      },
+      {
+       "file": "frames/m16_g2_11.jpg",
+       "thumb": "thumbs/m16_g2_11.jpg",
+       "caption": "BAR Gavi: where he presses (% of his 53 s of pressing)",
+       "frame": 25329,
+       "clock": "16:53.2",
+       "team": "BAR",
+       "player": "Gavi"
+      },
+      {
+       "file": "frames/m16_g2_12.jpg",
+       "thumb": "thumbs/m16_g2_12.jpg",
+       "caption": "BAR Raphinha: where he presses (% of his 46 s of pressing)",
+       "frame": 37697,
+       "clock": "25:07.9",
+       "team": "BAR",
+       "player": "Raphinha"
+      },
+      {
+       "file": "frames/m16_g2_13.jpg",
+       "thumb": "thumbs/m16_g2_13.jpg",
+       "caption": "BAR Fermin: where he presses (% of his 39 s of pressing)",
+       "frame": 269,
+       "clock": "00:10.8",
+       "team": "BAR",
+       "player": "Fermin"
+      },
+      {
+       "file": "frames/m16_g2_14.jpg",
+       "thumb": "thumbs/m16_g2_14.jpg",
+       "caption": "BAR Pedri: where he presses (% of his 31 s of pressing)",
+       "frame": 62001,
+       "clock": "41:20.0",
+       "team": "BAR",
+       "player": "Pedri"
+      },
+      {
+       "file": "frames/m16_g2_15.jpg",
+       "thumb": "thumbs/m16_g2_15.jpg",
+       "caption": "BAR Casado: where he presses (% of his 29 s of pressing)",
+       "frame": 34940,
+       "clock": "23:17.6",
+       "team": "BAR",
+       "player": "Casado"
+      },
+      {
+       "file": "frames/m16_g2_16.jpg",
+       "thumb": "thumbs/m16_g2_16.jpg",
+       "caption": "BAR Lewandowski: where he presses (% of his 25 s of pressing)",
+       "frame": 15021,
+       "clock": "10:00.8",
+       "team": "BAR",
+       "player": "Lewandowski"
+      },
+      {
+       "file": "frames/m16_g2_17.jpg",
+       "thumb": "thumbs/m16_g2_17.jpg",
+       "caption": "BAR Balde: where he presses (% of his 19 s of pressing)",
+       "frame": 54989,
+       "clock": "36:39.6",
+       "team": "BAR",
+       "player": "Balde"
+      },
+      {
+       "file": "frames/m16_g2_18.jpg",
+       "thumb": "thumbs/m16_g2_18.jpg",
+       "caption": "BAR Kounde: where he presses (% of his 18 s of pressing)",
+       "frame": 16686,
+       "clock": "11:07.4",
+       "team": "BAR",
+       "player": "Kounde"
+      },
+      {
+       "file": "frames/m16_g2_19.jpg",
+       "thumb": "thumbs/m16_g2_19.jpg",
+       "caption": "BAR Inigo: where he presses (% of his 4 s of pressing)",
+       "frame": 32487,
+       "clock": "21:39.5",
+       "team": "BAR",
+       "player": "Inigo"
+      },
+      {
+       "file": "frames/m16_g2_20.jpg",
+       "thumb": "thumbs/m16_g2_20.jpg",
+       "caption": "BAR Cubarsi: where he presses (% of his 4 s of pressing)",
+       "frame": 34969,
+       "clock": "23:18.8",
+       "team": "BAR",
+       "player": "Cubarsi"
+      }
+     ]
+    }
+   ]
+  }
+ ]
+}
