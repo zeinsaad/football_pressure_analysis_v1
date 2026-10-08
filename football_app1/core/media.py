@@ -76,29 +76,33 @@ def is_browser_ready(path: Path) -> bool:
 
 
 # ------------------------------------------------------------------ conversion
-def web_copy_path(src: Path, max_height: Optional[int] = None) -> Path:
-    return config.CACHE_DIR / "web" / f"{src.stem}_{_key(src, str(max_height))}.mp4"
+DEFAULT_CRF = 23
 
 
-def cached_web_copy(src: Path, max_height: Optional[int] = None) -> Optional[Path]:
+def web_copy_path(src: Path, max_height: Optional[int] = None, crf: int = DEFAULT_CRF) -> Path:
+    extra = str(max_height) if crf == DEFAULT_CRF else f"{max_height}_crf{crf}"      # clips keep their existing cache names
+    return config.CACHE_DIR / "web" / f"{src.stem}_{_key(src, extra)}.mp4"
+
+
+def cached_web_copy(src: Path, max_height: Optional[int] = None, crf: int = DEFAULT_CRF) -> Optional[Path]:
     """Path to the playable file if it already exists (the original if it is already H.264)."""
     if max_height is None and is_browser_ready(src):
         return src
-    dst = web_copy_path(src, max_height)
+    dst = web_copy_path(src, max_height, crf)
     return dst if dst.exists() else None
 
 
 def convert_for_browser(src: Path, max_height: Optional[int] = None,
-                        on_progress: Optional[Callable[[float], None]] = None) -> Path:
+                        on_progress: Optional[Callable[[float], None]] = None, crf: int = DEFAULT_CRF) -> Path:
     """H.264 + faststart copy of `src`, optionally capped at `max_height` pixels. Cached."""
-    ready = cached_web_copy(src, max_height)
+    ready = cached_web_copy(src, max_height, crf)
     if ready:
         return ready
     exe = ffmpeg_exe()
     if exe is None:
         raise RuntimeError("ffmpeg was not found. Run:  pip install imageio-ffmpeg")
 
-    dst = web_copy_path(src, max_height)
+    dst = web_copy_path(src, max_height, crf)
     dst.parent.mkdir(parents=True, exist_ok=True)
     tmp = dst.with_suffix(".part.mp4")
     duration = info_of(src)["duration"]
@@ -106,7 +110,7 @@ def convert_for_browser(src: Path, max_height: Optional[int] = None,
     cmd = [exe, "-y", "-loglevel", "error", "-i", str(src), "-map", "0:v:0", "-map", "0:a?"]
     if max_height:
         cmd += ["-vf", f"scale=-2:'min({max_height},ih)'"]
-    cmd += ["-c:v", "libx264", "-preset", "veryfast", "-crf", "23", "-pix_fmt", "yuv420p",
+    cmd += ["-c:v", "libx264", "-preset", "veryfast", "-crf", str(crf), "-pix_fmt", "yuv420p",
             "-c:a", "aac", "-b:a", "128k", "-movflags", "+faststart",
             "-progress", "pipe:1", "-nostats", str(tmp)]
 

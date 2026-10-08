@@ -10,7 +10,7 @@ import config
 from core import media
 from core.clips import Clip, analysis_preview, load_analysis, parse_analysis, scan_clips, strip_rules
 from ui.compat import STRETCH
-from ui.styles import analysis_chip, outcome_chip, stat, team_chip
+from ui.styles import analysis_chip, outcome_chip, team_chip
 
 PAGE_SIZE = 12
 GRID_COLS = 3
@@ -196,7 +196,13 @@ def _list(page: list[Clip], playlist: list[str], offset: int) -> None:
 
 # ------------------------------------------------------------------ tab
 def render() -> None:
-    clips, missing, bad = scan_clips()
+    _browse()
+
+
+@st.fragment                                   # filters, paging and the view switch re-run only this block
+def _browse() -> None:
+    with st.spinner("Loading clips..."):
+        clips, missing, bad = scan_clips()
     for m in missing:
         st.error(f"Folder not found: `{m}`. Check `CLIP_FOLDERS` in config.py.")
     if bad:
@@ -204,20 +210,6 @@ def render() -> None:
     if not clips:
         st.markdown('<div class="empty">No clips found yet.</div>', unsafe_allow_html=True)
         return
-
-    # counts
-    cols = st.columns(6)
-    counts = [
-        (len(clips), "clips"),
-        (sum(c.outcome == "kept" for c in clips), "kept the ball"),
-        (sum(c.outcome == "lost" for c in clips), "lost the ball"),
-        (sum(c.team == "BAR" for c in clips), "Barcelona"),
-        (sum(c.team == "ATM" for c in clips), "Atlético Madrid"),
-        (sum(c.has_analysis for c in clips), "with analysis"),
-    ]
-    for col, (n, label) in zip(cols, counts):
-        col.markdown(stat(n, label), unsafe_allow_html=True)
-    st.write("")
 
     # filters
     f1, f2, f3, f4 = st.columns([2.6, 2.4, 1.6, 1.4], vertical_alignment="bottom")
@@ -258,10 +250,10 @@ def render() -> None:
         p1, p2, p3 = st.columns([1, 2, 1])
         if p1.button("Previous page", disabled=page_no <= 1, **STRETCH):
             st.session_state["page"] = page_no - 1
-            st.rerun()
+            st.rerun(scope="fragment")
         if p3.button("Next page", disabled=page_no >= pages, **STRETCH):
             st.session_state["page"] = page_no + 1
-            st.rerun()
+            st.rerun(scope="fragment")
 
     # library tools
     with st.expander("Library tools"):
@@ -277,7 +269,7 @@ def render() -> None:
                     st.error(f"{c.stem}: {e}")
                     break
                 bar.progress(i / len(todo), text=f"{i} of {len(todo)}")
-            st.rerun()
+            st.rerun(scope="fragment")
         if st.button("Rescan folders and analyses"):
             scan_clips.clear()
-            st.rerun()
+            st.rerun(scope="fragment")

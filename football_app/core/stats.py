@@ -1,6 +1,6 @@
 """The exported pressing statistics (data/stats/stats.json) turned into display-ready pieces.
 
-The file is written by tools/export_stats.py from the executed stats notebook; this module only reads it.
+The folder is written by the STATS EXPORT cell of the stats notebook (figures, frames, csv, stats.json); this module only reads it.
 """
 from __future__ import annotations
 
@@ -34,6 +34,7 @@ DROP_EXTRA = {"m03": {"pct_of_middle_plus_attacking"}}      # duplicates pct_of_
 HIDE_FRAMES = {"m01": lambda f: "highest line" in f["caption"]}
 FRAME_INTRO = {"m01": "A typical back-three line of each team. White line = the team's match average, "
                       "coloured line = this frame's back three, the three players counted are marked L1 to L3."}
+HIDE_COLS = {"involved in pct of team pressing", "pressing rate (%)", "avg line depth (% of pitch)"}   # columns left out of every table (compared by their shown name)
 COMPACT_COLS = ["depth_mean", "width_mean", "area_mean", "area_median", "area_std"]
 PREFER_FRAME = ("typical", "not pressing")                  # which frame stands for a team when only one is shown
 METRIC_LABELS = {g: l for g, l in GROUPS}
@@ -51,6 +52,8 @@ def _drop_columns(sid: str, tb: dict, first: bool) -> None:
         elif h in DROP_EXTRA.get(sid, ()):
             drop.add(i)
         elif sid not in KEEP_TIME_COLS and DROP_COL.search(h):
+            drop.add(i)
+        elif nice_header(h).strip().lower() in HIDE_COLS:
             drop.add(i)
     if drop:
         tb["header"] = [h for i, h in enumerate(header) if i not in drop]
@@ -203,6 +206,71 @@ def web_image(path: Path) -> Path:
         return path
 
 
+# ------------------------------------------------------------------ player card: where he presses, drawn on a pitch (inline SVG, no extra packages)
+LEFT_IS_LOW_Y_ATT = True          # same switch as the stats notebook (checked with the left / right backs' positions). Only the NAMES left/right depend on it.
+_PL, _PW, _T1, _T2 = 105.0, 68.0, 35.0, 70.0
+_YLORRD = ["#ffffcc", "#ffeda0", "#fed976", "#feb24c", "#fd8d3c", "#fc4e2a", "#e31a1c", "#bd0026", "#800026"]
+
+
+def _heat_color(n: float) -> str:
+    n = min(max(n, 0.0), 1.0) * (len(_YLORRD) - 1)
+    i = min(int(n), len(_YLORRD) - 2); f = n - i
+    a, b = _YLORRD[i], _YLORRD[i + 1]
+    ch = lambda h, k: int(h[1 + 2 * k:3 + 2 * k], 16)
+    return "#%02x%02x%02x" % tuple(round(ch(a, k) + (ch(b, k) - ch(a, k)) * f) for k in range(3))
+
+
+def _cell_rect(rtl: bool, zone: str, ch: str) -> tuple:
+    """(x0, y0, x1, y1) in figure metres (y up). Barca attacks left -> right, the other team right -> left; same mapping as to_display in the notebook."""
+    z0, z1 = {"own": (0, _T1), "mid": (_T1, _T2), "att": (_T2, _PL)}[zone]
+    c0, c1 = {"low": (0, _PW / 3), "centre": (_PW / 3, 2 * _PW / 3), "high": (2 * _PW / 3, _PW)}[ch]
+    if rtl:                                      # the other team attacks right -> left
+        z0, z1 = _PL - z1, _PL - z0
+    else:                                        # y runs towards the attacker's right hand, the figure draws y upwards: mirror it
+        c0, c1 = _PW - c1, _PW - c0
+    return z0, c0, z1, c1
+
+
+def player_pitch_uri(team_code: str, v: dict) -> str:
+    """Data-URI SVG of the six pressing cells on a pitch. v has mid_/att_ x left/centre/right (% of his pressing)."""
+    import base64
+    rtl = team_code != TEAM_ORDER[0]
+    names = {"low": "left", "centre": "centre", "high": "right"} if LEFT_IS_LOW_Y_ATT else {"low": "right", "centre": "centre", "high": "left"}
+    vals = {(z, ch): float(v[f"{z}_{names[ch]}"]) for z in ("mid", "att") for ch in names}
+    mx = max(vals.values()) or 1.0
+    best = max(vals, key=vals.get)
+    Y = lambda y: _PW - y                                                   # figure metres (y up) -> svg (y down)
+    o = ['<svg xmlns="http://www.w3.org/2000/svg" viewBox="-6 -3 117 74" font-family="Arial,Helvetica,sans-serif">',
+         f'<rect x="-6" y="-3" width="117" height="74" fill="#2f6b3a"/>']
+    o += [f'<rect x="{i * _PL / 15:.2f}" y="0" width="{_PL / 15:.2f}" height="{_PW}" fill="{"#357a42" if i % 2 == 0 else "#2f6b3a"}"/>' for i in range(15)]
+    ox0, ox1 = (_PL - _T1, _PL) if rtl else (0, _T1)                        # own third: not counted as pressing
+    o.append(f'<rect x="{ox0}" y="0" width="{ox1 - ox0}" height="{_PW}" fill="#102014" fill-opacity=".6"/>')
+    o.append(f'<text x="{(ox0 + ox1) / 2}" y="{_PW / 2}" text-anchor="middle" dominant-baseline="central" font-size="3.6" font-style="italic" fill="#fff" fill-opacity=".8">own third</text>')
+    for (z, ch), val in vals.items():
+        x0, y0, x1, y1 = _cell_rect(rtl, z, ch)
+        o.append(f'<rect x="{x0:.2f}" y="{Y(y1):.2f}" width="{x1 - x0:.2f}" height="{y1 - y0:.2f}" fill="{_heat_color(val / mx)}" fill-opacity=".88" stroke="#fff" stroke-width=".5"/>')
+    ln = 'fill="none" stroke="#f4f4f0" stroke-width=".55"'                  # pitch markings on top of the cells
+    o += [f'<rect x="0" y="0" width="{_PL}" height="{_PW}" {ln}/>', f'<line x1="{_PL / 2}" y1="0" x2="{_PL / 2}" y2="{_PW}" {ln}/>',
+          f'<circle cx="{_PL / 2}" cy="{_PW / 2}" r="9.15" {ln}/>']
+    for left in (True, False):
+        o.append(f'<rect x="{0 if left else _PL - 16.5}" y="{_PW / 2 - 20.15}" width="16.5" height="40.3" {ln}/>')
+        o.append(f'<rect x="{0 if left else _PL - 5.5}" y="{_PW / 2 - 9.16}" width="5.5" height="18.32" {ln}/>')
+    for (z, ch), val in vals.items():
+        x0, y0, x1, y1 = _cell_rect(rtl, z, ch)
+        tx, ty, fs = (x0 + x1) / 2, Y((y0 + y1) / 2), 7.2 if (z, ch) == best else 6
+        base = f'x="{tx:.2f}" y="{ty:.2f}" text-anchor="middle" dominant-baseline="central" font-weight="700" font-size="{fs}"'
+        o.append(f'<text {base} fill="none" stroke="#000" stroke-opacity=".65" stroke-width="1.3" stroke-linejoin="round">{val:.0f}%</text>')   # dark halo, then the white number
+        o.append(f'<text {base} fill="#fff">{val:.0f}%</text>')
+    x0, y0, x1, y1 = _cell_rect(rtl, *best)                                  # his main cell
+    o.append(f'<rect x="{x0 + .8:.2f}" y="{Y(y1) + .8:.2f}" width="{x1 - x0 - 1.6:.2f}" height="{y1 - y0 - 1.6:.2f}" fill="none" stroke="#ffe45c" stroke-width="1.1"/>')
+    for ch in names:                                                         # left / centre / right as the team sees it (looking at the opponent's goal)
+        _, a, _, b = _cell_rect(rtl, "att", ch)
+        o.append(f'<text x="{-3.5 if not rtl else _PL + 3.5}" y="{Y((a + b) / 2):.2f}" text-anchor="middle" dominant-baseline="central" font-size="4" fill="#8d9ab3" '
+                 f'transform="rotate({-90 if not rtl else 90} {-3.5 if not rtl else _PL + 3.5} {Y((a + b) / 2):.2f})">{names[ch]}</text>')
+    o.append("</svg>")
+    return "data:image/svg+xml;base64," + base64.b64encode("".join(o).encode("utf-8")).decode("ascii")
+
+
 def section(data: dict, sid: str) -> Optional[dict]:
     return next((s for s in data["sections"] if s["id"] == sid), None)
 
@@ -308,7 +376,7 @@ def _cell(h: str, v: str, is_index: bool) -> str:
     if v in ("NaN", "nan", "None", ""):
         return "&ndash;" if not is_index else ""
     if is_index:
-        return html.escape(v.replace("_", " ").capitalize() if "_" in v else v)
+        return "All" if v.lower() == "all" else html.escape(v.replace("_", " ").capitalize() if "_" in v else v)
     if re.fullmatch(r"-?\d{4,}", v):
         return f"{int(v):,}"
     if re.fullmatch(r"-?\d{4,}\.0+", v):
@@ -316,21 +384,43 @@ def _cell(h: str, v: str, is_index: bool) -> str:
     return html.escape(v)
 
 
+BAR_COLS = {"zone_intensity_pct"}                  # columns drawn with a small bar behind the number (the key metric of a table)
+
+
+def _num(v: str) -> Optional[float]:
+    try:
+        return float(v)
+    except (TypeError, ValueError):
+        return None
+
+
 def table_html(tb: dict) -> str:
-    n = tb["n_index"]; header = list(tb["header"])
-    if header and header[0] == "" and any(r[0] in TEAM_ORDER for r in tb["rows"]):
+    """Grouped table: an index label is shown once per group, 'All' rows are the group total (bold, tinted), and the last index level is indented."""
+    n = tb["n_index"]; header = list(tb["header"]); rows = tb["rows"]
+    if header and header[0] == "" and any(r[0] in TEAM_ORDER for r in rows):
         header[0] = "Team"
     ths = "".join(f'<th class="{"l" if i < n else ""}">{html.escape(nice_header(h))}</th>' for i, h in enumerate(header))
+    bar_max = {i: max([x for x in (_num(r[i]) for r in rows) if x is not None] or [0]) for i, h in enumerate(tb["header"]) if h in BAR_COLS}
     body, prev = [], None
-    for r in tb["rows"]:
-        grp = prev is not None and n > 1 and r[0] != prev
+    for r in rows:
+        diff = 0 if prev is None else next((i for i in range(n) if r[i] != prev[i]), n)            # first index level that changed vs the row above
+        total = any(str(v).strip().lower() == "all" for v in r[:n])
+        cls = [c for c, on in (("grp", prev is not None and n > 1 and diff == 0), ("sub", n > 2 and diff == 1), ("tot", total)) if on]
         tds = []
         for i, v in enumerate(r):
-            shown = "" if (i == 0 and n > 1 and r[0] == prev) else v
-            tds.append(f'<td class="{"l" if i < n else ""}">{_cell(header[i], shown, i < n)}</td>')
-        body.append(f'<tr class="{"grp" if grp else ""}">{"".join(tds)}</tr>')
-        prev = r[0]
+            shown = "" if (n > 1 and i < n and i < diff) else v                                  # repeated group labels are left blank
+            if i < n:
+                tds.append(f'<td class="l{" ind" if (n > 2 and i == n - 1 and not total) else ""}">{_cell(header[i], shown, True)}</td>')
+            elif i in bar_max and _num(v) is not None and bar_max[i] > 0:
+                w = max(0.0, min(100.0, 100 * _num(v) / bar_max[i]))
+                tds.append(f'<td class="bar" style="--bc:{accent(r[0]) if r[0] in TEAM_ORDER else "#6EA8FE"}"><span class="bv">{html.escape(v)}</span>'
+                           f'<span class="bt"><i style="width:{w:.0f}%"></i></span></td>')
+            else:
+                tds.append(f'<td>{_cell(header[i], v, False)}</td>')
+        body.append(f'<tr class="{" ".join(cls)}">{"".join(tds)}</tr>')
+        prev = r
     return f'<div class="tbl-wrap"><table class="stbl"><thead><tr>{ths}</tr></thead><tbody>{"".join(body)}</tbody></table></div>'
+
 
 
 def table_csv(tb: dict) -> bytes:

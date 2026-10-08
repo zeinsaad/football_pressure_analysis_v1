@@ -119,11 +119,6 @@ def _findings(s: dict) -> None:
 
 
 # ------------------------------------------------------------------ one card per player (section "Where each player presses")
-def _heat(v: float, mx: float) -> str:
-    a = 0.08 + 0.85 * (v / mx if mx else 0)
-    return f'<td style="background:rgba(30,160,90,{a:.2f});color:{"#fff" if a > .5 else "#0b2a1a"}">{v:.0f}</td>'
-
-
 def _player_card(s: dict, row: dict, frame: dict | None, number: str) -> None:
     code = row["team"]
     with st.container(border=True):
@@ -139,13 +134,11 @@ def _player_card(s: dict, row: dict, frame: dict | None, number: str) -> None:
                 st.image(str(stats.web_image(p)), caption=f'match clock {frame["clock"]}', **STRETCH)
         with right:
             v = {k: float(row[k]) for k in ("mid_left", "mid_centre", "mid_right", "att_left", "att_centre", "att_right")}
-            mx = max(v.values())
             st.markdown(
                 '<div class="pc-t">Where he presses (% of his pressing)</div>'
-                '<table class="pgrid"><thead><tr><th></th><th>Middle third</th><th>Attacking third</th></tr></thead><tbody>'
-                f'<tr><th>Right</th>{_heat(v["mid_right"], mx)}{_heat(v["att_right"], mx)}</tr>'
-                f'<tr><th>Centre</th>{_heat(v["mid_centre"], mx)}{_heat(v["att_centre"], mx)}</tr>'
-                f'<tr><th>Left</th>{_heat(v["mid_left"], mx)}{_heat(v["att_left"], mx)}</tr></tbody></table>'
+                f'<img src="{stats.player_pitch_uri(code, v)}" style="width:100%;border-radius:8px;display:block;margin-bottom:.4rem" alt="where he presses">'
+                f'<div class="pc-t" style="margin-bottom:.8rem">{"Atlético attacks right to left" if code != stats.TEAM_ORDER[0] else "Barça attacks left to right"}. Yellow outline = main cell. '
+                'Left / right as his team sees it, looking at the opponent\'s goal.</div>'
                 f'<div class="pc-kv"><span>Main cell</span><b>{html.escape(row["main_cell"].replace(" / ", " / ").capitalize())}</b></div>'
                 f'<div class="pc-kv"><span>In attacking third</span><b>{float(row["pct_attacking_third"]):.1f}%</b></div>',
                 unsafe_allow_html=True)
@@ -241,17 +234,16 @@ def _method(data: dict) -> None:
     b.download_button("Key findings (text)", stats.findings_text(data), file_name="barca_atletico_key_findings.txt", mime="text/plain", **STRETCH)
     c.download_button("Everything (JSON)", stats.STATS_JSON.read_bytes(), file_name="stats.json", mime="application/json", **STRETCH)
     st.caption(f'Exported from `{data.get("source_notebook", "the stats notebook")}` on {data.get("generated", "")[:10]}. '
-               "Run `python tools/export_stats.py <notebook>` after re-running the notebook to refresh this tab.")
+               "Run the STATS EXPORT cell (last cell of the notebook) after re-running metrics to refresh this tab.")
 
 
 def render() -> None:
     with st.spinner("Loading statistics..."):
         data = stats.load_stats()
     if data is None:
-        st.markdown('<div class="empty">No statistics exported yet.<br>Run <code>python tools/export_stats.py &lt;notebook.ipynb&gt;</code> '
+        st.markdown('<div class="empty">No statistics exported yet.<br>Run the <code>STATS EXPORT</code> cell (last cell of the stats notebook) '
                     f'and reload. Expected file: <code>{html.escape(str(stats.STATS_JSON))}</code></div>', unsafe_allow_html=True)
         return
-    _kpis(data)
     _topics(data)
 
 

@@ -26,8 +26,8 @@ EXPLANATIONS_FILE = CLIPS_ROOT / "explanations.json"
 CACHE_DIR = Path(__file__).parent / ".cache"
 
 TEAMS = {
-    "BAR": dict(name="Barcelona", short="Barça", bg="#004D98", edge="#A50044"),
-    "ATM": dict(name="Atlético Madrid", short="Atlético", bg="#CB3524", edge="#F2F2F2"),
+    "BAR": dict(name="Barcelona", short="Barça", bg="#004D98", edge="#A50044", accent="#1E78FF"),
+    "ATM": dict(name="Atlético Madrid", short="Atlético", bg="#CB3524", edge="#F2F2F2", accent="#EB3737"),
 }
 
 OUTCOMES = {
@@ -35,5 +35,13 @@ OUTCOMES = {
     "lost": dict(label="Lost the ball", detail="Ball lost under pressure", fg="#FF9A76", bg="rgba(240,120,80,.16)"),
 }
 
-# Full-match video: height used when the file has to be converted for the browser
-MATCH_HEIGHT_OPTIONS = {"720p (recommended)": 720, "1080p": 1080, "Original size": None}
+# Full-match video: when the file is not browser-playable it is converted ONCE, automatically, at its original size.
+# CRF is the H.264 quality (lower = better and bigger; 18 is visually lossless, 23 is the ffmpeg default).
+MATCH_CRF = 18
+
+# Tab 3: statistics exported from the stats notebook (python tools/export_stats.py <notebook>)
+STATS_DIR = Path(__file__).parent / "data" / "stats"
+
+# Tab 4: tactical conclusions (plain text). A copy in data/ is used only if the original path is missing.
+CONCLUSIONS_FILE = BASE / "new" / "press" / "bar_atm_tactical_conclusions.txt"
+CONCLUSIONS_FALLBACK = Path(__file__).parent / "data" / "bar_atm_tactical_conclusions.txt"

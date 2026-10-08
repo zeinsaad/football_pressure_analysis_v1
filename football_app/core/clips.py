@@ -134,19 +134,40 @@ _RULE_RE = re.compile(r"^\s*[=\-_*]{3,}\s*$")
 _HEAD_RE = re.compile(r"^\s*(?:\d+[.)]\s+)?([A-Z][A-Z0-9 &/,'-]*[A-Z0-9](?:\s*\([^)]*\))?)\s*:?\s*$")
 
 
+# Also accepted as headings: "2. Why (ranked)" (numbered, mixed case, short, numbered in order), "## Why", "**Why**".
+_NUM_HEAD_RE = re.compile(r"^\s*(\d+)[.)]\s+([A-Z][A-Za-z0-9 &/,'()\-]{1,40}?)\s*:?\s*$")
+_MD_HEAD_RE = re.compile(r"^\s*(?:#{1,6}\s+|\*\*)\s*([^*#\n]{2,40}?)\s*\**\s*:?\s*$")
+
+
+def _heading_of(line: str, seen: int) -> Optional[str]:
+    """Title if `line` is a section heading, else None. `seen` = headings found so far (numbered headings must come in order)."""
+    m = _HEAD_RE.match(line)
+    if m:
+        return m.group(1).strip().capitalize()
+    m = _NUM_HEAD_RE.match(line)
+    if m and int(m.group(1)) == seen + 1 and len(m.group(2).split()) <= 5 and not m.group(2).rstrip().endswith((".", ";", ",")):
+        t = m.group(2).strip()
+        return t.capitalize() if t.isupper() else t
+    m = _MD_HEAD_RE.match(line)
+    if m:
+        t = m.group(1).strip()
+        return t.capitalize() if t.isupper() else t
+    return None
+
+
 def parse_analysis(text: str) -> list[tuple[str, str]]:
     """[(title, body), ...] from a structured analysis; [] when the text has no recognisable sections.
 
     The header line and ==== rules are dropped (the player already shows team, time and build-up).
-    Titles come back in sentence case ("WHY (ranked)" -> "Why (ranked)") without their numbers.
+    Titles come back without their numbers ("WHY (ranked)" -> "Why (ranked)").
     """
     sections: list[list] = []
     for line in text.splitlines():
         if _RULE_RE.match(line):
             continue
-        m = _HEAD_RE.match(line)
-        if m:
-            sections.append([m.group(1).strip().capitalize(), []])
+        title = _heading_of(line, len(sections))
+        if title:
+            sections.append([title, []])
         elif sections:
             sections[-1][1].append(line.rstrip())
     out = [(t, "\n".join(b).strip()) for t, b in sections]

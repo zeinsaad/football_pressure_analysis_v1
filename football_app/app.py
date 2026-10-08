@@ -3,7 +3,7 @@ import streamlit as st
 
 st.set_page_config(page_title="Barça v Atlético analysis", page_icon="⚽", layout="wide")
 
-from tabs import clips_tab, conclusions_tab, full_match, stats_tab   # noqa: E402  (after set_page_config)
+from tabs import clips_tab, conclusions_tab, formation_tab, full_match, stats_tab   # noqa: E402  (after set_page_config)
 from ui.header import render_header         # noqa: E402
 from ui.styles import apply_theme, inject_css   # noqa: E402
 
@@ -14,6 +14,7 @@ TABS = [
     ("Match video", full_match.render),
     ("Build-up clips", clips_tab.render),
     ("Stats", stats_tab.render),
+    ("Formation", formation_tab.render),
     ("Tactical conclusions", conclusions_tab.render),
 ]
 

@@ -1,5 +1,0 @@
-﻿team,state,frames,depth_mean,width_mean,area_mean,area_median,area_std
-ATM,pressing,4144,21.4,37.9,824.0,758.7,305.9
-ATM,not pressing,26569,18.8,35.5,685.3,617.6,322.9
-BAR,pressing,5652,22.8,37.0,854.7,831.3,319.6
-BAR,not pressing,15032,22.4,35.5,835.0,836.1,391.6

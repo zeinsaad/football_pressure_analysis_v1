@@ -5,25 +5,11 @@ import config
 from core import media
 
 
-def _stat(col, value: str, label: str) -> None:
-    col.markdown(f'<div class="stat-n">{value}</div><div class="stat-l">{label}</div>', unsafe_allow_html=True)
-
-
 def render() -> None:
     src = config.MATCH_VIDEO
     if not src.exists():
         st.error(f"Video not found: `{src}`. Check `MATCH_VIDEO` in config.py.")
         return
-
-    with st.spinner("Reading the match video..."):
-        info = media.info_of(src)
-    c = st.columns(4)
-    _stat(c[0], media.fmt_duration(info["duration"]), "length")
-    _stat(c[1], f'{info["width"]}x{info["height"]}' if info["width"] else "-", "resolution")
-    _stat(c[2], str(info["fps"] or "-"), "frames per second")
-    size = f'{info["size_mb"] / 1000:.1f} GB' if info["size_mb"] >= 1000 else f'{info["size_mb"]:.0f} MB'
-    _stat(c[3], size, "file size")
-    st.write("")
 
     # Browsers only play H.264. If the file is something else it is converted once, at the original size and
     # at the best quality, with no question asked; every later visit plays the saved copy straight away.
@@ -40,4 +26,3 @@ def render() -> None:
         bar.empty()
 
     st.video(str(ready))
-    st.caption(f"Playing: `{ready.name}`")

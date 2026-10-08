@@ -1,5 +1,0 @@
-﻿team,state,passes,completed,intercepted,success_rate_pct,ci95
-ATM,under pressure,99,82,17,82.8,74-89
-ATM,not under pressure,69,48,21,69.6,58-79
-BAR,under pressure,87,79,8,90.8,83-95
-BAR,not under pressure,182,150,32,82.4,76-87

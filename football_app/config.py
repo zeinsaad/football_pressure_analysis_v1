@@ -12,7 +12,7 @@ BASE = Path(os.environ.get(
 MATCH_VIDEO = BASE / "barca_atletico_first_half" / "new_cache" / "annotated_teams.mp4"
 
 # Tab 2: build-up clips (only the hand-checked "good" folders)
-CLIPS_ROOT = BASE / "new" / "press" / "buildup_output" / "clips_buildup"
+CLIPS_ROOT = BASE / "new" / "press" / "buildup_output" / "clips_final"
 CLIP_FOLDERS = {
     "kept": CLIPS_ROOT / "kept_under_pressure" ,
     "lost": CLIPS_ROOT / "lost_under_pressure" ,
@@ -39,9 +39,24 @@ OUTCOMES = {
 # CRF is the H.264 quality (lower = better and bigger; 18 is visually lossless, 23 is the ffmpeg default).
 MATCH_CRF = 18
 
-# Tab 3: statistics exported from the stats notebook (python tools/export_stats.py <notebook>)
-STATS_DIR = Path(__file__).parent / "data" / "stats"
+# Tab 3: statistics folder, written by the STATS EXPORT cell (last cell) of the stats notebook. It must be the same folder as STATS_OUT in the
+# notebook's recorder cell. Override with the FOOTBALL_STATS_DIR environment variable. If it does not exist yet, data/stats next to the app is used.
+STATS_DIR = Path(os.environ.get("FOOTBALL_STATS_DIR", BASE / "new" / "press" / "buildup_output" / "stats_app"))
+_LOCAL_STATS = Path(__file__).parent / "data" / "stats"
+if not (STATS_DIR / "stats.json").exists() and (_LOCAL_STATS / "stats.json").exists():
+    STATS_DIR = _LOCAL_STATS
 
 # Tab 4: tactical conclusions (plain text). A copy in data/ is used only if the original path is missing.
 CONCLUSIONS_FILE = BASE / "new" / "press" / "bar_atm_tactical_conclusions.txt"
 CONCLUSIONS_FALLBACK = Path(__file__).parent / "data" / "bar_atm_tactical_conclusions.txt"
+
+# Tab 2: starred clips (written when you click a star). Next to the app, not inside the clips folder, so regenerating the clips never deletes it.
+STARS_FILE = Path(os.environ.get("FOOTBALL_STARS_FILE", Path(__file__).parent / "data" / "stars.json"))
+
+# Header badges: your own image files, looked up in the icons folder next to app.py (football_app/icons). File names without extension; .png .jpg .jpeg .webp are tried.
+# A missing file falls back to a drawn shield.
+ICONS_DIR = Path(os.environ.get("FOOTBALL_ICONS_DIR", Path(__file__).parent / "icons"))
+ICON_FILES = {"MAIN": "football_badge", "BAR": "barca_badge", "ATM": "atletico_madrid_badge"}
+
+# Streamlit's own top bar (Deploy, Stop, menu) and the "Made with Streamlit" footer. True = hidden for a clean app look; False = show them again.
+HIDE_STREAMLIT_BAR = True

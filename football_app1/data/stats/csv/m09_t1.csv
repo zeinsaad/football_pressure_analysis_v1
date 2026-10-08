@@ -1,0 +1,5 @@
+﻿line,team,mean_m,median_m,std_m,frames_kept,outliers_removed
+last-1 defender,ATM,26.2,23.5,13.7,30894,54
+last-1 defender,BAR,44.8,48.2,13.1,20283,1220
+last-3 defenders (mean),ATM,27.4,24.4,13.9,30866,68
+last-3 defenders (mean),BAR,46.4,49.0,14.6,20068,736

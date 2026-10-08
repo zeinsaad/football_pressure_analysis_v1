@@ -1,0 +1,153 @@
+TACTICAL CONCLUSIONS: BARCELONA (BAR) vs ATLETICO MADRID (ATM)
+Build-up under pressure and pressing
+
+======================================================================
+1. BAR
+======================================================================
+
+BUILD-UP UNDER PRESSURE
+
+Strengths
+- BAR tends to escape pressure through quick circulation, short combinations
+  and fast switches of play, often moving the ball across the pitch before a
+  second presser can arrive.
+- Support around the ball is usually good. The carrier is rarely isolated early
+  in a sequence, and short, free options are normally available.
+- When there is space, BAR carries the ball through the middle and wide
+  channels with composure. These long, calm carries often take the ball into
+  the final third.
+- Switches to the far touchline are a recurring way of breaking an Atletico
+  press once it commits to one side.
+
+Weaknesses
+- Losses tend to happen when a carrier keeps the ball and runs towards the
+  touchline instead of releasing it early. The line removes one side of the
+  carrier's space, so a single defender can finish the job.
+- Wide carriers can become isolated, with teammates far away and forward
+  options scarce. A press that doubles up there is very hard to escape.
+- BAR sometimes plays forward or wide into an area where a defender is already
+  closing. Short, safe options were often available but not used.
+- Once a squeeze builds up, BAR tends to carry deeper into it rather than
+  release the ball, and the pressure grows with each second.
+
+PRESSING
+
+Strengths
+- Individual pressers close fast and often get very near the ball.
+- BAR pressers are persistent and re-engage after being beaten, which wears
+  down the opponent in long sequences.
+- Doubling up on the touchline and in the opponent's own third is effective.
+  The wide area plus a second presser often leaves the opponent no safe outlet.
+- BAR's block is often compact behind the ball, with many defenders goal-side,
+  so a ball played forward out of the press runs into cover.
+
+Weaknesses
+- Pressing is frequently done by one player at a time, with no second man to
+  cut off the escape pass.
+- At times the block is stretched or deep and passive, giving the opponent long
+  stretches of unpressured circulation.
+- Late presses often arrive after the ball has already been moved forward or
+  across, so they are too slow to matter.
+
+======================================================================
+2. ATM
+======================================================================
+
+BUILD-UP UNDER PRESSURE
+
+Strengths
+- ATM can escape a lone presser by playing backwards or sideways, and often
+  does so effectively.
+- When BAR's press is lone or slow, ATM carries and recycles through the
+  goalkeeper and full-backs to find space and stretch BAR's block.
+- Long forward balls and switches can bypass the first line of pressure and
+  move the team up the pitch quickly.
+
+Weaknesses
+- ATM often builds in its own third, near the touchline, where space is limited
+  and pressure can be stacked. Repeated use of the same wing makes it
+  predictable.
+- Forward options are often few and far from the carrier, leaving the player on
+  the ball with little support or only thin margins of space.
+- ATM tends to hold the ball too long when pressure begins, and is then
+  squeezed once more pressers arrive.
+- Several losses came from forward or wide balls played into an already
+  positioned defender when time and short options were available. These losses
+  look like choices rather than forced errors.
+- Carrying into a growing squeeze, instead of releasing early, is a recurring
+  pattern.
+
+PRESSING
+
+Strengths
+- ATM pressers close with intensity, especially early in a sequence and near
+  the ball, and a lone one-on-one is often enough to win it.
+- Sustained, close pressure on a carrier who is isolated near the touchline
+  works well.
+- The block is often compact and deep, with many players behind the ball.
+
+Weaknesses
+- Pressure frequently arrives one defender at a time, so the opponent can
+  switch play or play away from it.
+- The press often comes too late. ATM often sits deep and passive, allowing
+  long unpressed circulation and carries, with little stepping out onto the
+  carrier.
+- Pressers sometimes get close but do not attack the ball, and a block that is
+  stretched or wide leaves gaps.
+- Defenders tend to commit to the ball, leaving the next receiver or forward
+  lane with less cover.
+
+======================================================================
+3. WHAT SEPARATES A BALL LOST UNDER PRESSURE FROM A BALL KEPT
+======================================================================
+
+- Number of pressers: Losses usually involve two or more pressers arriving
+  together or building up over time. Kept balls usually involve a lone
+  presser, or pressers arriving one after another.
+- Closing speed and distance: Lost balls show fast, committed closing that ends
+  very near the carrier, with a persistent presser. Kept balls show pressers
+  who are slow, late or stop short of contact.
+- Free passing options: Where options are few, far away or only thinly free,
+  the ball tends to be lost. Where short, nearby options exist and are used,
+  it is kept.
+- Location: Losses cluster along touchlines and in a team's own third, where
+  space is limited. Kept balls more often come from central or switched play.
+- Decision timing: Releasing the ball early, before a second presser arrives,
+  tends to preserve it. Carrying or holding on tends to lose it.
+- Compactness: A compact block with cover behind the press tends to turn a
+  pressed ball into a turnover. A stretched or deep block rarely forces the
+  opponent into errors.
+
+======================================================================
+4. GENERAL TACTICAL TAKEAWAYS
+======================================================================
+
+- Pressure is most dangerous when it is collective. A second presser,
+  especially near the touchline, is what turns a contested ball into a lost
+  one for both sides.
+- Teams escape lone pressers by playing away from them, so an effective press
+  needs support and cover in the likely escape lanes.
+- Carrying into pressure, rather than releasing early, is the most common route
+  to a turnover.
+- Passive, deep defending allows unpressured progression, and late pressing
+  usually arrives after the key pass has already been made.
+- Building along the touchline in the own third carries high risk for both
+  teams, and switching play away from the squeeze is a reliable remedy.
+
+======================================================================
+5. LIMITATIONS
+======================================================================
+
+- The analysis cannot show whether an action was a pass, a tackle, a touch or a
+  clearance, nor what the passing lanes or body orientation were.
+- Pressing triggers, instructions and player intentions are not visible, so
+  reasons for passivity or hesitation are unknown.
+- The data covers only selected clips of pressure, so it may not represent the
+  whole match, and the outcome labels simplify complex sequences.
+- Tracking gaps and unreliable labels limit how reliably some sequences can be
+  read.
+- The free-space measures are only a geometric proxy, and the counterfactuals
+  are judgments rather than facts.
+- Match context such as scoreline, fatigue, substitutions and opposition
+  adjustments is absent, so these tendencies are not guaranteed to hold across
+  other matches.
